@@ -27,6 +27,7 @@ public class DialogManager : MonoBehaviour
 
     public event Action OnShowDialog;
     public event Action OnHideDialog;
+    public event Action<Dialog> OnDialogComplete; // New event for quest integration
     public static DialogManager Instance { get; private set; }
 
     private Dialog dialog;
@@ -323,8 +324,8 @@ public class DialogManager : MonoBehaviour
             if (buttonRect != null)
             {
                 buttonRect.sizeDelta = new Vector2(
-                    maxWidth + 20f, 
-                    textComponent.preferredHeight + 20f 
+                    maxWidth + 20f,
+                    textComponent.preferredHeight + 20f
                 );
             }
         }
@@ -387,6 +388,9 @@ public class DialogManager : MonoBehaviour
 
     private void EndDialog()
     {
+        // Store reference to the current dialog before clearing it
+        Dialog completedDialog = this.dialog;
+
         foreach (var button in currentChoiceButtons)
         {
             if (button != null)
@@ -415,7 +419,14 @@ public class DialogManager : MonoBehaviour
 
         StartCoroutine(DialogCooldown());
 
+        // Fire existing event
         OnHideDialog?.Invoke();
+
+        // Fire new event with the completed dialog
+        if (completedDialog != null)
+        {
+            OnDialogComplete?.Invoke(completedDialog);
+        }
     }
 
     private IEnumerator DialogCooldown()

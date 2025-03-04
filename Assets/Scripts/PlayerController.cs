@@ -7,7 +7,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float runSpeed = 8f;
     [SerializeField] private float gravity = -9.81f;
     [SerializeField] private float groundCheckDistance = 0.4f;
-    [SerializeField] private float rotationSpeed = 10f;
 
     [Header("Camera Settings")]
     [SerializeField] private Transform cameraTransform;
