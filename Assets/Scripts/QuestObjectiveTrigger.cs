@@ -31,10 +31,7 @@ public class QuestObjectiveTrigger : MonoBehaviour
     {
         if (playerTransform == null || QuestManager.Instance == null) return;
 
-        // Only show and activate if the quest is active
         if (!QuestManager.Instance.IsQuestActive(linkedQuest)) return;
-
-        // Don't show if this specific objective is already completed
         if (objectiveIndex >= 0 && objectiveIndex < linkedQuest.Objectives.Count &&
             linkedQuest.Objectives[objectiveIndex].isCompleted)
         {

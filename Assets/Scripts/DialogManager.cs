@@ -72,16 +72,12 @@ public class DialogManager : MonoBehaviour
         {
             Debug.Log("Dialog UI is set up for 3D world space");
         }
-
-        // Initialize layout components for choices container
         SetupChoicesContainer();
     }
 
     private void SetupChoicesContainer()
     {
         if (choicesContainer == null) return;
-
-        // Get or add VerticalLayoutGroup
         VerticalLayoutGroup layoutGroup = choicesContainer.GetComponent<VerticalLayoutGroup>();
         if (layoutGroup == null)
         {
@@ -95,7 +91,6 @@ public class DialogManager : MonoBehaviour
             layoutGroup.childForceExpandHeight = false;
         }
 
-        // Get or add ContentSizeFitter
         ContentSizeFitter sizeFitter = choicesContainer.GetComponent<ContentSizeFitter>();
         if (sizeFitter == null)
         {
@@ -225,8 +220,6 @@ public class DialogManager : MonoBehaviour
             Debug.LogError("Missing required components for showing choices");
             return;
         }
-
-        // Clean up any existing buttons
         foreach (var btn in new List<GameObject>(currentChoiceButtons))
         {
             if (btn != null && btn != choiceButtonPrefab)
@@ -236,11 +229,9 @@ public class DialogManager : MonoBehaviour
         }
         currentChoiceButtons.Clear();
 
-        // Make sure the container is active and reset
         choicesContainer.SetActive(true);
         choiceButtonPrefab.SetActive(false);
 
-        // Create buttons with automatic layout
         for (int i = 0; i < choices.Count; i++)
         {
             DialogChoice choice = choices[i];
@@ -250,7 +241,7 @@ public class DialogManager : MonoBehaviour
             buttonObj.name = $"ChoiceButton_{i}";
             buttonObj.SetActive(true);
 
-            // First try with DialogChoiceButton script
+
             DialogChoiceButton choiceButton = buttonObj.GetComponent<DialogChoiceButton>();
             if (choiceButton != null)
             {
@@ -258,17 +249,14 @@ public class DialogManager : MonoBehaviour
             }
             else
             {
-                // Fallback to manually setting up the text
+
                 TextMeshProUGUI buttonText = buttonObj.GetComponentInChildren<TextMeshProUGUI>();
                 if (buttonText != null)
                 {
                     buttonText.text = choice.Text;
 
-                    // Configure text settings
                     buttonText.alignment = TextAlignmentOptions.Center;
                     OptimizeButtonText(buttonText, maxButtonWidth);
-
-                    // Get the text rect transform and make sure it fills the button
                     RectTransform textRectTransform = buttonText.GetComponent<RectTransform>();
                     if (textRectTransform != null)
                     {
@@ -280,7 +268,6 @@ public class DialogManager : MonoBehaviour
                     }
                 }
 
-                // Get or add layout elements to button
                 LayoutElement layoutElement = buttonObj.GetComponent<LayoutElement>();
                 if (layoutElement == null)
                 {
@@ -298,7 +285,6 @@ public class DialogManager : MonoBehaviour
                 }
             }
 
-            // Add click handler
             Button button = buttonObj.GetComponent<Button>();
             if (button != null)
             {
@@ -315,7 +301,6 @@ public class DialogManager : MonoBehaviour
             currentChoiceButtons.Add(buttonObj);
         }
 
-        // Force layout rebuild
         LayoutRebuilder.ForceRebuildLayoutImmediate(choicesContainer.GetComponent<RectTransform>());
     }
 
@@ -323,41 +308,33 @@ public class DialogManager : MonoBehaviour
     {
         if (textComponent == null) return;
 
-        // First try without wrapping
         SetWordWrapping(textComponent, false);
 
-        // Get the preferred width
         textComponent.rectTransform.sizeDelta = new Vector2(0, textComponent.rectTransform.sizeDelta.y);
         textComponent.ForceMeshUpdate();
         float preferredWidth = textComponent.preferredWidth;
 
-        // If text is too wide, enable wrapping
         if (preferredWidth > maxWidth)
         {
             SetWordWrapping(textComponent, true);
             textComponent.rectTransform.sizeDelta = new Vector2(maxWidth, textComponent.rectTransform.sizeDelta.y);
 
-            // Update the parent button size to match the wrapped text
             RectTransform buttonRect = textComponent.transform.parent.GetComponent<RectTransform>();
             if (buttonRect != null)
             {
                 buttonRect.sizeDelta = new Vector2(
-                    maxWidth + 20f, // Account for padding
-                    textComponent.preferredHeight + 20f // Account for padding
+                    maxWidth + 20f, 
+                    textComponent.preferredHeight + 20f 
                 );
             }
         }
     }
-
-    // Helper method to handle different TextMeshPro versions
     private void SetWordWrapping(TMP_Text textComponent, bool enableWrapping)
     {
-        // Try to access the textWrappingMode property first through reflection
         var property = typeof(TMP_Text).GetProperty("textWrappingMode");
 
         if (property != null)
         {
-            // TextWrappingMode exists - use the newer API (values: 0=NoWrap, 1=Normal)
             property.SetValue(textComponent, enableWrapping ? 1 : 0);
         }
         else

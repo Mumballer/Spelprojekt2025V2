@@ -17,7 +17,6 @@ public class DialogChoiceButton : MonoBehaviour
     {
         rectTransform = GetComponent<RectTransform>();
 
-        // Add LayoutElement if not exists
         layoutElement = GetComponent<LayoutElement>();
         if (layoutElement == null)
         {
@@ -26,13 +25,11 @@ public class DialogChoiceButton : MonoBehaviour
         layoutElement.minWidth = minWidth;
         layoutElement.minHeight = minHeight;
 
-        // Get the text component if not assigned
         if (buttonText == null)
         {
             buttonText = GetComponentInChildren<TextMeshProUGUI>();
         }
 
-        // Setup ContentSizeFitter
         ContentSizeFitter fitter = GetComponent<ContentSizeFitter>();
         if (fitter == null)
         {
@@ -48,7 +45,6 @@ public class DialogChoiceButton : MonoBehaviour
 
         buttonText.text = text;
 
-        // Get the text rect transform and make sure it's properly set up
         RectTransform textRectTransform = buttonText.GetComponent<RectTransform>();
         if (textRectTransform != null)
         {
@@ -59,7 +55,6 @@ public class DialogChoiceButton : MonoBehaviour
             textRectTransform.offsetMax = new Vector2(-textPadding, -textPadding);
         }
 
-        // Make sure the text has proper settings
         buttonText.alignment = TextAlignmentOptions.Center;
 
 #pragma warning disable CS0618

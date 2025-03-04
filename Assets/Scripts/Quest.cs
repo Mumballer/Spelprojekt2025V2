@@ -76,8 +76,6 @@ public class Quest : ScriptableObject
         {
             _objectives[index].isCompleted = true;
             Debug.Log($"Completed objective {index + 1} for quest: {questName}");
-
-            // Check if all objectives are completed
             CheckQuestCompletion();
         }
     }

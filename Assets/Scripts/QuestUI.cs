@@ -20,10 +20,10 @@ public class QuestUI : MonoBehaviour
     [SerializeField] private Color unselectedTabColor = new Color(0.7f, 0.7f, 0.7f);
 
     [Header("Color Settings")]
-    [SerializeField] private Color inProgressColor = new Color(1f, 0.92f, 0.016f); // Yellow
-    [SerializeField] private Color completedColor = new Color(0f, 0.75f, 0.22f); // Green
+    [SerializeField] private Color inProgressColor = new Color(1f, 0.92f, 0.016f); 
+    [SerializeField] private Color completedColor = new Color(0f, 0.75f, 0.22f); 
     [SerializeField] private Color questTitleColor = Color.white;
-    [SerializeField] private Color questCompletedTitleColor = new Color(0.5f, 0.5f, 0.5f); // Gray
+    [SerializeField] private Color questCompletedTitleColor = new Color(0.5f, 0.5f, 0.5f); 
 
     private List<GameObject> questEntries = new List<GameObject>();
     private bool showingActiveQuests = true;
@@ -151,7 +151,6 @@ public class QuestUI : MonoBehaviour
 
     private void RefreshQuestList(Quest quest = null)
     {
-        // Clear existing entries
         foreach (var entry in questEntries)
         {
             Destroy(entry);
@@ -165,7 +164,6 @@ public class QuestUI : MonoBehaviour
             QuestManager.Instance.GetActiveQuests() :
             QuestManager.Instance.GetCompletedQuests();
 
-        // Show/hide "no quests" message
         if (noQuestsMessage != null)
         {
             noQuestsMessage.SetActive(questsToShow.Count == 0);
@@ -189,7 +187,6 @@ public class QuestUI : MonoBehaviour
             }
             else
             {
-                // Fallback to the old method if QuestEntryUI component is not found
                 SetupQuestEntryManually(entryObj, currentQuest);
             }
 
@@ -199,7 +196,6 @@ public class QuestUI : MonoBehaviour
 
     private void SetupQuestEntryManually(GameObject entryObj, Quest currentQuest)
     {
-        // Setup title
         TextMeshProUGUI questNameText = entryObj.transform.Find("QuestTitleText")?.GetComponent<TextMeshProUGUI>();
         if (questNameText != null)
         {
@@ -210,8 +206,6 @@ public class QuestUI : MonoBehaviour
         {
             Debug.LogWarning("QuestTitleText not found on quest entry prefab");
         }
-
-        // Setup description
         TextMeshProUGUI descriptionText = entryObj.transform.Find("QuestDescriptionText")?.GetComponent<TextMeshProUGUI>();
         if (descriptionText != null)
         {
@@ -221,8 +215,6 @@ public class QuestUI : MonoBehaviour
         {
             Debug.LogWarning("QuestDescriptionText not found on quest entry prefab");
         }
-
-        // Setup objectives with color coding
         TextMeshProUGUI objectivesText = entryObj.transform.Find("QuestObjectivesText")?.GetComponent<TextMeshProUGUI>();
         if (objectivesText != null && currentQuest.Objectives != null)
         {
