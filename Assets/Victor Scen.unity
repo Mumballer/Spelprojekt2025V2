@@ -692,6 +692,7 @@ GameObject:
   - component: {fileID: 632784579}
   - component: {fileID: 632784581}
   - component: {fileID: 632784580}
+  - component: {fileID: 632784582}
   m_Layer: 5
   m_Name: QuestLogPanel
   m_TagString: Untagged
@@ -759,6 +760,31 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 632784578}
   m_CullTransparentMesh: 1
+--- !u!114 &632784582
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 632784578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65b484ac01fd97a43a684d4bfdcb9a5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  questLogPanel: {fileID: 632784578}
+  questListContainer: {fileID: 488108169}
+  questEntryPrefab: {fileID: 534234562}
+  questLogHeaderText: {fileID: 0}
+  noQuestsMessage: {fileID: 0}
+  activeQuestsTab: {fileID: 0}
+  completedQuestsTab: {fileID: 0}
+  selectedTabColor: {r: 1, g: 1, b: 1, a: 1}
+  unselectedTabColor: {r: 0.7, g: 0.7, b: 0.7, a: 1}
+  inProgressColor: {r: 1, g: 0.92, b: 0.016, a: 1}
+  completedColor: {r: 0, g: 0.75, b: 0.22, a: 1}
+  questTitleColor: {r: 1, g: 1, b: 1, a: 1}
+  questCompletedTitleColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
 --- !u!1 &669123400
 GameObject:
   m_ObjectHideFlags: 0
@@ -2791,6 +2817,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: QuestEntryPrefab
       objectReference: {fileID: 0}
+    - target: {fileID: 4299171199234359949, guid: 991c86355eb1c0346a19f9315e5c5fb7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5394579641838032430, guid: 991c86355eb1c0346a19f9315e5c5fb7, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -2877,7 +2907,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8037983847897815780, guid: 991c86355eb1c0346a19f9315e5c5fb7, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -173.00629
+      value: -175
       objectReference: {fileID: 0}
     - target: {fileID: 8037983847897815780, guid: 991c86355eb1c0346a19f9315e5c5fb7, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
