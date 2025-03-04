@@ -6,7 +6,6 @@ public class QuestObjectiveTrigger : MonoBehaviour
     [SerializeField] private int objectiveIndex;
     [SerializeField] private bool autoComplete = false;
     [SerializeField] private float triggerDistance = 3f;
-    [SerializeField] private GameObject interactionPrompt;
     [SerializeField] private KeyCode interactKey = KeyCode.E;
     [SerializeField] private bool destroyAfterCompletion = true;
 
@@ -21,10 +20,7 @@ public class QuestObjectiveTrigger : MonoBehaviour
             playerTransform = player.transform;
         }
 
-        if (interactionPrompt != null)
-        {
-            interactionPrompt.SetActive(false);
-        }
+
     }
 
     private void Update()
@@ -35,10 +31,7 @@ public class QuestObjectiveTrigger : MonoBehaviour
         if (objectiveIndex >= 0 && objectiveIndex < linkedQuest.Objectives.Count &&
             linkedQuest.Objectives[objectiveIndex].isCompleted)
         {
-            if (interactionPrompt != null && interactionPrompt.activeSelf)
-            {
-                interactionPrompt.SetActive(false);
-            }
+
             return;
         }
 
@@ -46,10 +39,7 @@ public class QuestObjectiveTrigger : MonoBehaviour
 
         if (distance <= triggerDistance)
         {
-            if (interactionPrompt != null)
-            {
-                interactionPrompt.SetActive(true);
-            }
+
 
             if (autoComplete && !hasTriggered)
             {
@@ -63,10 +53,7 @@ public class QuestObjectiveTrigger : MonoBehaviour
         }
         else
         {
-            if (interactionPrompt != null)
-            {
-                interactionPrompt.SetActive(false);
-            }
+
 
             if (distance > triggerDistance * 1.5f)
             {
@@ -82,10 +69,6 @@ public class QuestObjectiveTrigger : MonoBehaviour
         {
             QuestManager.Instance.CompleteObjective(linkedQuest, objectiveIndex);
 
-            if (interactionPrompt != null)
-            {
-                interactionPrompt.SetActive(false);
-            }
 
             if (destroyAfterCompletion)
             {

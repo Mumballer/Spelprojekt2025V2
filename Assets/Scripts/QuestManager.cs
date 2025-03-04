@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System;
+using static Quest;
 
 public class QuestManager : MonoBehaviour
 {
@@ -24,6 +25,7 @@ public class QuestManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
     }
+
     private void OnEnable()
     {
         ResetAllQuests();
@@ -82,21 +84,6 @@ public class QuestManager : MonoBehaviour
         }
     }
 
-    public void CompleteObjective(Quest quest, int objectiveIndex)
-    {
-        if (quest == null || !activeQuests.Contains(quest)) return;
-
-        quest.CompleteObjective(objectiveIndex);
-        OnObjectiveCompleted?.Invoke(quest, objectiveIndex);
-
-        if (quest.IsCompleted && activeQuests.Contains(quest))
-        {
-            activeQuests.Remove(quest);
-            completedQuests.Add(quest);
-            OnQuestCompleted?.Invoke(quest);
-        }
-    }
-
     public bool IsQuestActive(Quest quest)
     {
         return quest != null && activeQuests.Contains(quest);
@@ -115,5 +102,45 @@ public class QuestManager : MonoBehaviour
     public List<Quest> GetCompletedQuests()
     {
         return new List<Quest>(completedQuests);
+    }
+
+    public void CompleteObjective(Quest quest, int objectiveIndex)
+    {
+        if (quest == null || objectiveIndex < 0 || objectiveIndex >= quest.Objectives.Count)
+        {
+            Debug.LogWarning("Invalid quest or objective index");
+            return;
+        }
+
+        if (!activeQuests.Contains(quest))
+        {
+            Debug.LogWarning($"Trying to complete objective for inactive quest: {quest.questName}");
+            return;
+        }
+
+        QuestObjective objective = quest.Objectives[objectiveIndex];
+        if (objective.isCompleted)
+        {
+            return; 
+        }
+
+        objective.isCompleted = true;
+
+        OnObjectiveCompleted?.Invoke(quest, objectiveIndex);
+
+        bool allCompleted = true;
+        foreach (var obj in quest.Objectives)
+        {
+            if (!obj.isCompleted)
+            {
+                allCompleted = false;
+                break;
+            }
+        }
+
+        if (allCompleted)
+        {
+            CompleteQuest(quest);
+        }
     }
 }
