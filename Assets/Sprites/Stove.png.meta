@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 5b4866019518278438bc5eb1d17c65f3
+guid: 83788ffc8a267654d8b603988cc34aa3
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -34,7 +34,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -72,7 +72,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -97,13 +97,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: SOFACKING 2_0
+      name: Stove_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 2339
+        y: 1754
         width: 1240
-        height: 1169
+        height: 1754
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -112,20 +112,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 35d3fe8bf372d3f45a8378bc1aec5003
-      internalID: -1347683896
+      spriteID: cdf0e6528856c6e4b96ffbd48b79722d
+      internalID: -2113832517
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SOFACKING 2_1
+      name: Stove_1
       rect:
         serializedVersion: 2
         x: 1240
-        y: 2339
+        y: 1754
         width: 1240
-        height: 1169
+        height: 1754
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -134,42 +134,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 21c860f382c406b4a8a53a2fa5088543
-      internalID: 1995405642
+      spriteID: ca57fb4026a862f4dad63c4d2840eac5
+      internalID: 1947107565
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SOFACKING 2_2
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 1170
-        width: 1240
-        height: 1169
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 0382d5e76e8c45a45a92d73e1a6946ff
-      internalID: -363346722
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: SOFACKING 2_3
+      name: Stove_2
       rect:
         serializedVersion: 2
         x: 1240
-        y: 1170
+        y: 0
         width: 1240
-        height: 1169
+        height: 1754
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -178,52 +156,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: afcacca6e470b6e43a9efb9c6b09d787
-      internalID: 1411508117
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: SOFACKING 2_4
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 1
-        width: 1240
-        height: 1169
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: c37b11a22b2dcac408660a9fd63e5253
-      internalID: -961412221
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: SOFACKING 2_5
-      rect:
-        serializedVersion: 2
-        x: 1240
-        y: 1
-        width: 1240
-        height: 1169
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 517abf17151139e419a42d2a6d015ee0
-      internalID: 20281931
+      spriteID: 47ef5314d206b384e9c9eba99168ee89
+      internalID: -1330805578
       vertices: []
       indices: 
       edges: []
@@ -232,7 +166,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: bd9f751e3cc55dc4abe4fd1375b41f87
+    spriteID: a530d1bfa8439b14fb3c26628e590a21
     internalID: 0
     vertices: []
     indices: 
@@ -242,12 +176,9 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      SOFACKING 2_0: -1347683896
-      SOFACKING 2_1: 1995405642
-      SOFACKING 2_2: -363346722
-      SOFACKING 2_3: 1411508117
-      SOFACKING 2_4: -961412221
-      SOFACKING 2_5: 20281931
+      Stove_0: -2113832517
+      Stove_1: 1947107565
+      Stove_2: -1330805578
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
