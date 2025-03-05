@@ -22,7 +22,7 @@ public class DialogManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI characterNameText;
     [SerializeField] private RectTransform portraitFrame;
     [SerializeField] private float defaultPortraitSize = 100f;
-    [SerializeField] private Vector2 defaultPortraitOffset = new Vector2(20f, -20f);
+    [SerializeField] private Vector2 defaultPortraitOffset = Vector2.zero;
 
     [Header("3D Settings")]
     [SerializeField] private float interactionDistance = 3f;
@@ -198,14 +198,29 @@ public class DialogManager : MonoBehaviour
             portraitImage.sprite = dialogLine.Character.portraitSprite;
             characterNameText.text = dialogLine.Character.characterName;
 
-            // Apply character-specific portrait settings
+            // Only adjust the portrait frame/image, not the container
             if (portraitFrame != null)
             {
                 float size = dialogLine.Character.portraitSize > 0 ? dialogLine.Character.portraitSize : defaultPortraitSize;
                 Vector2 offset = dialogLine.Character.portraitOffset != Vector2.zero ? dialogLine.Character.portraitOffset : defaultPortraitOffset;
 
+                // Set the portrait image size
                 portraitFrame.sizeDelta = new Vector2(size, size);
                 portraitFrame.anchoredPosition = offset;
+
+                // Ensure the portrait image is centered within its frame
+                RectTransform imageRect = portraitImage.GetComponent<RectTransform>();
+                if (imageRect != null && imageRect != portraitFrame)
+                {
+                    imageRect.anchorMin = new Vector2(0.5f, 0.5f);
+                    imageRect.anchorMax = new Vector2(0.5f, 0.5f);
+                    imageRect.pivot = new Vector2(0.5f, 0.5f);
+                    imageRect.anchoredPosition = Vector2.zero;
+                    imageRect.sizeDelta = new Vector2(size, size);
+                }
+
+                // Log for debugging
+                Debug.Log($"Setting portrait for {dialogLine.Character.characterName}: Size={size}, Offset={offset}");
             }
         }
         else

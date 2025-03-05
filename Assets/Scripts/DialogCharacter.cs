@@ -9,6 +9,6 @@ public class DialogCharacter : ScriptableObject
     [Header("Portrait Settings")]
     [Tooltip("Size of the portrait in UI units")]
     public float portraitSize = 100f;
-    [Tooltip("Offset position of the portrait")]
-    public Vector2 portraitOffset = new Vector2(20f, -20f);
+    [Tooltip("Offset position of the portrait within the container")]
+    public Vector2 portraitOffset = Vector2.zero;
 }
