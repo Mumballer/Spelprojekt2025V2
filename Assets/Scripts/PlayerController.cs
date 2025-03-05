@@ -14,6 +14,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float lookUpLimit = 80f;
     [SerializeField] private float lookDownLimit = 80f;
 
+    [Header("Item Interaction")]
+    [SerializeField] private Transform itemHoldPoint;
+    [SerializeField] private float interactionDistance = 3f;
+    [SerializeField] private LayerMask interactableLayers;
+
     private CharacterController controller;
     private Vector3 velocity;
     private bool isGrounded;
@@ -42,6 +47,25 @@ public class PlayerController : MonoBehaviour
                 cameraTransform = mainCamera.transform;
         }
 
+        // Create item hold point if it doesn't exist
+        if (itemHoldPoint == null)
+        {
+            GameObject holdPoint = new GameObject("ItemHoldPoint");
+            itemHoldPoint = holdPoint.transform;
+            itemHoldPoint.SetParent(transform);
+
+            // Position it in front of the player camera
+            if (cameraTransform != null)
+            {
+                itemHoldPoint.position = cameraTransform.position + cameraTransform.forward * 0.5f;
+                itemHoldPoint.rotation = cameraTransform.rotation;
+            }
+            else
+            {
+                itemHoldPoint.localPosition = new Vector3(0, 1.5f, 0.5f);
+            }
+        }
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
@@ -56,6 +80,16 @@ public class PlayerController : MonoBehaviour
         }
 
         HandleGravity();
+    }
+
+    private void LateUpdate()
+    {
+        // Update the hold point position
+        if (itemHoldPoint != null && cameraTransform != null)
+        {
+            itemHoldPoint.position = cameraTransform.position + cameraTransform.forward * 0.5f;
+            itemHoldPoint.rotation = cameraTransform.rotation;
+        }
     }
 
     private void HandleCameraRotation()

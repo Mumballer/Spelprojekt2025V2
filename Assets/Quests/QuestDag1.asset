@@ -13,9 +13,19 @@ MonoBehaviour:
   m_Name: QuestDag1
   m_EditorClassIdentifier: 
   questName: Guests are coming!
-  description: 'Set the table by finding '
-  _isActive: 0
+  description: Place the nametags in the right spots.
+  _isActive: 1
   _isCompleted: 0
   _objectives:
-  - description: Find and place silverware and plates.
+  - description: Calvin
+    isCompleted: 0
+  - description: Emma
+    isCompleted: 0
+  - description: Susan
+    isCompleted: 0
+  - description: Nico
+    isCompleted: 0
+  - description: Lisa
+    isCompleted: 0
+  - description: Luca
     isCompleted: 0

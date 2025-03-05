@@ -30,6 +30,17 @@ public class QuestManager : MonoBehaviour
     {
         ResetAllQuests();
     }
+    public void NotifyQuestCompleted(Quest quest)
+    {
+        // Handle quest completion logic
+        Debug.Log($"QuestManager notified of quest completion: {quest.questName}");
+
+        // If you have an event for quest completion, invoke it here
+        if (OnQuestCompleted != null)
+        {
+            OnQuestCompleted.Invoke(quest);
+        }
+    }
 
     public void ResetAllQuests()
     {
