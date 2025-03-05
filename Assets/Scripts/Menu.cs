@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Menu : MonoBehaviour
 {
@@ -16,6 +17,12 @@ public class Menu : MonoBehaviour
     public void QuitGame()
     {
         Application.Quit();
+    }
+
+    public void Back()
+    {
+        int loadPrevious = PlayerPrefs.GetInt("Menu");
+        Application.LoadLevel(loadPrevious);
     }
 
 
