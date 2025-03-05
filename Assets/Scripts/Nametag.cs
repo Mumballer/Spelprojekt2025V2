@@ -1,186 +1,154 @@
 using UnityEngine;
+using System.Collections;
 
 public class NameTag : MonoBehaviour
 {
     [Header("Nametag Settings")]
     [SerializeField] private string guestName;
-    [SerializeField] private string tagID; // This should match the chair's tagID
-    [SerializeField] private bool isPickedUp = false;
-    [SerializeField] private GameObject visualModel;
-    [SerializeField] private GameObject interactionPrompt;
+    [SerializeField] private Transform originalParent;
+    [SerializeField] private Vector3 originalPosition;
+    [SerializeField] private Quaternion originalRotation;
 
-    [Header("Effects")]
+    [Header("Interaction Settings")]
+    [SerializeField] private GameObject promptText;
+    [SerializeField] private float interactionDistance = 3f;
+
+    [Header("Sound Effects")]
     [SerializeField] private AudioClip pickupSound;
     [SerializeField] private AudioClip placeSound;
-    [SerializeField] private GameObject pickupEffect;
 
-    private Vector3 originalPosition;
-    private Quaternion originalRotation;
-    private Transform playerHoldPoint;
+    private bool isPickedUp = false;
     private AudioSource audioSource;
+    private Rigidbody rb;
+    private Collider col;
 
-    public string TagID => tagID;
-    public string GuestName => guestName;
     public bool IsPickedUp => isPickedUp;
+    public string GuestName => guestName;
 
     private void Awake()
     {
-        originalPosition = transform.position;
-        originalRotation = transform.rotation;
+        // Store original position and parent
+        originalParent = transform.parent;
+        originalPosition = transform.localPosition;
+        originalRotation = transform.localRotation;
+
+        // Get components
+        rb = GetComponent<Rigidbody>();
+        col = GetComponent<Collider>();
+        audioSource = GetComponent<AudioSource>();
 
         if (audioSource == null && (pickupSound != null || placeSound != null))
         {
             audioSource = gameObject.AddComponent<AudioSource>();
-            audioSource.spatialBlend = 1.0f; // 3D sound
-            audioSource.volume = 0.7f;
-        }
-
-        if (interactionPrompt != null)
-        {
-            interactionPrompt.SetActive(false);
-        }
-
-        if (pickupEffect != null)
-        {
-            pickupEffect.SetActive(false);
+            audioSource.playOnAwake = false;
+            audioSource.spatialBlend = 1f; // 3D sound
         }
     }
 
     private void Start()
     {
-        // Find the player's hold point
-        PlayerController player = FindFirstObjectByType<PlayerController>();
-        if (player != null)
+        if (promptText != null)
         {
-            // Try to find an existing hold point
-            playerHoldPoint = player.transform.Find("ItemHoldPoint");
-
-            // If no hold point exists, create one
-            if (playerHoldPoint == null)
-            {
-                GameObject holdPointObj = new GameObject("ItemHoldPoint");
-                playerHoldPoint = holdPointObj.transform;
-                playerHoldPoint.SetParent(player.transform);
-
-                // Position it in front of the player camera
-                Camera playerCamera = Camera.main;
-                if (playerCamera != null)
-                {
-                    playerHoldPoint.position = playerCamera.transform.position +
-                                              playerCamera.transform.forward * 0.5f;
-                    playerHoldPoint.rotation = playerCamera.transform.rotation;
-                }
-                else
-                {
-                    playerHoldPoint.localPosition = new Vector3(0, 1.5f, 0.5f);
-                }
-
-                Debug.Log("Created ItemHoldPoint for player");
-            }
-        }
-        else
-        {
-            Debug.LogWarning("No PlayerController found in scene");
+            promptText.SetActive(false);
         }
     }
 
-    private void Update()
+    public void ShowPrompt(bool show)
     {
-        if (isPickedUp && playerHoldPoint != null)
+        if (promptText != null)
         {
-            // Keep the nametag at the player's hold point
-            transform.position = playerHoldPoint.position;
-            transform.rotation = playerHoldPoint.rotation;
+            promptText.SetActive(show);
         }
     }
 
-    public void ShowInteractionPrompt(bool show)
-    {
-        if (interactionPrompt != null)
-        {
-            interactionPrompt.SetActive(show);
-        }
-    }
-
-    public void PickUp()
+    public void PickUp(Transform holdPoint)
     {
         if (isPickedUp) return;
 
         isPickedUp = true;
 
-        // Disable collider while held
-        Collider col = GetComponent<Collider>();
+        // Disable physics
+        if (rb != null)
+        {
+            rb.isKinematic = true;
+        }
+
+        // Disable collider to prevent clipping
         if (col != null)
         {
             col.enabled = false;
         }
 
+        // Parent to the hold point
+        transform.SetParent(holdPoint);
+        transform.localPosition = Vector3.zero;
+        transform.localRotation = Quaternion.identity;
+
         // Play sound
         if (audioSource != null && pickupSound != null)
         {
-            audioSource.PlayOneShot(pickupSound);
+            audioSource.clip = pickupSound;
+            audioSource.Play();
         }
 
-        // Show effect
-        if (pickupEffect != null)
+        // Hide prompt
+        ShowPrompt(false);
+
+        // Notify the manager - use the NotifyNameTagPickup method instead
+        if (NameTagManager.Instance != null)
         {
-            pickupEffect.SetActive(true);
-            Invoke(nameof(HidePickupEffect), 1.5f);
-        }
-
-        // Notify the nametag manager
-        NameTagManager.Instance?.OnNameTagPickedUp(this);
-
-        Debug.Log($"Picked up {guestName}'s nametag");
-    }
-
-    private void HidePickupEffect()
-    {
-        if (pickupEffect != null)
-        {
-            pickupEffect.SetActive(false);
+            NameTagManager.Instance.NotifyNameTagPickup(this);
         }
     }
 
-    public void Place(Transform placeTransform)
+    public void Place(Transform spot)
     {
         if (!isPickedUp) return;
 
         isPickedUp = false;
 
-        // Position at the placement point
-        transform.position = placeTransform.position;
-        transform.rotation = placeTransform.rotation;
+        // Parent to the placement spot
+        transform.SetParent(spot);
+        transform.localPosition = Vector3.zero;
+        transform.localRotation = Quaternion.identity;
 
-        // Re-enable collider
-        Collider col = GetComponent<Collider>();
+        // Enable collider again
         if (col != null)
         {
             col.enabled = true;
         }
+
+        // Keep rigidbody kinematic to prevent it from falling
 
         // Play sound
         if (audioSource != null && placeSound != null)
         {
-            audioSource.PlayOneShot(placeSound);
+            audioSource.clip = placeSound;
+            audioSource.Play();
         }
-
-        Debug.Log($"Placed {guestName}'s nametag");
     }
 
-    public void ReturnToOriginalPosition()
+    public void Reset()
     {
+        if (!isPickedUp) return;
+
         isPickedUp = false;
-        transform.position = originalPosition;
-        transform.rotation = originalRotation;
+
+        // Re-enable physics
+        if (rb != null)
+        {
+            rb.isKinematic = false;
+        }
 
         // Re-enable collider
-        Collider col = GetComponent<Collider>();
         if (col != null)
         {
             col.enabled = true;
         }
 
-        Debug.Log($"Returned {guestName}'s nametag to original position");
+        // Return to original position
+        transform.SetParent(originalParent);
+        transform.localPosition = originalPosition;
+        transform.localRotation = originalRotation;
     }
 }

@@ -4,10 +4,8 @@ public class ChairNameTagSpot : MonoBehaviour
 {
     [Header("Chair Settings")]
     [SerializeField] private string chairOwner;
-    [SerializeField] private string tagID; // This should match the nametag's tagID
     [SerializeField] private Transform placementPoint;
     [SerializeField] private GameObject interactionPrompt;
-    [SerializeField] private GameObject correctPlacementEffect;
 
     [Header("Quest Integration")]
     [SerializeField] private Quest relatedQuest;
@@ -16,7 +14,6 @@ public class ChairNameTagSpot : MonoBehaviour
     private bool hasNameTag = false;
     private NameTag currentNameTag = null;
 
-    public string TagID => tagID;
     public bool HasNameTag => hasNameTag;
     public string ChairOwner => chairOwner;
 
@@ -31,18 +28,22 @@ public class ChairNameTagSpot : MonoBehaviour
         {
             interactionPrompt.SetActive(false);
         }
-
-        if (correctPlacementEffect != null)
-        {
-            correctPlacementEffect.SetActive(false);
-        }
     }
 
     public void ShowInteractionPrompt(bool show)
     {
-        if (interactionPrompt != null && !hasNameTag)
+        if (interactionPrompt != null)
         {
-            interactionPrompt.SetActive(show);
+            // Only show prompt if we don't already have a nametag
+            if (show && !hasNameTag)
+            {
+                interactionPrompt.SetActive(true);
+            }
+            else
+            {
+                // Always hide when requested
+                interactionPrompt.SetActive(false);
+            }
         }
     }
 
@@ -55,17 +56,17 @@ public class ChairNameTagSpot : MonoBehaviour
         hasNameTag = true;
         currentNameTag = nameTag;
 
-        // Check if it's the correct nametag
-        bool isCorrect = nameTag.TagID == tagID;
+        // Hide the interaction prompt since we now have a nametag
+        if (interactionPrompt != null)
+        {
+            interactionPrompt.SetActive(false);
+        }
+
+        // Check if it's the correct nametag by comparing tags
+        bool isCorrect = nameTag.gameObject.tag == gameObject.tag;
 
         if (isCorrect)
         {
-            // Show success effect
-            if (correctPlacementEffect != null)
-            {
-                correctPlacementEffect.SetActive(true);
-            }
-
             // Complete quest objective if applicable
             if (relatedQuest != null)
             {
@@ -80,9 +81,7 @@ public class ChairNameTagSpot : MonoBehaviour
         {
             // Notify the manager of incorrect placement
             NameTagManager.Instance?.OnIncorrectNameTagPlaced(this, nameTag);
-
-            // You could add a hint or feedback here
-            Debug.Log($"Incorrect nametag placed at {chairOwner}'s spot. Expected {tagID}, got {nameTag.TagID}");
+            Debug.Log($"Incorrect nametag placed at {chairOwner}'s spot. Expected {gameObject.tag}, got {nameTag.gameObject.tag}");
         }
 
         return true;
@@ -91,14 +90,7 @@ public class ChairNameTagSpot : MonoBehaviour
     public void RemoveNameTag()
     {
         if (!hasNameTag || currentNameTag == null) return;
-
         hasNameTag = false;
-
-        if (correctPlacementEffect != null)
-        {
-            correctPlacementEffect.SetActive(false);
-        }
-
         currentNameTag = null;
     }
 
@@ -109,7 +101,6 @@ public class ChairNameTagSpot : MonoBehaviour
         Vector3 position = placementPoint != null ? placementPoint.position : transform.position;
         Gizmos.DrawWireSphere(position, 0.1f);
 
-        // Draw text for the chair owner
 #if UNITY_EDITOR
         if (!string.IsNullOrEmpty(chairOwner))
         {

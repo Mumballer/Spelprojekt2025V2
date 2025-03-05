@@ -1,33 +1,37 @@
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.Generic;
+using System.Collections;
 using System;
 
 public class NameTagManager : MonoBehaviour
 {
-    public static NameTagManager Instance { get; private set; }
+    [Header("References")]
+    [SerializeField] private Transform playerHoldPoint;
+    [SerializeField] private LayerMask nametagLayer;
+    [SerializeField] private float interactionDistance = 3f;
+    [SerializeField] private KeyCode interactKey = KeyCode.E;
 
     [Header("Settings")]
-    [SerializeField] private float interactionDistance = 2f;
-    [SerializeField] private LayerMask interactableLayers;
-    [SerializeField] private bool requireCorrectPlacement = true;
-    [SerializeField] private bool allowRemovingPlacedTags = true;
+    [SerializeField] private bool autoPickUpCorrectNametags = false;
 
     [Header("Quest Integration")]
-    [SerializeField] private Quest nameTagQuest;
-    [SerializeField] private bool completeQuestWhenAllPlaced = true;
+    [SerializeField] private Quest relatedQuest;
+    [SerializeField] private int objectiveIndex;
+    [SerializeField] private bool completeQuestWhenAllPlaced = false;
 
-    [Header("UI")]
-    [SerializeField] private GameObject nameTagHintUI;
+    // Events for UI
+    public event Action<int, int> OnProgressUpdated;    // Progress (current, total)
+    public event Action<NameTag> OnNameTagPickup;       // When player picks up a nametag
+    public event Action<ChairNameTagSpot, NameTag, bool> OnNameTagPlaced;  // When nametag is placed (spot, tag, isCorrect)
 
-    // Events
-    public event Action<NameTag> OnNameTagPickup;
-    public event Action<ChairNameTagSpot, NameTag, bool> OnNameTagPlaced;
-    public event Action<int, int> OnProgressUpdated; // current, total
-
-    private List<NameTag> allNameTags = new List<NameTag>();
-    private List<ChairNameTagSpot> allChairSpots = new List<ChairNameTagSpot>();
-    private NameTag currentlyHeldNameTag = null;
+    private NameTag currentNameTag = null;
+    private bool canInteract = true;
     private Camera mainCamera;
+    private List<ChairNameTagSpot> allChairSpots = new List<ChairNameTagSpot>();
+    private int correctPlacementCount = 0;
+    private ChairNameTagSpot currentlyLookingAt = null;
+
+    public static NameTagManager Instance { get; private set; }
 
     private void Awake()
     {
@@ -36,202 +40,226 @@ public class NameTagManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+
         Instance = this;
 
         mainCamera = Camera.main;
+
+        if (playerHoldPoint == null)
+        {
+            PlayerController player = FindAnyObjectByType<PlayerController>();
+            if (player != null)
+            {
+                Transform cameraTransform = player.transform.Find("Camera") ?? mainCamera?.transform;
+                GameObject holdPoint = new GameObject("NameTagHoldPoint");
+                playerHoldPoint = holdPoint.transform;
+                playerHoldPoint.SetParent(cameraTransform);
+                playerHoldPoint.localPosition = new Vector3(0, 0, 0.5f);
+            }
+        }
+
+        // Find all chair spots in the scene
+        ChairNameTagSpot[] spots = FindObjectsOfType<ChairNameTagSpot>();
+        allChairSpots.AddRange(spots);
     }
 
     private void Start()
     {
-        // Find all nametags and chair spots in the scene using the non-deprecated method
-        allNameTags.AddRange(FindObjectsByType<NameTag>(FindObjectsSortMode.None));
-        allChairSpots.AddRange(FindObjectsByType<ChairNameTagSpot>(FindObjectsSortMode.None));
-
-        Debug.Log($"Found {allNameTags.Count} nametags and {allChairSpots.Count} chair spots");
-
-        // Show/hide the hint UI
-        if (nameTagHintUI != null)
-        {
-            nameTagHintUI.SetActive(false);
-        }
+        // Make sure all prompts are hidden initially
+        HideAllInteractionPrompts();
     }
 
     private void Update()
     {
-        // Don't process interactions if dialog is active
-        if (DialogManager.Instance != null && DialogManager.Instance.IsDialogActive)
-            return;
+        if (!canInteract) return;
 
-        HandleInteraction();
-        UpdatePrompts();
-
-        // Show/hide hint UI based on whether we're holding a nametag
-        if (nameTagHintUI != null)
+        if (Input.GetKeyDown(interactKey))
         {
-            nameTagHintUI.SetActive(currentlyHeldNameTag != null);
-        }
-    }
-
-    private void HandleInteraction()
-    {
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            if (currentlyHeldNameTag != null)
+            if (currentNameTag == null)
             {
-                // Try to place the held nametag
-                TryPlaceHeldNameTag();
+                TryPickUpNameTag();
             }
             else
             {
-                // Try to pick up a nametag
-                TryPickupNameTag();
+                TryPlaceNameTag();
+            }
+        }
+
+        // Only update look target if we're holding a nametag
+        if (currentNameTag != null)
+        {
+            UpdateLookTarget();
+        }
+        else if (currentlyLookingAt != null)
+        {
+            // If we're not holding a nametag but still have a cached reference, clear it
+            currentlyLookingAt.ShowInteractionPrompt(false);
+            currentlyLookingAt = null;
+        }
+    }
+
+    // Method to update what we're looking at
+    private void UpdateLookTarget()
+    {
+        if (mainCamera == null) return;
+
+        // Hide the previous target's prompt
+        if (currentlyLookingAt != null)
+        {
+            currentlyLookingAt.ShowInteractionPrompt(false);
+            currentlyLookingAt = null;
+        }
+
+        // Only continue if we're holding a nametag
+        if (currentNameTag == null) return;
+
+        Ray ray = mainCamera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, interactionDistance))
+        {
+            ChairNameTagSpot spot = hit.collider.GetComponent<ChairNameTagSpot>();
+
+            if (spot != null && !spot.HasNameTag)
+            {
+                // We're looking at a valid chair spot
+                currentlyLookingAt = spot;
+                spot.ShowInteractionPrompt(true);
             }
         }
     }
 
-    private void TryPickupNameTag()
+    private void TryPickUpNameTag()
     {
         if (mainCamera == null) return;
 
         Ray ray = mainCamera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
-        if (Physics.Raycast(ray, out RaycastHit hit, interactionDistance, interactableLayers))
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, interactionDistance, nametagLayer))
         {
             NameTag nameTag = hit.collider.GetComponent<NameTag>();
             if (nameTag != null && !nameTag.IsPickedUp)
             {
-                nameTag.PickUp();
-                currentlyHeldNameTag = nameTag;
-                OnNameTagPickup?.Invoke(nameTag);
+                // Pick up the nametag
+                nameTag.PickUp(playerHoldPoint);
+                currentNameTag = nameTag;
+
+                // Notify listeners
+                NotifyNameTagPickup(nameTag);
             }
         }
     }
 
-    private void TryPlaceHeldNameTag()
+    private void TryPlaceNameTag()
     {
-        if (mainCamera == null || currentlyHeldNameTag == null) return;
+        if (mainCamera == null || currentNameTag == null) return;
 
         Ray ray = mainCamera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
-        if (Physics.Raycast(ray, out RaycastHit hit, interactionDistance, interactableLayers))
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, interactionDistance))
         {
-            ChairNameTagSpot chairSpot = hit.collider.GetComponent<ChairNameTagSpot>();
-            if (chairSpot != null && !chairSpot.HasNameTag)
+            ChairNameTagSpot spot = hit.collider.GetComponent<ChairNameTagSpot>();
+
+            if (spot != null && !spot.HasNameTag)
             {
-                bool placed = chairSpot.TryPlaceNameTag(currentlyHeldNameTag);
-                if (placed)
+                bool success = spot.TryPlaceNameTag(currentNameTag);
+                if (success)
                 {
-                    currentlyHeldNameTag = null;
-                    UpdateQuestProgress();
+                    // Check if it's the correct spot (matching tags)
+                    bool isCorrect = currentNameTag.gameObject.tag == spot.gameObject.tag;
+
+                    // Trigger UI event
+                    OnNameTagPlaced?.Invoke(spot, currentNameTag, isCorrect);
+
+                    // Hide all chair interaction prompts
+                    HideAllInteractionPrompts();
+
+                    currentNameTag = null;
                 }
+            }
+            else
+            {
+                // Player tried to place it somewhere invalid - return to original position
+                currentNameTag.Reset();
+                currentNameTag = null;
+
+                // Hide all interaction prompts
+                HideAllInteractionPrompts();
             }
         }
         else
         {
-            // If not pointing at a chair, drop the nametag back at its original position
-            currentlyHeldNameTag.ReturnToOriginalPosition();
-            currentlyHeldNameTag = null;
+            // Player tried to place it in thin air - return to original position
+            currentNameTag.Reset();
+            currentNameTag = null;
+
+            // Hide all interaction prompts
+            HideAllInteractionPrompts();
         }
     }
 
-    private void UpdatePrompts()
+    // Helper method to hide all interaction prompts
+    private void HideAllInteractionPrompts()
     {
-        if (mainCamera == null) return;
-
-        // Hide all prompts first
-        foreach (var nameTag in allNameTags)
-        {
-            if (nameTag != null)
-                nameTag.ShowInteractionPrompt(false);
-        }
-
+        // Hide all interaction prompts for chair spots
         foreach (var chairSpot in allChairSpots)
         {
-            if (chairSpot != null)
-                chairSpot.ShowInteractionPrompt(false);
+            chairSpot.ShowInteractionPrompt(false);
         }
 
-        // If holding a nametag, show prompts for chairs
-        if (currentlyHeldNameTag != null)
+        // Reset the currently looking at reference
+        currentlyLookingAt = null;
+    }
+
+    public void OnCorrectNameTagPlaced(ChairNameTagSpot spot, NameTag nameTag)
+    {
+        correctPlacementCount++;
+        Debug.Log($"Correct placement! {correctPlacementCount}/{allChairSpots.Count} placed correctly");
+
+        // Update progress
+        OnProgressUpdated?.Invoke(correctPlacementCount, allChairSpots.Count);
+
+        // Hide all interaction prompts
+        HideAllInteractionPrompts();
+
+        // Check if all nametags are correctly placed
+        if (completeQuestWhenAllPlaced && correctPlacementCount >= allChairSpots.Count)
         {
-            Ray ray = mainCamera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
-            if (Physics.Raycast(ray, out RaycastHit hit, interactionDistance, interactableLayers))
+            Debug.Log("All nametags correctly placed!");
+
+            if (relatedQuest != null)
             {
-                ChairNameTagSpot chairSpot = hit.collider.GetComponent<ChairNameTagSpot>();
-                if (chairSpot != null && !chairSpot.HasNameTag)
+                relatedQuest.CompleteObjective(objectiveIndex);
+
+                // Optionally complete the entire quest
+                if (completeQuestWhenAllPlaced)
                 {
-                    chairSpot.ShowInteractionPrompt(true);
-                }
-            }
-        }
-        else
-        {
-            // If not holding a nametag, show prompts for nametags
-            Ray ray = mainCamera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
-            if (Physics.Raycast(ray, out RaycastHit hit, interactionDistance, interactableLayers))
-            {
-                NameTag nameTag = hit.collider.GetComponent<NameTag>();
-                if (nameTag != null && !nameTag.IsPickedUp)
-                {
-                    nameTag.ShowInteractionPrompt(true);
+                    relatedQuest.CompleteQuest();
                 }
             }
         }
     }
 
-    public void OnNameTagPickedUp(NameTag nameTag)
+    public void OnIncorrectNameTagPlaced(ChairNameTagSpot spot, NameTag nameTag)
     {
-        // This is called by the NameTag when it's picked up
+        Debug.Log("Incorrect nametag placement!");
+
+        // Notify UI but keep the nametag where it is
+        OnNameTagPlaced?.Invoke(spot, nameTag, false);
+
+        // Hide all interaction prompts
+        HideAllInteractionPrompts();
+
+        // Make sure we can interact immediately 
+        canInteract = true;
+    }
+
+    // Method to allow other classes to notify about nametag pickup
+    public void NotifyNameTagPickup(NameTag nameTag)
+    {
+        // Invoke the event from within the NameTagManager class
         OnNameTagPickup?.Invoke(nameTag);
-    }
-
-    public void OnCorrectNameTagPlaced(ChairNameTagSpot chairSpot, NameTag nameTag)
-    {
-        // This is called by the ChairNameTagSpot when a correct nametag is placed
-        OnNameTagPlaced?.Invoke(chairSpot, nameTag, true);
-        UpdateQuestProgress();
-    }
-
-    public void OnIncorrectNameTagPlaced(ChairNameTagSpot chairSpot, NameTag nameTag)
-    {
-        // This is called by the ChairNameTagSpot when an incorrect nametag is placed
-        OnNameTagPlaced?.Invoke(chairSpot, nameTag, false);
-
-        // If we require correct placement, return the nametag to its original position
-        if (requireCorrectPlacement)
-        {
-            nameTag.ReturnToOriginalPosition();
-            chairSpot.RemoveNameTag();
-        }
-    }
-
-    private void UpdateQuestProgress()
-    {
-        // Count correctly placed nametags
-        int correctlyPlaced = 0;
-        int total = allChairSpots.Count;
-
-        foreach (var chairSpot in allChairSpots)
-        {
-            if (chairSpot != null && chairSpot.HasNameTag)
-            {
-                correctlyPlaced++;
-            }
-        }
-
-        OnProgressUpdated?.Invoke(correctlyPlaced, total);
-
-        // Check if all nametags are placed correctly
-        if (correctlyPlaced == total && completeQuestWhenAllPlaced && nameTagQuest != null)
-        {
-            // Complete the entire quest using the Quest ScriptableObject
-            nameTagQuest.CompleteQuest();
-            Debug.Log($"All nametags placed correctly! Completed quest: {nameTagQuest.questName}");
-
-            // If you have a QuestManager, you can notify it here
-            if (QuestManager.Instance != null)
-            {
-                // Instead of directly accessing the event, call a public method
-                QuestManager.Instance.NotifyQuestCompleted(nameTagQuest);
-            }
-        }
     }
 }
