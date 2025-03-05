@@ -20,6 +20,9 @@ public class DialogManager : MonoBehaviour
     [SerializeField] private GameObject portraitContainer;
     [SerializeField] private Image portraitImage;
     [SerializeField] private TextMeshProUGUI characterNameText;
+    [SerializeField] private RectTransform portraitFrame;
+    [SerializeField] private float defaultPortraitSize = 100f;
+    [SerializeField] private Vector2 defaultPortraitOffset = new Vector2(20f, -20f);
 
     [Header("3D Settings")]
     [SerializeField] private float interactionDistance = 3f;
@@ -194,6 +197,16 @@ public class DialogManager : MonoBehaviour
             portraitContainer.SetActive(true);
             portraitImage.sprite = dialogLine.Character.portraitSprite;
             characterNameText.text = dialogLine.Character.characterName;
+
+            // Apply character-specific portrait settings
+            if (portraitFrame != null)
+            {
+                float size = dialogLine.Character.portraitSize > 0 ? dialogLine.Character.portraitSize : defaultPortraitSize;
+                Vector2 offset = dialogLine.Character.portraitOffset != Vector2.zero ? dialogLine.Character.portraitOffset : defaultPortraitOffset;
+
+                portraitFrame.sizeDelta = new Vector2(size, size);
+                portraitFrame.anchoredPosition = offset;
+            }
         }
         else
         {
