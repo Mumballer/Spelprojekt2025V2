@@ -5,7 +5,7 @@ public class QuestTrigger : MonoBehaviour
     [SerializeField] private Quest questToComplete;
     [SerializeField] private bool autoComplete = false;
     [SerializeField] private float triggerDistance = 3f;
-    [SerializeField] private GameObject interactionPrompt;
+    [SerializeField] public GameObject interactionPrompt;
     [SerializeField] private KeyCode interactKey = KeyCode.E;
 
     private Transform playerTransform;

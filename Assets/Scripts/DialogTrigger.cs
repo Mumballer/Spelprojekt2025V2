@@ -3,12 +3,11 @@ using System.Collections;
 
 public class DialogTrigger : MonoBehaviour
 {
-    // Change from private to public - this solves the accessibility issue
     [SerializeField] public Dialog dialog;
 
     [SerializeField] private bool autoTrigger = false;
-    [SerializeField] private float triggerDistance = 3f;
-    [SerializeField] private GameObject interactionPrompt;
+    [SerializeField] public float triggerDistance = 3f;
+    [SerializeField] public GameObject interactionPrompt;
 
     [Header("Quest Integration")]
     [SerializeField] private Quest questToComplete;
@@ -31,17 +30,22 @@ public class DialogTrigger : MonoBehaviour
             interactionPrompt.SetActive(false);
         }
 
-        // Subscribe to dialog completion if we need to complete a quest
-        if (completeQuestAfterDialog && questToComplete != null && DialogManager.Instance != null)
+        // Subscribe to dialog events to handle prompt visibility
+        if (DialogManager.Instance != null)
         {
+            DialogManager.Instance.OnShowDialog += HidePrompt;
+            DialogManager.Instance.OnHideDialog += CheckShowPrompt;
             DialogManager.Instance.OnDialogComplete += OnDialogCompleted;
         }
     }
 
     private void OnDestroy()
     {
+        // Unsubscribe from events
         if (DialogManager.Instance != null)
         {
+            DialogManager.Instance.OnShowDialog -= HidePrompt;
+            DialogManager.Instance.OnHideDialog -= CheckShowPrompt;
             DialogManager.Instance.OnDialogComplete -= OnDialogCompleted;
         }
     }
@@ -54,6 +58,7 @@ public class DialogTrigger : MonoBehaviour
 
         if (distance <= triggerDistance)
         {
+            // Only show prompt if no dialog is active
             if (interactionPrompt != null && !DialogManager.Instance.IsDialogActive)
             {
                 interactionPrompt.SetActive(true);
@@ -79,10 +84,32 @@ public class DialogTrigger : MonoBehaviour
         }
     }
 
+    // Hide prompt when any dialog starts
+    private void HidePrompt()
+    {
+        if (interactionPrompt != null)
+        {
+            interactionPrompt.SetActive(false);
+        }
+    }
+
+    // Check if we should show prompt when dialog ends
+    private void CheckShowPrompt()
+    {
+        if (playerTransform == null) return;
+
+        float distance = Vector3.Distance(transform.position, playerTransform.position);
+        if (distance <= triggerDistance && interactionPrompt != null)
+        {
+            interactionPrompt.SetActive(true);
+        }
+    }
+
     public void TriggerDialog()
     {
         if (dialog != null && DialogManager.Instance != null && DialogManager.Instance.CanStartDialog())
         {
+            Debug.Log($"Triggering dialog from {gameObject.name}");
             StartCoroutine(DialogManager.Instance.ShowDialog(dialog));
 
             if (interactionPrompt != null)
@@ -90,12 +117,15 @@ public class DialogTrigger : MonoBehaviour
                 interactionPrompt.SetActive(false);
             }
         }
+        else
+        {
+            Debug.LogWarning($"Failed to trigger dialog from {gameObject.name}. Dialog: {(dialog == null ? "null" : "valid")}, DialogManager: {(DialogManager.Instance == null ? "null" : "valid")}, CanStartDialog: {(DialogManager.Instance != null ? DialogManager.Instance.CanStartDialog().ToString() : "N/A")}");
+        }
     }
 
     // Handle quest completion after dialog
-    public void OnDialogCompleted(Dialog completedDialog)
+    private void OnDialogCompleted(Dialog completedDialog)
     {
-        // Now we can directly access dialog since it's public
         if (completedDialog == dialog && completeQuestAfterDialog &&
             questToComplete != null && QuestManager.Instance != null)
         {

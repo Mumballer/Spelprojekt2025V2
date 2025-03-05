@@ -11,7 +11,7 @@ public class InteractableQuestObject : MonoBehaviour
 
     [Header("Interaction Settings")]
     [SerializeField] private float interactionDistance = 5f; // Increased default distance
-    [SerializeField] private string interactionPrompt = "Press E to interact";
+    [SerializeField] public string interactionPrompt = "Press E to interact";
     [SerializeField] private bool debugMode = true; // Enable for troubleshooting
 
     [Header("Optional Settings")]

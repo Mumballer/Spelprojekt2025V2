@@ -126,8 +126,17 @@ public class DialogManager : MonoBehaviour
             DialogTrigger trigger = hit.collider.GetComponent<DialogTrigger>();
             if (trigger != null)
             {
+                Debug.Log($"Found dialog trigger on {hit.collider.gameObject.name}");
                 trigger.TriggerDialog();
             }
+            else
+            {
+                Debug.Log($"No dialog trigger found on {hit.collider.gameObject.name}");
+            }
+        }
+        else
+        {
+            Debug.Log("No interactable object hit by raycast");
         }
     }
 
@@ -141,6 +150,7 @@ public class DialogManager : MonoBehaviour
 
         yield return new WaitForEndOfFrame();
 
+        // Fire the event BEFORE setting IsDialogActive
         OnShowDialog?.Invoke();
         IsDialogActive = true;
 
@@ -447,10 +457,9 @@ public class DialogManager : MonoBehaviour
 
         StartCoroutine(DialogCooldown());
 
-        // Fire existing event
+        // Fire events AFTER setting IsDialogActive to false
         OnHideDialog?.Invoke();
 
-        // Fire new event with the completed dialog
         if (completedDialog != null)
         {
             OnDialogComplete?.Invoke(completedDialog);
