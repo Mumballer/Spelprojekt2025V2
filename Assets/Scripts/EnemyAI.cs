@@ -12,13 +12,12 @@ public class EnemyAI : MonoBehaviour
     public GameObject theEnemy;
     public float normalSpeed = 0.01f;
     public float chaseSpeed = 0.05f;
-    public float StopSpeed = 0f;
     private float enemySpeed;
     public float detectionRange = 10f;
     public LayerMask playerLayer;
     public float animSpeed = 1.0f;
     public float footstepDistance = 5f;
-    public float maxVolume = 10.0f;
+    public float maxVolume = 50f;
     Animation enemyAnimation;
     AudioSource footstepAudio;
     public string walkAnim = "Walk";
@@ -27,8 +26,8 @@ public class EnemyAI : MonoBehaviour
     private bool isJumpscaring = false;
 
     // New variables for chase music and background music
-    public AudioSource Chasemusic;
-    public AudioSource BackgroundMusic;
+    //public AudioSource Chasemusic;
+    //public AudioSource BackgroundMusic;
 
     void Start()
     {
@@ -36,9 +35,9 @@ public class EnemyAI : MonoBehaviour
         enemySpeed = normalSpeed;
         enemyAnimation = theEnemy.GetComponent<Animation>();
         footstepAudio = theEnemy.GetComponent<AudioSource>();
-
+        footstepAudio.spatialBlend = 1f;
         // Ensure chase music is not playing at the start
-        Chasemusic.Stop();
+        //Chasemusic.Stop();
     }
 
     void Update()
@@ -49,43 +48,23 @@ public class EnemyAI : MonoBehaviour
         stalkerAgent.SetDestination(stalkerDes.transform.position);
 
         float distanceToPlayer = Vector3.Distance(transform.position, stalkerDes.transform.position);
-        if (distanceToPlayer <= footstepDistance)
-        {
-            footstepAudio.volume = Mathf.Lerp(0, maxVolume, (footstepDistance - distanceToPlayer) / footstepDistance);
-            //Chasemusic.volume = Mathf.Lerp(0, maxVolume, (footstepDistance - distanceToPlayer) / footstepDistance);
-            if (!footstepAudio.isPlaying)
-            {
-                footstepAudio.Play();
-                Chasemusic.Play();
-                BackgroundMusic.Stop();
-            }
-        }
-        else
-        {
-            footstepAudio.volume = 0;
-            if (footstepAudio.isPlaying)
-            {
-                footstepAudio.Stop();
-                Chasemusic.Stop();
-                BackgroundMusic.Play();
-            }
-        }
+        //HandleFootstepAudio(distanceToPlayer);
 
         if (IsPlayerInSight())
         {
             enemySpeed = chaseSpeed;
             enemyAnimation[runAnim].speed = animSpeed;
-            /*if (!enemyAnimation.IsPlaying(runAnim))
+            if (!enemyAnimation.IsPlaying(runAnim))
             {
                 enemyAnimation.Play(runAnim);
 
 
-            }*/
+            }
         }
         else
         {
             enemySpeed = normalSpeed;
-            //enemyAnimation[walkAnim].speed = animSpeed;
+            enemyAnimation[walkAnim].speed = animSpeed;
             /*if (!enemyAnimation.IsPlaying(walkAnim))
             {
                 enemyAnimation.Play(walkAnim);
@@ -110,8 +89,7 @@ public class EnemyAI : MonoBehaviour
         else
         {
             stalkerAgent.isStopped = true;
-            enemySpeed = StopSpeed;
-            //Wander();
+            Wander();
         }
     }
 
@@ -134,12 +112,41 @@ public class EnemyAI : MonoBehaviour
         return false;
     }
 
+    /*public void HandleFootstepAudio(float distanceToPlayer)
+    {
+        if (distanceToPlayer <= footstepDistance)
+        {
+            // Calculate volume based on distance.
+            float calculatedVolume = Mathf.Lerp(0, maxVolume, (footstepDistance - distanceToPlayer) / footstepDistance);
+
+            // Ensure the volume is being updated correctly.
+            footstepAudio.volume = Mathf.Clamp(calculatedVolume, 0, maxVolume);  // Clamp the volume between 0 and maxVolume
+
+            // Play footstep audio if it's not playing and the volume is above a threshold.
+            if (!footstepAudio.isPlaying && footstepAudio.volume > 0.01f)
+            {
+                footstepAudio.Play();
+            }
+        }
+        else
+        {
+            // Stop the sound if the player is far away.
+            footstepAudio.volume = 0;
+            if (footstepAudio.isPlaying)
+            {
+                footstepAudio.Stop();
+            }
+        }
+    }*/
+
+
+
     public void StartJumpscare()
     {
         isJumpscaring = true;
         footstepAudio.Stop();
-        Chasemusic.Stop();
-        BackgroundMusic.Stop();
+        //Chasemusic.Stop();
+        //BackgroundMusic.Stop();
 
         // Reload the scene after a short delay
         Invoke("ReloadScene", 1f); // 2 second delay for effect (adjust as needed)

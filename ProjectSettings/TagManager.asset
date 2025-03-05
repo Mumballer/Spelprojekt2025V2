@@ -10,11 +10,12 @@ TagManager:
   - Emma
   - Luca
   - Nico
+  - SceneChanger
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Player
+  - player
   - Water
   - UI
   - 
