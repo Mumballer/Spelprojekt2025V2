@@ -11,6 +11,7 @@ TagManager:
   - Luca
   - Nico
   - SceneChanger
+  - Enemy
   layers:
   - Default
   - TransparentFX

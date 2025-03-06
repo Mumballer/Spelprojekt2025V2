@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement; // Add this for scene management
+using UnityEngine.UI;
 
 public class EnemyAI : MonoBehaviour
 {
@@ -23,7 +24,8 @@ public class EnemyAI : MonoBehaviour
     public string walkAnim = "Walk";
     public string runAnim = "Run";
     public Transform player;
-    private bool isJumpscaring = false;
+    //private bool isJumpscaring = false;
+    //public Image JumpscareImage;
 
     // New variables for chase music and background music
     //public AudioSource Chasemusic;
@@ -37,6 +39,7 @@ public class EnemyAI : MonoBehaviour
         enemyAnimation = theEnemy.GetComponent<Animation>();
         footstepAudio = theEnemy.GetComponent<AudioSource>();
         footstepAudio.spatialBlend = 1f;
+        //JumpscareImage.enabled = false;
         
         // Ensure chase music is not playing at the start
         //Chasemusic.Stop();
@@ -44,7 +47,7 @@ public class EnemyAI : MonoBehaviour
 
     void Update()
     {
-        if (isJumpscaring) return;
+        
 
         stalkerAgent.SetDestination(player.position);
         stalkerAgent.SetDestination(stalkerDes.transform.position);
@@ -160,17 +163,25 @@ public class EnemyAI : MonoBehaviour
         
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            StartJumpscare();
+        }
+    }
 
 
     public void StartJumpscare()
     {
-        isJumpscaring = true;
+        //isJumpscaring = true;
+        //JumpscareImage.enabled = true;
         footstepAudio.Stop();
         //Chasemusic.Stop();
         //BackgroundMusic.Stop();
 
         // Reload the scene after a short delay
-        Invoke("ReloadScene", 1f); // 2 second delay for effect (adjust as needed)
+        //Invoke("ReloadScene", 1f); // 2 second delay for effect (adjust as needed)
     }
 
     void ReloadScene()
