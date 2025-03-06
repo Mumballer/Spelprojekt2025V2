@@ -106,6 +106,15 @@ public class QuestDisplayManager : MonoBehaviour
         }
         questEntries.Clear();
 
+        // Clear any leftover entries in the container that might not be tracked
+        foreach (Transform child in questContainer)
+        {
+            if (child.gameObject != noQuestsMessage)
+            {
+                Destroy(child.gameObject);
+            }
+        }
+
         // Create new entries for active quests
         List<Quest> activeQuests = QuestManager.Instance.GetActiveQuests();
 

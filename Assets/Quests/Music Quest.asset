@@ -14,17 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questName: Play the Gramophone Music
   description: Find and play the Gramophone Music on the gramophone.
-  _isActive: 0
-  _isCompleted: 0
-  _objectives:
-  - description: Start playing music on the gramophone
-    isCompleted: 0
-  followUpQuests:
-  - {fileID: 11400000, guid: ce646ed4f8725f947a4807145226f777, type: 2}
-  requiresManualAcceptance: 1
+  questId: 7201dadd-356b-450d-b910-5ed910fb09db
+  objectives: []
   musicName: Gramophone Music
   startMusicObjective: Start playing music on the gramophone
-  stopMusicObjective: Stop the music on the gramophone
+  stopMusicObjective: 
   requireBothStartAndStop: 0
   completeOnMusicStart: 1
-  completeOnMusicStop: 0
+  completeOnMusicStop: 1

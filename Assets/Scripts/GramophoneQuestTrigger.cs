@@ -13,13 +13,12 @@ public class GramophoneQuestTrigger : MonoBehaviour
 
     [Header("Quest Settings")]
     [SerializeField] private Quest musicQuest;
-    [SerializeField] private int startMusicObjectiveIndex = 0;
-    [SerializeField] private int stopMusicObjectiveIndex = 1;
+    [SerializeField] private int musicObjectiveIndex = 0;
 
     private bool playerInRange = false;
     private bool canInteract = true;
     private Camera mainCamera;
-    private bool musicQuestActivated = false;
+    private bool questCompleted = false;
 
     private void Start()
     {
@@ -70,28 +69,23 @@ public class GramophoneQuestTrigger : MonoBehaviour
         {
             gramophone.ToggleMusic();
 
-            // MUSIC QUEST ONLY - don't affect other quests
-            if (musicQuest != null && QuestManager.Instance != null)
+            // Complete the quest when the gramophone is interacted with
+            if (musicQuest != null && QuestManager.Instance != null && !questCompleted)
             {
-                // First time interacting with gramophone, add the quest
-                if (!musicQuestActivated && !QuestManager.Instance.IsQuestActive(musicQuest) &&
-                    !QuestManager.Instance.GetCompletedQuests().Contains(musicQuest))
+                // If quest is not active yet, add it
+                if (!QuestManager.Instance.IsQuestActive(musicQuest) &&
+                    !QuestManager.Instance.IsQuestCompleted(musicQuest))
                 {
-                    Debug.Log($"Activated music quest: {musicQuest.questName}");
+                    Debug.Log($"Activated gramophone quest: {musicQuest.questName}");
                     QuestManager.Instance.AddQuest(musicQuest);
-                    musicQuestActivated = true;
                 }
 
-                // Complete specific objectives based on gramophone state
-                if (gramophone.IsPlaying && QuestManager.Instance.IsQuestActive(musicQuest))
+                // Complete the objective
+                if (QuestManager.Instance.IsQuestActive(musicQuest))
                 {
-                    Debug.Log($"Music quest only: Completing start music objective");
-                    QuestManager.Instance.CompleteObjective(musicQuest, startMusicObjectiveIndex);
-                }
-                else if (!gramophone.IsPlaying && QuestManager.Instance.IsQuestActive(musicQuest))
-                {
-                    Debug.Log($"Music quest only: Completing stop music objective");
-                    QuestManager.Instance.CompleteObjective(musicQuest, stopMusicObjectiveIndex);
+                    Debug.Log($"Completing gramophone interaction objective");
+                    QuestManager.Instance.CompleteObjective(musicQuest, musicObjectiveIndex);
+                    questCompleted = true;
                 }
             }
         }
