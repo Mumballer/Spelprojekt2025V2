@@ -117,7 +117,7 @@ public class TableController : MonoBehaviour
         // Debug status
         if (debugMode)
         {
-            DebugLog($"Checking nametags: {filledSpots}/{nametagSpots.Length} filled, {correctlyPlaced}/{nametagSpots.Length} correct");
+            //DebugLog($"Checking nametags: {filledSpots}/{nametagSpots.Length} filled, {correctlyPlaced}/{nametagSpots.Length} correct");
         }
 
         // Check if all spots are filled with correct nametags
@@ -127,7 +127,7 @@ public class TableController : MonoBehaviour
 
         if (allPlaced && !questCompleted)
         {
-            DebugLog("All nametags placed! (" + filledSpots + "/" + nametagSpots.Length + ")");
+            //DebugLog("All nametags placed! (" + filledSpots + "/" + nametagSpots.Length + ")");
 
             // Play sound effect
             if (audioSource != null && allCorrectSound != null)
@@ -170,7 +170,7 @@ public class TableController : MonoBehaviour
     {
         if (debugMode)
         {
-            DebugLog($"Nametag removed: {guestName}");
+            //DebugLog($"Nametag removed: {guestName}");
         }
 
         placedNameTags.Remove(guestName);
@@ -185,17 +185,17 @@ public class TableController : MonoBehaviour
 
         if (relatedQuest == null)
         {
-            Debug.LogWarning("[TableController] No quest assigned!");
+            //Debug.LogWarning("[TableController] No quest assigned!");
             return;
         }
 
-        DebugLog("Completing nametag quest...");
+        //DebugLog("Completing nametag quest...");
 
         // Check if we have a specialized NameTagQuest
         NameTagQuest nameTagQuest = relatedQuest as NameTagQuest;
         if (nameTagQuest != null)
         {
-            DebugLog("Using specialized NameTagQuest completion logic");
+            //DebugLog("Using specialized NameTagQuest completion logic");
             nameTagQuest.MarkAllNameTagsPlaced();
 
             // Also call HandleQuestCompletion to trigger scene loading if needed
@@ -204,7 +204,7 @@ public class TableController : MonoBehaviour
         else
         {
             // Standard quest completion
-            DebugLog("Using standard Quest completion logic");
+            //DebugLog("Using standard Quest completion logic");
             relatedQuest.CompleteQuest();
         }
     }
@@ -275,7 +275,7 @@ public class TableController : MonoBehaviour
     {
         if (debugMode)
         {
-            Debug.Log("[TableController:Dining Table] " + message);
+            //Debug.Log("[TableController:Dining Table] " + message);
         }
     }
 
