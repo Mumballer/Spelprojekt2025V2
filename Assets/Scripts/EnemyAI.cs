@@ -17,8 +17,8 @@ public class EnemyAI : MonoBehaviour
     public float detectionRange = 10f;
     public LayerMask playerLayer;
     public float animSpeed = 1.0f;
-    public float footstepDistance = 10f;
-    public float maxVolume = 50f;
+    public float footstepDistance;
+    public float maxVolume;
     Animation enemyAnimation;
     AudioSource footstepAudio;
     public string walkAnim = "Walk";
