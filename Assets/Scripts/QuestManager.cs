@@ -1,162 +1,116 @@
-using UnityEngine;
-using System.Collections.Generic;
 using System;
-using static Quest;
+using System.Collections.Generic;
+using UnityEngine;
 
 public class QuestManager : MonoBehaviour
 {
-    public static QuestManager Instance { get; private set; }
+    public static QuestManager Instance;
 
-    [SerializeField] private List<Quest> activeQuests = new List<Quest>();
-    [SerializeField] private List<Quest> completedQuests = new List<Quest>();
-    [SerializeField] private List<Quest> availableQuests = new List<Quest>();
-
+    // Events for quest state changes
     public event Action<Quest> OnQuestAdded;
+    public event Action<Quest> OnQuestAccepted;
+    public event Action<Quest> OnQuestAvailable;
     public event Action<Quest> OnQuestCompleted;
     public event Action<Quest> OnQuestRemoved;
-    public event Action<Quest> OnQuestAvailable;
     public event Action<Quest, int> OnObjectiveCompleted;
 
-    private void Awake()
+    // Quest lists
+    private List<Quest> activeQuests = new List<Quest>();
+    private List<Quest> availableQuests = new List<Quest>();
+    private List<Quest> completedQuests = new List<Quest>();
+
+    [Header("Debug Options")]
+    [SerializeField] private bool enableDebugLogs = true;
+
+    void Awake()
     {
-        if (Instance != null && Instance != this)
-        {
+        if (Instance == null)
+            Instance = this;
+        else
             Destroy(gameObject);
-            return;
-        }
 
-        Instance = this;
         DontDestroyOnLoad(gameObject);
+
+        DebugLog("QuestManager initialized");
     }
 
-    private void OnEnable()
-    {
-        ResetAllQuests();
-    }
-
-    public void NotifyQuestCompleted(Quest quest)
-    {
-        // Handle quest completion logic
-        Debug.Log($"QuestManager notified of quest completion: {quest.questName}");
-
-        // If the quest is in our active list, move it to completed
-        if (activeQuests.Contains(quest))
-        {
-            activeQuests.Remove(quest);
-            completedQuests.Add(quest);
-
-            // Notify UI to remove this quest
-            OnQuestRemoved?.Invoke(quest);
-            OnQuestCompleted?.Invoke(quest);
-
-            // Check for follow-up quests
-            CheckForFollowUpQuests(quest);
-        }
-    }
-
-    private void CheckForFollowUpQuests(Quest quest)
-    {
-        if (quest.followUpQuests == null || quest.followUpQuests.Length == 0)
-            return;
-
-        foreach (Quest followUpQuest in quest.followUpQuests)
-        {
-            if (followUpQuest == null) continue;
-
-            if (followUpQuest.requiresManualAcceptance)
-            {
-                // Make the quest available but don't add it yet
-                if (!availableQuests.Contains(followUpQuest) &&
-                    !activeQuests.Contains(followUpQuest) &&
-                    !completedQuests.Contains(followUpQuest))
-                {
-                    availableQuests.Add(followUpQuest);
-                    OnQuestAvailable?.Invoke(followUpQuest);
-                    Debug.Log($"Follow-up quest available: {followUpQuest.questName}");
-                }
-            }
-            else
-            {
-                // Automatically add the follow-up quest
-                AddQuest(followUpQuest);
-                Debug.Log($"Follow-up quest automatically added: {followUpQuest.questName}");
-            }
-        }
-    }
-
-    public void ResetAllQuests()
-    {
-        activeQuests.Clear();
-        completedQuests.Clear();
-        availableQuests.Clear();
-
-        Quest[] allQuests = Resources.FindObjectsOfTypeAll<Quest>();
-        foreach (var quest in allQuests)
-        {
-            quest.IsActive = false;
-            quest.IsCompleted = false;
-
-            if (quest.Objectives != null)
-            {
-                foreach (var objective in quest.Objectives)
-                {
-                    objective.isCompleted = false;
-                }
-            }
-        }
-    }
+    // Quest Management Methods
 
     public void AddQuest(Quest quest)
     {
         if (quest == null) return;
 
-        if (activeQuests.Contains(quest) || completedQuests.Contains(quest))
+        DebugLog($"Adding quest '{quest.questName}' - ID: {quest.QuestId}");
+
+        if (!activeQuests.Contains(quest))
         {
-            Debug.Log($"Quest '{quest.questName}' is already in progress or completed");
-            return;
+            activeQuests.Add(quest);
+            OnQuestAdded?.Invoke(quest);
+            OnQuestAccepted?.Invoke(quest);
         }
+    }
 
-        // Remove from available quests if it was there
-        if (availableQuests.Contains(quest))
+    public void AcceptQuest(Quest quest)
+    {
+        if (quest == null) return;
+
+        DebugLog($"Accepting quest '{quest.questName}' - ID: {quest.QuestId}");
+
+        if (!activeQuests.Contains(quest))
         {
-            availableQuests.Remove(quest);
+            activeQuests.Add(quest);
+            availableQuests.Remove(quest); // Remove from available if it was there
+            OnQuestAccepted?.Invoke(quest);
         }
+    }
 
-        activeQuests.Add(quest);
-        quest.ActivateQuest();
-        Debug.Log($"Added quest: {quest.questName}");
+    public void MakeQuestAvailable(Quest quest)
+    {
+        if (quest == null) return;
 
-        OnQuestAdded?.Invoke(quest);
+        DebugLog($"Making quest available '{quest.questName}' - ID: {quest.QuestId}");
+
+        if (!availableQuests.Contains(quest) && !activeQuests.Contains(quest) && !completedQuests.Contains(quest))
+        {
+            availableQuests.Add(quest);
+            OnQuestAvailable?.Invoke(quest);
+        }
     }
 
     public void CompleteQuest(Quest quest)
     {
         if (quest == null) return;
 
+        DebugLog($"Completing ONLY quest '{quest.questName}' - ID: {quest.QuestId}");
+
+        // Only affect THIS specific quest
         if (activeQuests.Contains(quest))
         {
             activeQuests.Remove(quest);
+            availableQuests.Remove(quest); // Also remove from available if it's there
             completedQuests.Add(quest);
-            quest.CompleteQuest();
-
-            Debug.Log($"Completed quest: {quest.questName}");
-
             OnQuestCompleted?.Invoke(quest);
-            OnQuestRemoved?.Invoke(quest);
-
-            // Check for follow-up quests
-            CheckForFollowUpQuests(quest);
         }
     }
+
+    public void RemoveQuest(Quest quest)
+    {
+        if (quest == null) return;
+
+        DebugLog($"Removing quest '{quest.questName}' - ID: {quest.QuestId}");
+
+        if (activeQuests.Contains(quest))
+        {
+            activeQuests.Remove(quest);
+            OnQuestRemoved?.Invoke(quest);
+        }
+    }
+
+    // Query Methods
 
     public bool IsQuestActive(Quest quest)
     {
         return quest != null && activeQuests.Contains(quest);
-    }
-
-    public bool IsQuestCompleted(Quest quest)
-    {
-        return quest != null && completedQuests.Contains(quest);
     }
 
     public bool IsQuestAvailable(Quest quest)
@@ -164,48 +118,49 @@ public class QuestManager : MonoBehaviour
         return quest != null && availableQuests.Contains(quest);
     }
 
-    public List<Quest> GetActiveQuests()
+    public bool IsQuestCompleted(Quest quest)
     {
-        return new List<Quest>(activeQuests);
+        return quest != null && completedQuests.Contains(quest);
     }
 
-    public List<Quest> GetCompletedQuests()
-    {
-        return new List<Quest>(completedQuests);
-    }
-
-    public List<Quest> GetAvailableQuests()
-    {
-        return new List<Quest>(availableQuests);
-    }
+    // Objective Methods
 
     public void CompleteObjective(Quest quest, int objectiveIndex)
     {
-        if (quest == null || objectiveIndex < 0 || objectiveIndex >= quest.Objectives.Count)
+        if (quest == null || !activeQuests.Contains(quest)) return;
+
+        DebugLog($"Completing objective {objectiveIndex} for quest '{quest.questName}' - ID: {quest.QuestId}");
+
+        if (objectiveIndex >= 0 && objectiveIndex < quest.Objectives.Count)
         {
-            Debug.LogWarning("Invalid quest or objective index");
-            return;
+            quest.Objectives[objectiveIndex].isCompleted = true;
+            OnObjectiveCompleted?.Invoke(quest, objectiveIndex);
+
+            if (quest.IsCompleted)
+            {
+                DebugLog($"Auto-completing quest '{quest.questName}' as all objectives are done");
+                CompleteQuest(quest);
+            }
         }
+    }
 
-        if (!activeQuests.Contains(quest))
+    // Convenience Methods
+
+    public void NotifyQuestCompleted(Quest quest) => CompleteQuest(quest);
+
+    // Getters
+
+    public List<Quest> GetActiveQuests() => new List<Quest>(activeQuests);
+    public List<Quest> GetCompletedQuests() => new List<Quest>(completedQuests);
+    public List<Quest> GetAvailableQuests() => new List<Quest>(availableQuests);
+
+    // Debug Helper
+
+    private void DebugLog(string message)
+    {
+        if (enableDebugLogs)
         {
-            Debug.LogWarning($"Trying to complete objective for inactive quest: {quest.questName}");
-            return;
-        }
-
-        QuestObjective objective = quest.Objectives[objectiveIndex];
-        if (objective.isCompleted)
-        {
-            return;
-        }
-
-        objective.isCompleted = true;
-
-        OnObjectiveCompleted?.Invoke(quest, objectiveIndex);
-
-        if (quest.AreAllObjectivesCompleted())
-        {
-            CompleteQuest(quest);
+            Debug.Log($"[QuestManager] {message}");
         }
     }
 }

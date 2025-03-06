@@ -1,6 +1,6 @@
 using UnityEngine;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 
 public class NameTagManager : MonoBehaviour
 {
@@ -15,6 +15,7 @@ public class NameTagManager : MonoBehaviour
     [SerializeField] private Quest relatedQuest;
     [SerializeField] private int objectiveIndex;
 
+    // Events
     public event Action<int, int> OnProgressUpdated;
     public event Action<NameTag> OnNameTagPickup;
     public event Action<NameTag> OnNameTagPlaced;
@@ -24,6 +25,7 @@ public class NameTagManager : MonoBehaviour
     private Camera mainCamera;
     private List<NameTag> allNameTags = new List<NameTag>();
     private TableController currentTable = null;
+    private NametagCounter nametagCounter; // Reference to your counter
 
     public static NameTagManager Instance { get; private set; }
 
@@ -39,31 +41,26 @@ public class NameTagManager : MonoBehaviour
 
         mainCamera = Camera.main;
 
+        if (playerHoldPoint == null)
+        {
+            PlayerController player = FindFirstObjectByType<PlayerController>();
+            if (player != null)
+            {
+                Transform cameraTransform = player.transform.Find("Camera") ?? mainCamera?.transform;
+                GameObject holdPoint = new GameObject("NameTagHoldPoint");
+                playerHoldPoint = holdPoint.transform;
+                playerHoldPoint.SetParent(cameraTransform);
+                playerHoldPoint.localPosition = new Vector3(0, 0, 0.5f);
+            }
+        }
+
         NameTag[] nameTags = FindObjectsByType<NameTag>(FindObjectsSortMode.None);
         allNameTags.AddRange(nameTags);
 
+        // Find the nametag counter
+        nametagCounter = FindFirstObjectByType<NametagCounter>();
+
         Debug.Log($"NameTagManager initialized. Found {allNameTags.Count} nametags.");
-    }
-
-    public void InitializeHoldPoint(Transform cameraTransform)
-    {
-        if (playerHoldPoint == null)
-        {
-            GameObject holdPoint = new GameObject("NameTagHoldPoint");
-            playerHoldPoint = holdPoint.transform;
-
-            if (cameraTransform != null)
-            {
-                playerHoldPoint.SetParent(cameraTransform);
-                playerHoldPoint.localPosition = new Vector3(0, 0, 0.5f);
-                playerHoldPoint.localRotation = Quaternion.identity;
-            }
-            else
-            {
-                playerHoldPoint.SetParent(transform);
-                playerHoldPoint.localPosition = Vector3.zero;
-            }
-        }
     }
 
     private void Update()
@@ -83,23 +80,6 @@ public class NameTagManager : MonoBehaviour
         }
 
         UpdateTableInteraction();
-
-        // Update hold point position if camera moves
-        if (playerHoldPoint != null && playerHoldPoint.parent == null && mainCamera != null)
-        {
-            playerHoldPoint.position = mainCamera.transform.position + mainCamera.transform.forward * 0.5f;
-            playerHoldPoint.rotation = mainCamera.transform.rotation;
-        }
-    }
-
-    private void LateUpdate()
-    {
-        // Update hold point position if it's not parented to the camera
-        if (playerHoldPoint != null && playerHoldPoint.parent == null && mainCamera != null)
-        {
-            playerHoldPoint.position = mainCamera.transform.position + mainCamera.transform.forward * 0.5f;
-            playerHoldPoint.rotation = mainCamera.transform.rotation;
-        }
     }
 
     private void UpdateTableInteraction()
@@ -166,7 +146,7 @@ public class NameTagManager : MonoBehaviour
             {
                 Debug.Log("Found table, placing nametag");
 
-                // Place the nametag on the table (reveals a random table nametag)
+                // Place the nametag on the table
                 table.PlaceNameTag(currentNameTag);
 
                 // Hide the original nametag
@@ -192,16 +172,28 @@ public class NameTagManager : MonoBehaviour
 
     public void NotifyNameTagPlaced(NameTag nameTag)
     {
+        // Invoke the event
         OnNameTagPlaced?.Invoke(nameTag);
+
+        // Update the counter directly
+        if (nametagCounter != null)
+        {
+            nametagCounter.IncrementNametagCount();
+        }
+    }
+
+    // Overloaded method with no parameters
+    public void NotifyNameTagPlaced()
+    {
+        // Update the counter directly without calling the event
+        if (nametagCounter != null)
+        {
+            nametagCounter.IncrementNametagCount();
+        }
     }
 
     public void UpdateProgress(int current, int total)
     {
         OnProgressUpdated?.Invoke(current, total);
-    }
-
-    public Transform GetHoldPoint()
-    {
-        return playerHoldPoint;
     }
 }

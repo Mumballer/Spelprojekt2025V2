@@ -1,475 +1,352 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using System.Collections.Generic;
-using System.Collections;
 
 public class QuestUI : MonoBehaviour
 {
     [Header("UI References")]
-    [SerializeField] private GameObject questLogPanel;
-    [SerializeField] private Transform questListContainer;
+    [SerializeField] private GameObject questPanel;
+    [SerializeField] private Transform questContainer;
     [SerializeField] private GameObject questEntryPrefab;
-    [SerializeField] private TextMeshProUGUI questLogHeaderText;
     [SerializeField] private GameObject noQuestsMessage;
 
-    [Header("Tab System")]
-    [SerializeField] private Button activeQuestsTab;
-    [SerializeField] private Button completedQuestsTab;
-    [SerializeField] private Button availableQuestsTab;
-    [SerializeField] private Color selectedTabColor = Color.white;
-    [SerializeField] private Color unselectedTabColor = new Color(0.7f, 0.7f, 0.7f);
+    [Header("Tab UI")]
+    [SerializeField] private Button activeQuestsTabButton;
+    [SerializeField] private Button completedQuestsTabButton;
+    [SerializeField] private Button availableQuestsTabButton;
+
+    [Header("Quest Details")]
+    [SerializeField] private GameObject detailsPanel;
+    [SerializeField] private TextMeshProUGUI questTitleText;
+    [SerializeField] private TextMeshProUGUI questDescriptionText;
+    [SerializeField] private TextMeshProUGUI questObjectivesText;
+    [SerializeField] private Button acceptQuestButton;
 
     [Header("Color Settings")]
-    [SerializeField] private Color inProgressColor = new Color(1f, 0.92f, 0.016f);
-    [SerializeField] private Color completedColor = new Color(0f, 0.75f, 0.22f);
-    [SerializeField] private Color questTitleColor = Color.white;
-    [SerializeField] private Color questCompletedTitleColor = new Color(0.5f, 0.5f, 0.5f);
-    [SerializeField] private Color availableQuestColor = new Color(0.4f, 0.7f, 1f);
+    [SerializeField] private Color inProgressColor = Color.yellow;
+    [SerializeField] private Color completedColor = Color.green;
+    [SerializeField] private Color titleColor = Color.white;
+    [SerializeField] private Color completedTitleColor = Color.green;
 
-    [Header("Notifications")]
-    [SerializeField] private GameObject notificationPrefab;
-    [SerializeField] private Transform notificationContainer;
-    [SerializeField] private float notificationDuration = 3f;
-
-    private List<GameObject> questEntries = new List<GameObject>();
-    private enum QuestTabType { Active, Completed, Available }
-    private QuestTabType currentTab = QuestTabType.Active;
-
-    // Store original prefab properties
-    private Vector3 originalPosition;
-    private Vector3 originalScale;
-    private Vector2 originalSizeDelta;
-    private Vector2 originalAnchorMin;
-    private Vector2 originalAnchorMax;
-    private Vector2 originalPivot;
+    private enum QuestTab { Active, Completed, Available }
+    private QuestTab currentTab = QuestTab.Active;
+    private Quest selectedQuest;
+    private Dictionary<Quest, QuestEntryUI> activeQuestEntries = new Dictionary<Quest, QuestEntryUI>();
+    private Dictionary<Quest, QuestEntryUI> completedQuestEntries = new Dictionary<Quest, QuestEntryUI>();
+    private Dictionary<Quest, QuestEntryUI> availableQuestEntries = new Dictionary<Quest, QuestEntryUI>();
 
     private void Awake()
     {
-        // Store the original prefab transform properties
-        if (questEntryPrefab != null)
-        {
-            // Store original transform properties
-            RectTransform prefabRect = questEntryPrefab.GetComponent<RectTransform>();
-            if (prefabRect != null)
-            {
-                originalPosition = prefabRect.localPosition;
-                originalScale = prefabRect.localScale;
-                originalSizeDelta = prefabRect.sizeDelta;
-                originalAnchorMin = prefabRect.anchorMin;
-                originalAnchorMax = prefabRect.anchorMax;
-                originalPivot = prefabRect.pivot;
-            }
+        if (questPanel != null)
+            questPanel.SetActive(false);
 
-            // Make sure the prefab is hidden
-            questEntryPrefab.SetActive(false);
-        }
+        if (detailsPanel != null)
+            detailsPanel.SetActive(false);
 
-        // Make sure we have the required components
-        if (questListContainer != null && !questListContainer.GetComponent<VerticalLayoutGroup>())
-        {
-            VerticalLayoutGroup layout = questListContainer.gameObject.AddComponent<VerticalLayoutGroup>();
-            layout.childAlignment = TextAnchor.UpperCenter;
-            layout.childControlHeight = true;
-            layout.childControlWidth = true;
-            layout.childForceExpandHeight = false;
-            layout.childForceExpandWidth = true;
-            layout.spacing = 10;
-        }
+        // Set up tab button listeners
+        if (activeQuestsTabButton != null)
+            activeQuestsTabButton.onClick.AddListener(() => SwitchTab(QuestTab.Active));
+
+        if (completedQuestsTabButton != null)
+            completedQuestsTabButton.onClick.AddListener(() => SwitchTab(QuestTab.Completed));
+
+        if (availableQuestsTabButton != null)
+            availableQuestsTabButton.onClick.AddListener(() => SwitchTab(QuestTab.Available));
+
+        if (acceptQuestButton != null)
+            acceptQuestButton.onClick.AddListener(AcceptSelectedQuest);
     }
 
-    private void Start()
+    private void OnEnable()
     {
-        // Ensure quest log is active from the start
-        if (questLogPanel != null)
-        {
-            questLogPanel.SetActive(true);
-        }
+        // Subscribe to quest events
+        QuestManager.Instance.OnQuestAdded += OnQuestAdded;
+        QuestManager.Instance.OnQuestCompleted += OnQuestCompleted;
+        QuestManager.Instance.OnQuestAvailable += OnQuestAvailable;
+        QuestManager.Instance.OnObjectiveCompleted += OnObjectiveCompleted;
 
-        if (QuestManager.Instance != null)
-        {
-            QuestManager.Instance.OnQuestAdded += HandleQuestAdded;
-            QuestManager.Instance.OnQuestCompleted += HandleQuestCompleted;
-            QuestManager.Instance.OnQuestRemoved += HandleQuestRemoved;
-            QuestManager.Instance.OnQuestAvailable += HandleQuestAvailable;
-            QuestManager.Instance.OnObjectiveCompleted += (quest, index) => RefreshQuestList();
-        }
-
-        // Setup tabs
-        if (activeQuestsTab != null)
-        {
-            activeQuestsTab.onClick.AddListener(() => {
-                currentTab = QuestTabType.Active;
-                UpdateTabVisuals();
-                RefreshQuestList();
-            });
-        }
-
-        if (completedQuestsTab != null)
-        {
-            completedQuestsTab.onClick.AddListener(() => {
-                currentTab = QuestTabType.Completed;
-                UpdateTabVisuals();
-                RefreshQuestList();
-            });
-        }
-
-        if (availableQuestsTab != null)
-        {
-            availableQuestsTab.onClick.AddListener(() => {
-                currentTab = QuestTabType.Available;
-                UpdateTabVisuals();
-                RefreshQuestList();
-            });
-        }
-
-        UpdateTabVisuals();
-        RefreshQuestList(); // Refresh initially
+        RefreshAllQuests();
+        SwitchTab(currentTab);
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
-        if (QuestManager.Instance != null)
-        {
-            QuestManager.Instance.OnQuestAdded -= HandleQuestAdded;
-            QuestManager.Instance.OnQuestCompleted -= HandleQuestCompleted;
-            QuestManager.Instance.OnQuestRemoved -= HandleQuestRemoved;
-            QuestManager.Instance.OnQuestAvailable -= HandleQuestAvailable;
-            QuestManager.Instance.OnObjectiveCompleted -= (quest, index) => RefreshQuestList();
-        }
+        // Unsubscribe from quest events
+        QuestManager.Instance.OnQuestAdded -= OnQuestAdded;
+        QuestManager.Instance.OnQuestCompleted -= OnQuestCompleted;
+        QuestManager.Instance.OnQuestAvailable -= OnQuestAvailable;
+        QuestManager.Instance.OnObjectiveCompleted -= OnObjectiveCompleted;
     }
 
-    private void UpdateTabVisuals()
+    public void ToggleQuestPanel()
     {
-        // Active tab
-        if (activeQuestsTab != null)
+        if (questPanel != null)
         {
-            Image tabImage = activeQuestsTab.GetComponent<Image>();
-            if (tabImage != null)
-            {
-                tabImage.color = currentTab == QuestTabType.Active ? selectedTabColor : unselectedTabColor;
-            }
+            bool isActive = !questPanel.activeSelf;
+            questPanel.SetActive(isActive);
 
-            TextMeshProUGUI tabText = activeQuestsTab.GetComponentInChildren<TextMeshProUGUI>();
-            if (tabText != null)
+            if (isActive)
             {
-                tabText.fontStyle = currentTab == QuestTabType.Active ? FontStyles.Bold : FontStyles.Normal;
+                RefreshAllQuests();
+                SwitchTab(currentTab);
             }
-        }
-
-        // Completed tab
-        if (completedQuestsTab != null)
-        {
-            Image tabImage = completedQuestsTab.GetComponent<Image>();
-            if (tabImage != null)
+            else
             {
-                tabImage.color = currentTab == QuestTabType.Completed ? selectedTabColor : unselectedTabColor;
-            }
-
-            TextMeshProUGUI tabText = completedQuestsTab.GetComponentInChildren<TextMeshProUGUI>();
-            if (tabText != null)
-            {
-                tabText.fontStyle = currentTab == QuestTabType.Completed ? FontStyles.Bold : FontStyles.Normal;
-            }
-        }
-
-        // Available tab
-        if (availableQuestsTab != null)
-        {
-            Image tabImage = availableQuestsTab.GetComponent<Image>();
-            if (tabImage != null)
-            {
-                tabImage.color = currentTab == QuestTabType.Available ? selectedTabColor : unselectedTabColor;
-            }
-
-            TextMeshProUGUI tabText = availableQuestsTab.GetComponentInChildren<TextMeshProUGUI>();
-            if (tabText != null)
-            {
-                tabText.fontStyle = currentTab == QuestTabType.Available ? FontStyles.Bold : FontStyles.Normal;
-            }
-        }
-
-        if (questLogHeaderText != null)
-        {
-            switch (currentTab)
-            {
-                case QuestTabType.Active:
-                    questLogHeaderText.text = "ACTIVE QUESTS";
-                    break;
-                case QuestTabType.Completed:
-                    questLogHeaderText.text = "COMPLETED QUESTS";
-                    break;
-                case QuestTabType.Available:
-                    questLogHeaderText.text = "AVAILABLE QUESTS";
-                    break;
+                CloseDetailsPanel();
             }
         }
     }
 
-    private void RefreshQuestList()
+    private void OnQuestAdded(Quest quest)
     {
-        // Clear existing entries
-        foreach (var entry in questEntries)
-        {
-            Destroy(entry);
-        }
-        questEntries.Clear();
+        AddQuestToList(quest, QuestTab.Active);
+        RefreshQuestsList(currentTab);
+    }
 
-        if (QuestManager.Instance == null || questListContainer == null || questEntryPrefab == null)
+    private void OnQuestCompleted(Quest quest)
+    {
+        if (activeQuestEntries.ContainsKey(quest))
+        {
+            Destroy(activeQuestEntries[quest].gameObject);
+            activeQuestEntries.Remove(quest);
+        }
+
+        AddQuestToList(quest, QuestTab.Completed);
+        RefreshQuestsList(currentTab);
+    }
+
+    private void OnQuestAvailable(Quest quest)
+    {
+        AddQuestToList(quest, QuestTab.Available);
+        RefreshQuestsList(currentTab);
+    }
+
+    private void OnObjectiveCompleted(Quest quest, int objectiveIndex)
+    {
+        if (activeQuestEntries.ContainsKey(quest))
+        {
+            activeQuestEntries[quest].RefreshDisplay();
+        }
+
+        if (selectedQuest == quest)
+        {
+            UpdateDetailsPanel(quest);
+        }
+    }
+
+    private void RefreshAllQuests()
+    {
+        ClearAllQuestLists();
+
+        // Active quests
+        List<Quest> activeQuests = QuestManager.Instance.GetActiveQuests();
+        foreach (Quest quest in activeQuests)
+        {
+            AddQuestToList(quest, QuestTab.Active);
+        }
+
+        // Completed quests
+        List<Quest> completedQuests = QuestManager.Instance.GetCompletedQuests();
+        foreach (Quest quest in completedQuests)
+        {
+            AddQuestToList(quest, QuestTab.Completed);
+        }
+
+        // Available quests
+        List<Quest> availableQuests = QuestManager.Instance.GetAvailableQuests();
+        foreach (Quest quest in availableQuests)
+        {
+            AddQuestToList(quest, QuestTab.Available);
+        }
+    }
+
+    private void ClearAllQuestLists()
+    {
+        foreach (var entry in activeQuestEntries.Values)
+        {
+            Destroy(entry.gameObject);
+        }
+        activeQuestEntries.Clear();
+
+        foreach (var entry in completedQuestEntries.Values)
+        {
+            Destroy(entry.gameObject);
+        }
+        completedQuestEntries.Clear();
+
+        foreach (var entry in availableQuestEntries.Values)
+        {
+            Destroy(entry.gameObject);
+        }
+        availableQuestEntries.Clear();
+    }
+
+    private void AddQuestToList(Quest quest, QuestTab tab)
+    {
+        if (quest == null || questEntryPrefab == null || questContainer == null)
             return;
 
-        // Get the appropriate quests based on current tab
-        List<Quest> questsToShow;
-        switch (currentTab)
+        Dictionary<Quest, QuestEntryUI> targetDictionary = GetDictionaryForTab(tab);
+
+        if (targetDictionary.ContainsKey(quest))
+            return;
+
+        GameObject entryObj = Instantiate(questEntryPrefab, questContainer);
+        entryObj.SetActive(false); // Hide initially
+
+        QuestEntryUI entryUI = entryObj.GetComponent<QuestEntryUI>();
+        if (entryUI != null)
         {
-            case QuestTabType.Active:
-                questsToShow = QuestManager.Instance.GetActiveQuests();
-                break;
-            case QuestTabType.Completed:
-                questsToShow = QuestManager.Instance.GetCompletedQuests();
-                break;
-            case QuestTabType.Available:
-                questsToShow = QuestManager.Instance.GetAvailableQuests();
-                break;
-            default:
-                questsToShow = new List<Quest>();
-                break;
-        }
+            // This is line 286 that had the error - changed from SetupQuest to Setup
+            entryUI.Setup(quest);
 
-        // Show/hide empty state message
-        if (noQuestsMessage != null)
-        {
-            noQuestsMessage.SetActive(questsToShow.Count == 0);
-        }
-
-        // Temporarily disable layout groups to prevent immediate recalculation
-        LayoutGroup[] layoutGroups = questListContainer.GetComponents<LayoutGroup>();
-        foreach (var layout in layoutGroups)
-        {
-            layout.enabled = false;
-        }
-
-        // Create entries for each quest
-        for (int i = 0; i < questsToShow.Count; i++)
-        {
-            var currentQuest = questsToShow[i];
-
-            // Instantiate as a direct child of the quest list container
-            GameObject entryObj = Instantiate(questEntryPrefab, questListContainer);
-
-            // Important: Set the local position to zero to prevent it from going to the top
-            RectTransform entryRect = entryObj.GetComponent<RectTransform>();
-            if (entryRect != null)
+            // Add click handler
+            Button button = entryObj.GetComponent<Button>();
+            if (button != null)
             {
-                // Keep the original scale and size, but reset the position
-                entryRect.localPosition = Vector3.zero;
-                entryRect.localScale = originalScale;
-                entryRect.sizeDelta = originalSizeDelta;
-
-                // Ensure anchors are set correctly for vertical layout
-                entryRect.anchorMin = new Vector2(0, 1);
-                entryRect.anchorMax = new Vector2(1, 1);
-                entryRect.pivot = new Vector2(0.5f, 1);
+                button.onClick.AddListener(() => SelectQuest(quest));
             }
 
-            // Make it visible
-            entryObj.SetActive(true);
-
-            // Setup the quest data
-            QuestEntryUI entryUI = entryObj.GetComponent<QuestEntryUI>();
-            if (entryUI != null)
-            {
-                Color titleColorToUse = currentTab == QuestTabType.Available ?
-                    availableQuestColor :
-                    (currentQuest.IsCompleted ? questCompletedTitleColor : questTitleColor);
-
-                entryUI.SetupQuest(
-                    currentQuest,
-                    currentQuest.IsCompleted,
-                    inProgressColor,
-                    completedColor,
-                    titleColorToUse,
-                    questCompletedTitleColor
-                );
-
-                // Add accept button for available quests
-                if (currentTab == QuestTabType.Available)
-                {
-                    Button acceptButton = entryObj.GetComponentInChildren<Button>();
-                    if (acceptButton != null)
-                    {
-                        acceptButton.onClick.AddListener(() => {
-                            QuestManager.Instance.AddQuest(currentQuest);
-                            RefreshQuestList();
-                            ShowNotification($"Accepted quest: {currentQuest.questName}", Color.green);
-                        });
-                    }
-                }
-            }
-            else
-            {
-                SetupQuestEntryManually(entryObj, currentQuest);
-            }
-
-            questEntries.Add(entryObj);
-        }
-
-        // Re-enable layout groups to position entries correctly
-        foreach (var layout in layoutGroups)
-        {
-            layout.enabled = true;
-        }
-
-        // Force layout rebuild
-        Canvas.ForceUpdateCanvases();
-        foreach (var layout in layoutGroups)
-        {
-            LayoutRebuilder.ForceRebuildLayoutImmediate(layout.GetComponent<RectTransform>());
+            targetDictionary.Add(quest, entryUI);
         }
     }
 
-    private void SetupQuestEntryManually(GameObject entryObj, Quest currentQuest)
+    private void AcceptSelectedQuest()
     {
-        TextMeshProUGUI questNameText = entryObj.transform.Find("QuestTitleText")?.GetComponent<TextMeshProUGUI>();
-        if (questNameText != null)
+        if (selectedQuest != null)
         {
-            questNameText.text = currentQuest.questName;
+            QuestManager.Instance.AddQuest(selectedQuest);
 
-            if (currentTab == QuestTabType.Available)
+            // Remove from available list
+            if (availableQuestEntries.ContainsKey(selectedQuest))
             {
-                questNameText.color = availableQuestColor;
+                Destroy(availableQuestEntries[selectedQuest].gameObject);
+                availableQuestEntries.Remove(selectedQuest);
             }
-            else
+
+            // If viewing available quests, refresh the list
+            if (currentTab == QuestTab.Available)
             {
-                questNameText.color = currentQuest.IsCompleted ? questCompletedTitleColor : questTitleColor;
+                RefreshQuestsList(QuestTab.Available);
             }
+
+            CloseDetailsPanel();
         }
-        else
+    }
+
+    private void SwitchTab(QuestTab tab)
+    {
+        currentTab = tab;
+
+        // Update UI elements to reflect selected tab
+        if (activeQuestsTabButton != null)
+            activeQuestsTabButton.interactable = tab != QuestTab.Active;
+
+        if (completedQuestsTabButton != null)
+            completedQuestsTabButton.interactable = tab != QuestTab.Completed;
+
+        if (availableQuestsTabButton != null)
+            availableQuestsTabButton.interactable = tab != QuestTab.Available;
+
+        RefreshQuestsList(tab);
+        CloseDetailsPanel();
+    }
+
+    private void RefreshQuestsList(QuestTab tab)
+    {
+        // Hide all quest entries first
+        foreach (var entry in activeQuestEntries.Values)
         {
-            Debug.LogWarning("QuestTitleText not found on quest entry prefab");
+            entry.gameObject.SetActive(false);
         }
 
-        TextMeshProUGUI descriptionText = entryObj.transform.Find("QuestDescriptionText")?.GetComponent<TextMeshProUGUI>();
-        if (descriptionText != null)
+        foreach (var entry in completedQuestEntries.Values)
         {
-            descriptionText.text = currentQuest.description;
-        }
-        else
-        {
-            Debug.LogWarning("QuestDescriptionText not found on quest entry prefab");
+            entry.gameObject.SetActive(false);
         }
 
-        TextMeshProUGUI objectivesText = entryObj.transform.Find("QuestObjectivesText")?.GetComponent<TextMeshProUGUI>();
-        if (objectivesText != null && currentQuest.Objectives != null)
+        foreach (var entry in availableQuestEntries.Values)
+        {
+            entry.gameObject.SetActive(false);
+        }
+
+        // Show entries based on selected tab
+        Dictionary<Quest, QuestEntryUI> entriesToShow = GetDictionaryForTab(tab);
+
+        foreach (var entry in entriesToShow.Values)
+        {
+            entry.gameObject.SetActive(true);
+        }
+
+        // Show "No Quests" message if needed
+        if (noQuestsMessage != null)
+        {
+            noQuestsMessage.SetActive(entriesToShow.Count == 0);
+        }
+    }
+
+    private Dictionary<Quest, QuestEntryUI> GetDictionaryForTab(QuestTab tab)
+    {
+        switch (tab)
+        {
+            case QuestTab.Active:
+                return activeQuestEntries;
+            case QuestTab.Completed:
+                return completedQuestEntries;
+            case QuestTab.Available:
+                return availableQuestEntries;
+            default:
+                return activeQuestEntries;
+        }
+    }
+
+    private void SelectQuest(Quest quest)
+    {
+        selectedQuest = quest;
+        UpdateDetailsPanel(quest);
+    }
+
+    private void UpdateDetailsPanel(Quest quest)
+    {
+        if (detailsPanel == null || quest == null)
+            return;
+
+        detailsPanel.SetActive(true);
+
+        if (questTitleText != null)
+            questTitleText.text = quest.questName;
+
+        if (questDescriptionText != null)
+            questDescriptionText.text = quest.description;
+
+        // Update objectives text
+        if (questObjectivesText != null && quest.Objectives != null)
         {
             string objectivesContent = "";
-
-            for (int i = 0; i < currentQuest.Objectives.Count; i++)
+            foreach (var objective in quest.Objectives)
             {
-                var objective = currentQuest.Objectives[i];
-                if (objective == null) continue;
-
-                string colorHex = objective.isCompleted ?
-                    ColorUtility.ToHtmlStringRGB(completedColor) :
-                    ColorUtility.ToHtmlStringRGB(inProgressColor);
-
+                string colorHex = ColorUtility.ToHtmlStringRGB(objective.isCompleted ? completedColor : inProgressColor);
                 string checkmark = objective.isCompleted ? "✓ " : "• ";
                 objectivesContent += $"<color=#{colorHex}>{checkmark}{objective.description}</color>\n";
             }
-
-            objectivesText.text = objectivesContent.TrimEnd('\n');
-        }
-        else
-        {
-            Debug.LogWarning("QuestObjectivesText not found on quest entry prefab");
+            questObjectivesText.text = objectivesContent.TrimEnd('\n');
         }
 
-        // Add accept button for available quests
-        if (currentTab == QuestTabType.Available)
+        // Show/hide the accept button based on tab
+        if (acceptQuestButton != null)
         {
-            Button acceptButton = entryObj.transform.Find("AcceptButton")?.GetComponent<Button>();
-            if (acceptButton != null)
-            {
-                acceptButton.gameObject.SetActive(true);
-                acceptButton.onClick.AddListener(() => {
-                    QuestManager.Instance.AddQuest(currentQuest);
-                    RefreshQuestList();
-                    ShowNotification($"Accepted quest: {currentQuest.questName}", Color.green);
-                });
-            }
+            acceptQuestButton.gameObject.SetActive(currentTab == QuestTab.Available);
         }
     }
 
-    private void HandleQuestAdded(Quest quest)
+    private void CloseDetailsPanel()
     {
-        if (currentTab == QuestTabType.Active)
+        if (detailsPanel != null)
         {
-            RefreshQuestList();
+            detailsPanel.SetActive(false);
         }
-        ShowNotification($"New Quest: {quest.questName}", Color.yellow);
-    }
-
-    private void HandleQuestCompleted(Quest quest)
-    {
-        RefreshQuestList();
-        ShowNotification($"Quest Completed: {quest.questName}", Color.green);
-    }
-
-    private void HandleQuestRemoved(Quest quest)
-    {
-        if (currentTab == QuestTabType.Active)
-        {
-            RefreshQuestList();
-        }
-    }
-
-    private void HandleQuestAvailable(Quest quest)
-    {
-        if (currentTab == QuestTabType.Available)
-        {
-            RefreshQuestList();
-        }
-        ShowNotification($"New Quest Available: {quest.questName}", Color.cyan);
-    }
-
-    private void ShowNotification(string message, Color color)
-    {
-        if (notificationPrefab == null || notificationContainer == null)
-            return;
-
-        GameObject notification = Instantiate(notificationPrefab, notificationContainer);
-
-        TextMeshProUGUI textComponent = notification.GetComponentInChildren<TextMeshProUGUI>();
-        if (textComponent != null)
-        {
-            textComponent.text = message;
-            textComponent.color = color;
-        }
-
-        StartCoroutine(RemoveNotificationAfterDelay(notification));
-    }
-
-    private IEnumerator RemoveNotificationAfterDelay(GameObject notification)
-    {
-        yield return new WaitForSeconds(notificationDuration);
-
-        // Fade out
-        CanvasGroup canvasGroup = notification.GetComponent<CanvasGroup>();
-        if (canvasGroup != null)
-        {
-            float startTime = Time.time;
-            float endTime = startTime + 1f;
-
-            while (Time.time < endTime)
-            {
-                float t = (Time.time - startTime) / 1f;
-                canvasGroup.alpha = Mathf.Lerp(1f, 0f, t);
-                yield return null;
-            }
-
-            canvasGroup.alpha = 0f;
-        }
-
-        Destroy(notification);
+        selectedQuest = null;
     }
 }

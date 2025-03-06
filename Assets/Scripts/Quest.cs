@@ -1,146 +1,142 @@
-using UnityEngine;
+using System;
 using System.Collections.Generic;
+using UnityEngine;
 
-[CreateAssetMenu(fileName = "NewQuest", menuName = "Quests/Quest")]
+[CreateAssetMenu(fileName = "New Quest", menuName = "Quests/Quest")]
 public class Quest : ScriptableObject
 {
-    [Header("Quest Information")]
-    public string questName;
-    [TextArea(3, 5)]
-    public string description;
+    [Header("Quest Info")]
+    public string questName = "New Quest";
+    [TextArea(3, 6)]
+    public string description = "Quest description goes here.";
 
-    [Header("Quest Status")]
-    [SerializeField] private bool _isActive;
-    [SerializeField] private bool _isCompleted;
+    [Header("Identification")]
+    [SerializeField] private string questId = "";
 
-    [System.Serializable]
-    public class QuestObjective
+    [Header("Objectives")]
+    [SerializeField] private List<QuestObjective> objectives = new List<QuestObjective>();
+
+    // Prevent multiple completion calls
+    private bool isAlreadyCompleted = false;
+
+    public List<QuestObjective> Objectives => objectives;
+    public string QuestId => questId;
+
+    // Automatically generate a Quest ID if none exists
+    private void OnValidate()
     {
-        [TextArea(1, 3)]
-        public string description;
-        public bool isCompleted;
+        if (string.IsNullOrEmpty(questId))
+        {
+            questId = System.Guid.NewGuid().ToString();
+        }
     }
 
-    [Header("Quest Objectives")]
-    [SerializeField] private List<QuestObjective> _objectives = new List<QuestObjective>();
-
-    [Header("Follow-up Quests")]
-    [Tooltip("Quests that will become available after this quest is completed")]
-    public Quest[] followUpQuests;
-    [Tooltip("If true, follow-up quests must be manually accepted. If false, they will be automatically added.")]
-    public bool requiresManualAcceptance = true;
-
-    public bool IsActive
-    {
-        get { return _isActive; }
-        set { _isActive = value; }
-    }
-
-    public Quest CreateInstance()
-    {
-        Quest instance = Instantiate(this);
-        instance.ActivateQuest();
-        return instance;
-    }
-
+    // Check if all objectives are completed
     public bool IsCompleted
     {
-        get { return _isCompleted; }
-        set { _isCompleted = value; }
+        get
+        {
+            if (objectives.Count == 0) return false;
+
+            foreach (var objective in objectives)
+            {
+                if (!objective.isCompleted)
+                    return false;
+            }
+            return true;
+        }
     }
 
-    public List<QuestObjective> Objectives => _objectives;
-
-    public void ActivateQuest()
+    // Quick way to check objective status by index
+    public bool IsObjectiveCompleted(int index)
     {
-        _isActive = true;
-        _isCompleted = false;
+        if (index < 0 || index >= objectives.Count)
+            return false;
 
-        foreach (var objective in _objectives)
+        return objectives[index].isCompleted;
+    }
+
+    // Reset quest state (useful for testing)
+    public void ResetQuest()
+    {
+        foreach (var objective in objectives)
         {
             objective.isCompleted = false;
         }
-
-        Debug.Log($"Quest activated: {questName}");
+        isAlreadyCompleted = false;
     }
 
+    // Complete the quest (called when all objectives are done)
     public void CompleteQuest()
     {
-        _isActive = false;
-        _isCompleted = true;
-
-        foreach (var objective in _objectives)
+        // Guard against multiple completions
+        if (isAlreadyCompleted)
         {
-            objective.isCompleted = true;
+            Debug.LogWarning($"Attempted to complete already completed quest: {questName} (ID: {questId})");
+            return;
         }
 
-        Debug.Log($"Quest completed: {questName}");
+        isAlreadyCompleted = true;
+        Debug.Log($"Quest completed: {questName} (ID: {questId})");
 
-        // Notify the QuestManager
         if (QuestManager.Instance != null)
         {
             QuestManager.Instance.NotifyQuestCompleted(this);
         }
     }
 
+    // Complete a specific objective
     public void CompleteObjective(int index)
     {
-        if (index >= 0 && index < _objectives.Count)
+        if (isAlreadyCompleted)
         {
-            _objectives[index].isCompleted = true;
-            Debug.Log($"Completed objective {index + 1} for quest: {questName}");
-            CheckQuestCompletion();
+            Debug.LogWarning($"Attempted to modify already completed quest: {questName} (ID: {questId})");
+            return;
         }
+
+        if (index < 0 || index >= objectives.Count)
+            return;
+
+        Debug.Log($"Completed objective {index} for quest: {questName} (ID: {questId})");
+
+        objectives[index].isCompleted = true;
+
+        // Check if all objectives are completed
+        CheckQuestCompletion();
     }
 
+    // Check if quest is complete and notify if so
     public void CheckQuestCompletion()
     {
-        bool allCompleted = true;
-        foreach (var objective in _objectives)
-        {
-            if (!objective.isCompleted)
-            {
-                allCompleted = false;
-                break;
-            }
-        }
-
-        if (allCompleted && !_isCompleted)
+        if (!isAlreadyCompleted && IsCompleted)
         {
             CompleteQuest();
         }
     }
+}
 
-    public bool AreAllObjectivesCompleted()
+// Quest objective structure
+[Serializable]
+public class QuestObjective
+{
+    [TextArea(1, 3)]
+    public string description = "Objective description";
+    public bool isCompleted = false;
+}
+
+// Extension methods for backward compatibility
+public static class QuestExtensions
+{
+    public static bool IsActive(this Quest quest)
     {
-        foreach (var objective in _objectives)
-        {
-            if (!objective.isCompleted)
-                return false;
-        }
-        return true;
+        return QuestManager.Instance != null && QuestManager.Instance.IsQuestActive(quest);
     }
 
-    public float GetCompletionPercentage()
+    public static void ActivateQuest(this Quest quest)
     {
-        if (_objectives == null || _objectives.Count == 0)
-            return 0f;
-
-        int completedCount = 0;
-        foreach (var objective in _objectives)
+        if (QuestManager.Instance != null)
         {
-            if (objective.isCompleted)
-                completedCount++;
-        }
-
-        return (float)completedCount / _objectives.Count;
-    }
-
-    private void OnEnable()
-    {
-        if (string.IsNullOrEmpty(questName))
-        {
-            questName = "New Quest";
+            QuestManager.Instance.AddQuest(quest);
         }
     }
 }

@@ -46,11 +46,6 @@ public class PlayerController : MonoBehaviour
                 cameraTransform = mainCamera.transform;
         }
 
-        // Create a hold point in the NameTagManager instead
-        if (NameTagManager.Instance != null)
-        {
-            NameTagManager.Instance.InitializeHoldPoint(cameraTransform);
-        }
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;

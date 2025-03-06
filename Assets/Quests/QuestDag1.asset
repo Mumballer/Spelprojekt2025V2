@@ -14,18 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questName: Guests are coming!
   description: Place the nametags in the right spots.
-  _isActive: 1
+  _isActive: 0
   _isCompleted: 0
   _objectives:
-  - description: Calvin
+  - description: 0/6
     isCompleted: 0
-  - description: Emma
-    isCompleted: 0
-  - description: Susan
-    isCompleted: 0
-  - description: Nico
-    isCompleted: 0
-  - description: Lisa
-    isCompleted: 0
-  - description: Luca
-    isCompleted: 0
+  followUpQuests: []
+  requiresManualAcceptance: 1

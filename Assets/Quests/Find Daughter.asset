@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a40bc76f94580a1448e1863f4dcb27a1, type: 3}
-  m_Name: NewQuest
-  m_EditorClassIdentifier: Assembly-CSharp::Quest
-  questName: Yuhh
-  description: type shiii..
+  m_Name: Find Daughter
+  m_EditorClassIdentifier: 
+  questName: Find your daughter
+  description: Go to the kitchen and speak to Emma.
   _isActive: 0
   _isCompleted: 0
-  _objectives:
-  - description: Find valter
-    isCompleted: 0
+  _objectives: []
+  followUpQuests: []
+  requiresManualAcceptance: 1

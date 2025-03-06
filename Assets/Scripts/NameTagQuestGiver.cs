@@ -3,79 +3,117 @@ using System.Collections;
 
 public class NameTagQuestGiver : MonoBehaviour
 {
-    [SerializeField] private Dialog instructionsDialog;
-    [SerializeField] private Dialog completionDialog;
-    [SerializeField] private Quest nameTagQuest;
+    [Header("References")]
+    [SerializeField] private Transform interactionPoint;
+    [SerializeField] private GameObject interactionPrompt;
+    [SerializeField] private float interactionDistance = 2f;
+    [SerializeField] private LayerMask playerLayer;
+    [SerializeField] private KeyCode interactKey = KeyCode.E;
 
-    private bool questCompleted = false;
+    [Header("Quest Settings")]
+    [SerializeField] private Quest quest;
+    [SerializeField] private Dialog questDialog;
+    [SerializeField] private bool giveQuestAfterDialog = true;
+
+    private bool playerInRange = false;
+    private bool canInteract = true;
+    private bool hasGivenQuest = false;
 
     private void Start()
     {
-        // Check if the quest is already completed
-        if (nameTagQuest != null && nameTagQuest.IsCompleted)
+        if (interactionPrompt != null)
         {
-            questCompleted = true;
+            interactionPrompt.SetActive(false);
         }
     }
 
-    public void StartNameTagQuest()
+    private void Update()
     {
-        if (questCompleted)
-        {
-            // If quest is already completed, show completion dialog
-            if (DialogManager.Instance != null && completionDialog != null)
-            {
-                StartCoroutine(DialogManager.Instance.ShowDialog(completionDialog));
-            }
-            return;
-        }
+        if (hasGivenQuest) return;
 
-        if (DialogManager.Instance != null && instructionsDialog != null)
-        {
-            StartCoroutine(DialogManager.Instance.ShowDialog(instructionsDialog));
+        CheckPlayerDistance();
 
-            // Subscribe to dialog completion
-            DialogManager.Instance.OnDialogComplete += OnDialogComplete;
+        if (playerInRange && canInteract && Input.GetKeyDown(interactKey))
+        {
+            Interact();
         }
     }
 
-    private void OnDialogComplete(Dialog completedDialog)
+    private void CheckPlayerDistance()
     {
-        if (completedDialog == instructionsDialog)
+        if (interactionPoint == null) return;
+
+        Collider[] colliders = Physics.OverlapSphere(interactionPoint.position, interactionDistance, playerLayer);
+        bool isPlayerNear = colliders.Length > 0;
+
+        if (isPlayerNear != playerInRange)
         {
-            // Unsubscribe
-            DialogManager.Instance.OnDialogComplete -= OnDialogComplete;
-
-            // Start the quest
-            if (nameTagQuest != null)
+            playerInRange = isPlayerNear;
+            if (interactionPrompt != null)
             {
-                // Activate the quest using the Quest ScriptableObject
-                nameTagQuest.ActivateQuest();
-
-                // If you have a QuestManager, you can add it there
-                if (QuestManager.Instance != null)
-                {
-                    QuestManager.Instance.AddQuest(nameTagQuest);
-                }
-
-                Debug.Log($"Started nametag quest: {nameTagQuest.questName}");
+                interactionPrompt.SetActive(playerInRange && !hasGivenQuest);
             }
         }
     }
 
-    // This can be called by an event system when the quest is completed
-    public void OnQuestCompleted(Quest quest)
+    public void Interact()
     {
-        if (quest == nameTagQuest)
-        {
-            questCompleted = true;
-            Debug.Log("Nametag quest completed!");
+        if (hasGivenQuest) return;
 
-            // Optionally show completion dialog
-            if (DialogManager.Instance != null && completionDialog != null)
+        // Start dialog - use your actual method name
+        if (questDialog != null && DialogManager.Instance != null)
+        {
+            // Try different method name - your actual implementation might differ
+            DialogManager.Instance.ShowDialog(questDialog);
+
+            // If dialog is handled differently in your system, give quest immediately
+            if (!giveQuestAfterDialog)
             {
-                StartCoroutine(DialogManager.Instance.ShowDialog(completionDialog));
+                GiveQuestToPlayer();
             }
+            // For quest giving after dialog, we'll rely on the DialogTrigger to handle it
+            // Your dialog system likely has its own completion mechanism
+        }
+        else
+        {
+            // No dialog, just give quest immediately
+            GiveQuestToPlayer();
+        }
+
+        // Hide prompt after interaction
+        if (interactionPrompt != null)
+        {
+            interactionPrompt.SetActive(false);
+        }
+    }
+
+    // Called by your DialogManager (if it supports callbacks) or by other means
+    public void OnDialogComplete()
+    {
+        // Give quest after dialog completes
+        if (giveQuestAfterDialog)
+        {
+            GiveQuestToPlayer();
+        }
+    }
+
+    private void GiveQuestToPlayer()
+    {
+        // Give quest
+        if (quest != null && QuestManager.Instance != null && !hasGivenQuest)
+        {
+            QuestManager.Instance.AddQuest(quest);
+            hasGivenQuest = true;
+            Debug.Log($"NameTagQuestGiver: Gave quest to player: {quest.questName}");
+        }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (interactionPoint != null)
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireSphere(interactionPoint.position, interactionDistance);
         }
     }
 }

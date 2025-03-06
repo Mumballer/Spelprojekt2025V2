@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class NameTagQuestDisplay : MonoBehaviour
+public class NameTagQuestInitializer : MonoBehaviour
 {
     [Header("Quest References")]
     [SerializeField] private Quest nametagQuest;
@@ -9,7 +9,7 @@ public class NameTagQuestDisplay : MonoBehaviour
     {
         if (nametagQuest == null)
         {
-            Debug.LogError("Nametag Quest not assigned to NameTagQuestDisplay!");
+            Debug.LogError("Nametag Quest not assigned to NameTagQuestInitializer!");
             return;
         }
 
