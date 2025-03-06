@@ -1,105 +1,146 @@
 using UnityEngine;
-using System;
 using System.Collections.Generic;
-using static UnityEditor.Progress;
 
-[CreateAssetMenu(fileName = "New Quest", menuName = "Quests/Quest")]
+[CreateAssetMenu(fileName = "NewQuest", menuName = "Quests/Quest")]
 public class Quest : ScriptableObject
 {
-    [Header("Quest Info")]
+    [Header("Quest Information")]
     public string questName;
-    [TextArea(3, 10)]
+    [TextArea(3, 5)]
     public string description;
 
-    [Header("Objectives")]
-    public List<QuestObjective> Objectives = new List<QuestObjective>();
+    [Header("Quest Status")]
+    [SerializeField] private bool _isActive;
+    [SerializeField] private bool _isCompleted;
 
-    [Header("Rewards")]
-    public int experienceReward;
-    public int goldReward;
-    public Item[] itemRewards;
-
-    [Header("Follow-up Quests")]
-    public Quest[] followUpQuests;
-    public bool requiresManualAcceptance = true;
-
-    [HideInInspector]
-    public bool IsActive = false;
-    [HideInInspector]
-    public bool IsCompleted = false;
-
-    public event Action OnQuestActivated;
-    public event Action OnQuestCompleted;
-    public event Action<int> OnObjectiveCompleted;
-
-    [Serializable]
+    [System.Serializable]
     public class QuestObjective
     {
+        [TextArea(1, 3)]
         public string description;
         public bool isCompleted;
     }
 
+    [Header("Quest Objectives")]
+    [SerializeField] private List<QuestObjective> _objectives = new List<QuestObjective>();
+
+    [Header("Follow-up Quests")]
+    [Tooltip("Quests that will become available after this quest is completed")]
+    public Quest[] followUpQuests;
+    [Tooltip("If true, follow-up quests must be manually accepted. If false, they will be automatically added.")]
+    public bool requiresManualAcceptance = true;
+
+    public bool IsActive
+    {
+        get { return _isActive; }
+        set { _isActive = value; }
+    }
+
+    public Quest CreateInstance()
+    {
+        Quest instance = Instantiate(this);
+        instance.ActivateQuest();
+        return instance;
+    }
+
+    public bool IsCompleted
+    {
+        get { return _isCompleted; }
+        set { _isCompleted = value; }
+    }
+
+    public List<QuestObjective> Objectives => _objectives;
+
     public void ActivateQuest()
     {
-        IsActive = true;
-        IsCompleted = false;
+        _isActive = true;
+        _isCompleted = false;
 
-        // Reset objectives
-        foreach (var objective in Objectives)
+        foreach (var objective in _objectives)
         {
             objective.isCompleted = false;
         }
 
-        OnQuestActivated?.Invoke();
+        Debug.Log($"Quest activated: {questName}");
     }
 
     public void CompleteQuest()
     {
-        IsActive = false;
-        IsCompleted = true;
+        _isActive = false;
+        _isCompleted = true;
 
-        // Mark all objectives as completed
-        foreach (var objective in Objectives)
+        foreach (var objective in _objectives)
         {
             objective.isCompleted = true;
         }
 
-        OnQuestCompleted?.Invoke();
+        Debug.Log($"Quest completed: {questName}");
 
-        // Notify the quest manager
+        // Notify the QuestManager
         if (QuestManager.Instance != null)
         {
             QuestManager.Instance.NotifyQuestCompleted(this);
         }
     }
 
+    public void CompleteObjective(int index)
+    {
+        if (index >= 0 && index < _objectives.Count)
+        {
+            _objectives[index].isCompleted = true;
+            Debug.Log($"Completed objective {index + 1} for quest: {questName}");
+            CheckQuestCompletion();
+        }
+    }
+
+    public void CheckQuestCompletion()
+    {
+        bool allCompleted = true;
+        foreach (var objective in _objectives)
+        {
+            if (!objective.isCompleted)
+            {
+                allCompleted = false;
+                break;
+            }
+        }
+
+        if (allCompleted && !_isCompleted)
+        {
+            CompleteQuest();
+        }
+    }
+
     public bool AreAllObjectivesCompleted()
     {
-        if (Objectives == null || Objectives.Count == 0)
-            return true;
-
-        foreach (var objective in Objectives)
+        foreach (var objective in _objectives)
         {
             if (!objective.isCompleted)
                 return false;
         }
-
         return true;
     }
 
     public float GetCompletionPercentage()
     {
-        if (Objectives == null || Objectives.Count == 0)
+        if (_objectives == null || _objectives.Count == 0)
             return 0f;
 
         int completedCount = 0;
-
-        foreach (var objective in Objectives)
+        foreach (var objective in _objectives)
         {
             if (objective.isCompleted)
                 completedCount++;
         }
 
-        return (float)completedCount / Objectives.Count;
+        return (float)completedCount / _objectives.Count;
+    }
+
+    private void OnEnable()
+    {
+        if (string.IsNullOrEmpty(questName))
+        {
+            questName = "New Quest";
+        }
     }
 }

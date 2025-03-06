@@ -9,9 +9,12 @@ public class QuestManager : MonoBehaviour
 
     [SerializeField] private List<Quest> activeQuests = new List<Quest>();
     [SerializeField] private List<Quest> completedQuests = new List<Quest>();
+    [SerializeField] private List<Quest> availableQuests = new List<Quest>();
 
     public event Action<Quest> OnQuestAdded;
     public event Action<Quest> OnQuestCompleted;
+    public event Action<Quest> OnQuestRemoved;
+    public event Action<Quest> OnQuestAvailable;
     public event Action<Quest, int> OnObjectiveCompleted;
 
     private void Awake()
@@ -30,15 +33,54 @@ public class QuestManager : MonoBehaviour
     {
         ResetAllQuests();
     }
+
     public void NotifyQuestCompleted(Quest quest)
     {
         // Handle quest completion logic
         Debug.Log($"QuestManager notified of quest completion: {quest.questName}");
 
-        // If you have an event for quest completion, invoke it here
-        if (OnQuestCompleted != null)
+        // If the quest is in our active list, move it to completed
+        if (activeQuests.Contains(quest))
         {
-            OnQuestCompleted.Invoke(quest);
+            activeQuests.Remove(quest);
+            completedQuests.Add(quest);
+
+            // Notify UI to remove this quest
+            OnQuestRemoved?.Invoke(quest);
+            OnQuestCompleted?.Invoke(quest);
+
+            // Check for follow-up quests
+            CheckForFollowUpQuests(quest);
+        }
+    }
+
+    private void CheckForFollowUpQuests(Quest quest)
+    {
+        if (quest.followUpQuests == null || quest.followUpQuests.Length == 0)
+            return;
+
+        foreach (Quest followUpQuest in quest.followUpQuests)
+        {
+            if (followUpQuest == null) continue;
+
+            if (followUpQuest.requiresManualAcceptance)
+            {
+                // Make the quest available but don't add it yet
+                if (!availableQuests.Contains(followUpQuest) &&
+                    !activeQuests.Contains(followUpQuest) &&
+                    !completedQuests.Contains(followUpQuest))
+                {
+                    availableQuests.Add(followUpQuest);
+                    OnQuestAvailable?.Invoke(followUpQuest);
+                    Debug.Log($"Follow-up quest available: {followUpQuest.questName}");
+                }
+            }
+            else
+            {
+                // Automatically add the follow-up quest
+                AddQuest(followUpQuest);
+                Debug.Log($"Follow-up quest automatically added: {followUpQuest.questName}");
+            }
         }
     }
 
@@ -46,6 +88,8 @@ public class QuestManager : MonoBehaviour
     {
         activeQuests.Clear();
         completedQuests.Clear();
+        availableQuests.Clear();
+
         Quest[] allQuests = Resources.FindObjectsOfTypeAll<Quest>();
         foreach (var quest in allQuests)
         {
@@ -72,6 +116,12 @@ public class QuestManager : MonoBehaviour
             return;
         }
 
+        // Remove from available quests if it was there
+        if (availableQuests.Contains(quest))
+        {
+            availableQuests.Remove(quest);
+        }
+
         activeQuests.Add(quest);
         quest.ActivateQuest();
         Debug.Log($"Added quest: {quest.questName}");
@@ -92,6 +142,10 @@ public class QuestManager : MonoBehaviour
             Debug.Log($"Completed quest: {quest.questName}");
 
             OnQuestCompleted?.Invoke(quest);
+            OnQuestRemoved?.Invoke(quest);
+
+            // Check for follow-up quests
+            CheckForFollowUpQuests(quest);
         }
     }
 
@@ -105,6 +159,11 @@ public class QuestManager : MonoBehaviour
         return quest != null && completedQuests.Contains(quest);
     }
 
+    public bool IsQuestAvailable(Quest quest)
+    {
+        return quest != null && availableQuests.Contains(quest);
+    }
+
     public List<Quest> GetActiveQuests()
     {
         return new List<Quest>(activeQuests);
@@ -113,6 +172,11 @@ public class QuestManager : MonoBehaviour
     public List<Quest> GetCompletedQuests()
     {
         return new List<Quest>(completedQuests);
+    }
+
+    public List<Quest> GetAvailableQuests()
+    {
+        return new List<Quest>(availableQuests);
     }
 
     public void CompleteObjective(Quest quest, int objectiveIndex)
@@ -132,24 +196,14 @@ public class QuestManager : MonoBehaviour
         QuestObjective objective = quest.Objectives[objectiveIndex];
         if (objective.isCompleted)
         {
-            return; 
+            return;
         }
 
         objective.isCompleted = true;
 
         OnObjectiveCompleted?.Invoke(quest, objectiveIndex);
 
-        bool allCompleted = true;
-        foreach (var obj in quest.Objectives)
-        {
-            if (!obj.isCompleted)
-            {
-                allCompleted = false;
-                break;
-            }
-        }
-
-        if (allCompleted)
+        if (quest.AreAllObjectivesCompleted())
         {
             CompleteQuest(quest);
         }
