@@ -4643,12 +4643,12 @@ MonoBehaviour:
   theEnemy: {fileID: 399233375}
   normalSpeed: 0.01
   chaseSpeed: 0.05
-  detectionRange: 10
+  detectionRange: 5
   playerLayer:
     serializedVersion: 2
     m_Bits: 8
   animSpeed: 1
-  footstepDistance: 5
+  footstepDistance: 50
   maxVolume: 10
   walkAnim: Walk
   runAnim: Run
@@ -4707,7 +4707,7 @@ Transform:
   m_GameObject: {fileID: 399233375}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 30.01, y: 0.93, z: 17.16}
+  m_LocalPosition: {x: 30.01, y: 0.84, z: 17.16}
   m_LocalScale: {x: 1.1532, y: 1.1532, z: 1.1532}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -4762,10 +4762,10 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1.18
-  MinDistance: 20.92
-  MaxDistance: 50.3
+  MinDistance: 1
+  MaxDistance: 50
   Pan2D: 0
-  rolloffMode: 1
+  rolloffMode: 0
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -4773,23 +4773,68 @@ AudioSource:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
+      time: 0.04256775
+      value: 1.0125008
+      inSlope: -50.01992
+      outSlope: -50.01992
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.054102935
+      value: 0.62083435
+      inSlope: -12.50498
+      outSlope: -12.50498
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.12231262
+      value: 0.3291626
+      inSlope: -3.126245
+      outSlope: -3.126245
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.258732
+      value: 0.16667175
+      inSlope: -0.78156126
+      outSlope: -0.78156126
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.44693786
+      value: 0.037506104
+      inSlope: -0.55617666
+      outSlope: -0.55617666
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.5351921
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.64
+      value: 0.03125
+      inSlope: -0.04884758
+      outSlope: -0.04884758
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
     - serializedVersion: 3
       time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
+      value: 0.02
+      inSlope: -0.020007975
+      outSlope: -0.020007975
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
+      inWeight: 0
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
@@ -4828,7 +4873,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -14665,7 +14710,7 @@ Transform:
   m_GameObject: {fileID: 1251371570}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.044353954, y: 1.45, z: 0.07404432}
+  m_LocalPosition: {x: 2.69, y: 1.45, z: 10.44}
   m_LocalScale: {x: 1, y: 1.6612626, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

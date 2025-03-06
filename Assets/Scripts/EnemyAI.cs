@@ -16,7 +16,7 @@ public class EnemyAI : MonoBehaviour
     public float detectionRange = 10f;
     public LayerMask playerLayer;
     public float animSpeed = 1.0f;
-    public float footstepDistance = 5f;
+    public float footstepDistance = 10f;
     public float maxVolume = 50f;
     Animation enemyAnimation;
     AudioSource footstepAudio;
@@ -32,10 +32,12 @@ public class EnemyAI : MonoBehaviour
     void Start()
     {
         stalkerAgent = GetComponent<NavMeshAgent>();
-        enemySpeed = normalSpeed;
+        
+        stalkerAgent.Stop();
         enemyAnimation = theEnemy.GetComponent<Animation>();
         footstepAudio = theEnemy.GetComponent<AudioSource>();
         footstepAudio.spatialBlend = 1f;
+        
         // Ensure chase music is not playing at the start
         //Chasemusic.Stop();
     }
@@ -48,12 +50,49 @@ public class EnemyAI : MonoBehaviour
         stalkerAgent.SetDestination(stalkerDes.transform.position);
 
         float distanceToPlayer = Vector3.Distance(transform.position, stalkerDes.transform.position);
-        //HandleFootstepAudio(distanceToPlayer);
-
-        if (IsPlayerInSight())
+        //Debug.Log(footstepDistance + "Footsteps distance");
+        //Debug.Log(distanceToPlayer + "Distance to player");
+        if (distanceToPlayer <= footstepDistance)
         {
-            enemySpeed = chaseSpeed;
+
+            footstepAudio.volume = Mathf.Lerp(0, maxVolume, (footstepDistance - distanceToPlayer) / footstepDistance);
+
+            if (!footstepAudio.isPlaying && footstepAudio.volume > 0.01f)  // Ensure volume is high enough to be heard
+            {
+                footstepAudio.Play();
+            }
+
+            //Debug.Log("Distance to player is less the fottsteps distance");
+            // Calculate volume based on distance.
+            //float calculatedVolume = Mathf.Lerp(0, maxVolume, (footstepDistance - distanceToPlayer));
+
+            // Ensure the volume is being updated correctly.
+            //footstepAudio.volume = Mathf.Clamp(calculatedVolume, 0, maxVolume);  // Clamp the volume between 0 and maxVolume
+            //Debug.Log(calculatedVolume + "Calculated volume");
+            //Debug.Log(footstepAudio.volume + "Volume");
+
+            // Play footstep audio if it's not playing and the volume is above a threshold.
+            //footstepAudio.Play();
+            //Debug.Log("Is playing");
+
+        }
+        else
+        {
+            // Stop the sound if the player is far away.
+            //footstepAudio.volume = 0;
+            if (footstepAudio.isPlaying)
+            {
+                footstepAudio.Stop();
+            }
+        }
+        
+
+        if (IsPlayerInSight() == true)
+        {
+            //enemySpeed = chaseSpeed;
+            stalkerAgent.Resume();
             enemyAnimation[runAnim].speed = animSpeed;
+            //transform.position = Vector3.MoveTowards(transform.position, stalkerDes.transform.position, enemySpeed);
             if (!enemyAnimation.IsPlaying(runAnim))
             {
                 enemyAnimation.Play(runAnim);
@@ -63,8 +102,11 @@ public class EnemyAI : MonoBehaviour
         }
         else
         {
-            enemySpeed = normalSpeed;
+            //enemySpeed = 0f;
+            stalkerAgent.Stop();
+            //enemySpeed = normalSpeed;
             enemyAnimation[walkAnim].speed = animSpeed;
+
             /*if (!enemyAnimation.IsPlaying(walkAnim))
             {
                 enemyAnimation.Play(walkAnim);
@@ -80,7 +122,7 @@ public class EnemyAI : MonoBehaviour
             }*/
         }
 
-        transform.position = Vector3.MoveTowards(transform.position, stalkerDes.transform.position, enemySpeed);
+        
 
         if (stalkerAgent.remainingDistance > stalkerAgent.stoppingDistance)
         {
@@ -89,7 +131,7 @@ public class EnemyAI : MonoBehaviour
         else
         {
             stalkerAgent.isStopped = true;
-            Wander();
+            //Wander();
         }
     }
 
@@ -100,6 +142,7 @@ public class EnemyAI : MonoBehaviour
 
         if (distanceToPlayer <= detectionRange)
         {
+            Debug.Log("Less the detecctionrange");
             RaycastHit hit;
             if (Physics.Raycast(transform.position, directionToPlayer.normalized, out hit, detectionRange, playerLayer))
             {
@@ -112,32 +155,10 @@ public class EnemyAI : MonoBehaviour
         return false;
     }
 
-    /*public void HandleFootstepAudio(float distanceToPlayer)
+    public void HandleFootstepAudio(float distanceToPlayer)
     {
-        if (distanceToPlayer <= footstepDistance)
-        {
-            // Calculate volume based on distance.
-            float calculatedVolume = Mathf.Lerp(0, maxVolume, (footstepDistance - distanceToPlayer) / footstepDistance);
-
-            // Ensure the volume is being updated correctly.
-            footstepAudio.volume = Mathf.Clamp(calculatedVolume, 0, maxVolume);  // Clamp the volume between 0 and maxVolume
-
-            // Play footstep audio if it's not playing and the volume is above a threshold.
-            if (!footstepAudio.isPlaying && footstepAudio.volume > 0.01f)
-            {
-                footstepAudio.Play();
-            }
-        }
-        else
-        {
-            // Stop the sound if the player is far away.
-            footstepAudio.volume = 0;
-            if (footstepAudio.isPlaying)
-            {
-                footstepAudio.Stop();
-            }
-        }
-    }*/
+        
+    }
 
 
 
@@ -158,7 +179,7 @@ public class EnemyAI : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    void Wander()
+    /*void Wander()
     {
         Vector3 randomDirection = Random.insideUnitSphere * 5f;
         randomDirection += transform.position;
@@ -168,5 +189,5 @@ public class EnemyAI : MonoBehaviour
         {
             stalkerAgent.SetDestination(hit.position);
         }
-    }
+    }*/
 }
