@@ -21602,12 +21602,12 @@ MonoBehaviour:
       - text: I suppose..
         nextDialog:
           lines: []
-        quest: {fileID: 11400000, guid: d119fe9b472e05549a8907ba7f079b32, type: 2}
+        quest: {fileID: 11400000, guid: a069e25193c8e0641b434ac4f97fb1f5, type: 2}
       character: {fileID: 11400000, guid: c2405cd586ae9254c862d66121dfc807, type: 2}
   autoTrigger: 0
   triggerDistance: 3
   interactionPrompt: {fileID: 1029177602}
-  questToComplete: {fileID: 11400000, guid: d119fe9b472e05549a8907ba7f079b32, type: 2}
+  questToComplete: {fileID: 11400000, guid: a069e25193c8e0641b434ac4f97fb1f5, type: 2}
   objectiveIndex: 0
   completeQuestAfterDialog: 0
 --- !u!65 &1548107260
@@ -21648,9 +21648,9 @@ MonoBehaviour:
   interactionDistance: 2
   playerLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   interactKey: 101
-  quest: {fileID: 11400000, guid: d119fe9b472e05549a8907ba7f079b32, type: 2}
+  quest: {fileID: 11400000, guid: a069e25193c8e0641b434ac4f97fb1f5, type: 2}
   questDialog:
     lines: []
   giveQuestAfterDialog: 1
