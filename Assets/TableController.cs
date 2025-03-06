@@ -1,257 +1,291 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class TableController : MonoBehaviour
 {
+    [Header("Quest Integration")]
+    [SerializeField] private Quest relatedQuest;
+    [SerializeField] private bool debugMode = true;
+
     [Header("Nametag Settings")]
-    [SerializeField] private List<Transform> nametagPlacementSpots = new List<Transform>();
+    [SerializeField] private NameTagSpot[] nametagSpots;
+    [SerializeField] private string[] expectedGuests;
+    [SerializeField] private float checkingInterval = 0.5f;
+    [SerializeField] private bool requireCorrectPositions = true;
+
+    [Header("Interaction Settings")]
     [SerializeField] private GameObject interactionPrompt;
-    [SerializeField] private AudioClip placementSound;
-    [SerializeField] private bool hideNametagsOnStart = true;
+    [SerializeField] private float interactionDistance = 2f;
+    [SerializeField] private Transform promptPosition;
 
-    [Header("Quest Settings")]
-    [SerializeField] private Quest nametagQuest;
-    [SerializeField] private int startingObjectiveIndex = 0;
-    [SerializeField] private bool incrementObjectiveIndex = true;
-    [SerializeField] private bool requireCorrectNametagOrder = false;
+    [Header("Audio")]
+    [SerializeField] private AudioClip correctPlacementSound;
+    [SerializeField] private AudioClip allCorrectSound;
+    [SerializeField] private AudioSource audioSource;
 
-    [Header("Debug")]
-    [SerializeField] private bool showDebugMessages = true;
+    // Tracking variables
+    private int filledSpots = 0;
+    private float timeSinceLastCheck = 0f;
+    private bool questCompleted = false;
+    private List<string> placedNameTags = new List<string>();
+    private NameTag currentSelectedNameTag;
 
-    private List<NameTag> placedNametags = new List<NameTag>();
-    private AudioSource audioSource;
-    private int totalNametagsPlaced = 0;
-    private int objectiveIndex;
-
-    void Awake()
+    private void Start()
     {
-        // Initialize audio source if sound effects are used
-        if (placementSound != null && audioSource == null)
+        // Make sure we have audio source if audio clips were provided
+        if (audioSource == null && (correctPlacementSound != null || allCorrectSound != null))
         {
             audioSource = gameObject.AddComponent<AudioSource>();
-            audioSource.playOnAwake = false;
         }
 
-        // Make sure table is on correct layer for detection
-        if (gameObject.layer != LayerMask.NameToLayer("Table"))
+        if (nametagSpots == null || nametagSpots.Length == 0)
         {
-            DebugLog($"Setting layer of {gameObject.name} to 'Table'");
-            gameObject.layer = LayerMask.NameToLayer("Table");
+            // Try to find nametag spots if none were assigned
+            nametagSpots = GetComponentsInChildren<NameTagSpot>();
+            if (nametagSpots.Length == 0)
+            {
+                Debug.LogError("[TableController] No nametag spots found or assigned!");
+            }
         }
 
-        // Initially hide the interaction prompt
+        // Make sure we have the correct number of expected guests
+        if (expectedGuests == null || expectedGuests.Length == 0)
+        {
+            if (debugMode) Debug.LogWarning("[TableController] No expected guests specified.");
+            expectedGuests = new string[nametagSpots.Length];
+            for (int i = 0; i < expectedGuests.Length; i++)
+            {
+                expectedGuests[i] = "Guest " + (i + 1);
+            }
+        }
+        else if (expectedGuests.Length != nametagSpots.Length)
+        {
+            Debug.LogWarning($"[TableController] Mismatch between expected guests ({expectedGuests.Length}) and nametag spots ({nametagSpots.Length})");
+        }
+
+        // Initialize spots with their expected guests
+        for (int i = 0; i < nametagSpots.Length && i < expectedGuests.Length; i++)
+        {
+            if (nametagSpots[i] != null)
+            {
+                nametagSpots[i].Initialize(expectedGuests[i], this);
+                if (debugMode) Debug.Log($"[TableController] Spot {i} initialized for guest: {expectedGuests[i]}");
+            }
+        }
+
+        // Hide interaction prompt at start
         if (interactionPrompt != null)
         {
             interactionPrompt.SetActive(false);
         }
 
-        // Set initial objective index
-        objectiveIndex = startingObjectiveIndex;
-
-        ValidateSetup();
+        DebugLog("TableController initialized with " + nametagSpots.Length + " nametag spots");
     }
 
-    void Start()
+    private void Update()
     {
-        // Perform additional checks after all objects are initialized
-        if (hideNametagsOnStart)
+        // Periodically check if all nametags are placed correctly
+        timeSinceLastCheck += Time.deltaTime;
+        if (timeSinceLastCheck >= checkingInterval)
         {
-            // This can be useful if you have pre-placed nametags in the scene that should be hidden until placed
-            foreach (Transform spot in nametagPlacementSpots)
+            CheckAllNameTags();
+            timeSinceLastCheck = 0f;
+        }
+    }
+
+    private void CheckAllNameTags()
+    {
+        if (questCompleted) return;
+
+        int correctlyPlaced = 0;
+        filledSpots = 0;
+
+        foreach (var spot in nametagSpots)
+        {
+            if (spot == null) continue;
+
+            if (spot.HasNameTag)
             {
-                // Check if there are any child nametags that should be hidden initially
-                NameTag existingNameTag = spot.GetComponentInChildren<NameTag>(true);
-                if (existingNameTag != null)
+                filledSpots++;
+                if (!requireCorrectPositions || spot.IsCorrectNameTag)
                 {
-                    existingNameTag.gameObject.SetActive(false);
-                    DebugLog($"Hiding pre-placed nametag: {existingNameTag.name}");
+                    correctlyPlaced++;
                 }
             }
         }
+
+        // Debug status
+        if (debugMode)
+        {
+            DebugLog($"Checking nametags: {filledSpots}/{nametagSpots.Length} filled, {correctlyPlaced}/{nametagSpots.Length} correct");
+        }
+
+        // Check if all spots are filled with correct nametags
+        bool allPlaced = requireCorrectPositions ?
+            (correctlyPlaced == nametagSpots.Length) :
+            (filledSpots == nametagSpots.Length);
+
+        if (allPlaced && !questCompleted)
+        {
+            DebugLog("All nametags placed! (" + filledSpots + "/" + nametagSpots.Length + ")");
+
+            // Play sound effect
+            if (audioSource != null && allCorrectSound != null)
+            {
+                audioSource.clip = allCorrectSound;
+                audioSource.Play();
+            }
+
+            // Complete the quest
+            CompleteNametagQuest();
+        }
     }
 
-    // Validate component setup
-    private void ValidateSetup()
+    // Called when a nametag is placed on a spot
+    public void OnNameTagPlaced(NameTagSpot spot, string guestName)
     {
-        if (nametagPlacementSpots.Count == 0)
+        if (debugMode)
         {
-            Debug.LogWarning($"TableController on {gameObject.name} has no nametag placement spots defined!");
+            DebugLog($"Nametag placed: {guestName} at spot expecting {spot.ExpectedGuest}");
         }
 
-        if (nametagQuest != null && nametagQuest.Objectives.Count <= startingObjectiveIndex)
+        if (!placedNameTags.Contains(guestName))
         {
-            Debug.LogWarning($"Starting objective index ({startingObjectiveIndex}) is greater than the number of objectives in the quest ({nametagQuest.Objectives.Count})!");
+            placedNameTags.Add(guestName);
+        }
+
+        // Play correct placement sound if this is the right spot
+        if (spot.IsCorrectNameTag && audioSource != null && correctPlacementSound != null)
+        {
+            audioSource.clip = correctPlacementSound;
+            audioSource.Play();
+        }
+
+        // Check all nametags right away when a new one is placed
+        CheckAllNameTags();
+    }
+
+    // Called when a nametag is removed from a spot
+    public void OnNameTagRemoved(NameTagSpot spot, string guestName)
+    {
+        if (debugMode)
+        {
+            DebugLog($"Nametag removed: {guestName}");
+        }
+
+        placedNameTags.Remove(guestName);
+    }
+
+    // Completes the nametag quest, handling both regular Quests and specialized NameTagQuests
+    private void CompleteNametagQuest()
+    {
+        if (questCompleted) return;
+
+        questCompleted = true;
+
+        if (relatedQuest == null)
+        {
+            Debug.LogWarning("[TableController] No quest assigned!");
+            return;
+        }
+
+        DebugLog("Completing nametag quest...");
+
+        // Check if we have a specialized NameTagQuest
+        NameTagQuest nameTagQuest = relatedQuest as NameTagQuest;
+        if (nameTagQuest != null)
+        {
+            DebugLog("Using specialized NameTagQuest completion logic");
+            nameTagQuest.MarkAllNameTagsPlaced();
+
+            // Also call HandleQuestCompletion to trigger scene loading if needed
+            nameTagQuest.HandleQuestCompletion();
+        }
+        else
+        {
+            // Standard quest completion
+            DebugLog("Using standard Quest completion logic");
+            relatedQuest.CompleteQuest();
         }
     }
 
-    // Called by NametagManager when player is looking at the table
+    // Check if a nametag can be placed on the table
+    public bool CanPlaceNameTag(NameTag nameTag = null)
+    {
+        // Find an empty spot
+        foreach (var spot in nametagSpots)
+        {
+            if (spot != null && !spot.HasNameTag)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Place a nametag on the table
+    public bool PlaceNameTag(NameTag nameTag, Vector3 playerPosition)
+    {
+        if (nameTag == null) return false;
+
+        // Find the closest empty spot
+        NameTagSpot closestSpot = null;
+        float closestDistance = float.MaxValue;
+
+        foreach (var spot in nametagSpots)
+        {
+            if (spot != null && !spot.HasNameTag)
+            {
+                float distance = Vector3.Distance(spot.transform.position, playerPosition);
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closestSpot = spot;
+                }
+            }
+        }
+
+        if (closestSpot != null && closestSpot.snapPoint != null)
+        {
+            // Place the nametag at the spot
+            nameTag.PlaceOnTable(closestSpot.snapPoint.position, closestSpot.snapPoint.rotation);
+            return true;
+        }
+
+        return false;
+    }
+
+    // Show/hide the interaction prompt
     public void ShowInteractionPrompt(bool show)
     {
         if (interactionPrompt != null)
         {
             interactionPrompt.SetActive(show);
-        }
-    }
 
-    // Check if a nametag can be placed on this table
-    public bool CanPlaceNameTag()
-    {
-        // If all spots are full, return false
-        return totalNametagsPlaced < nametagPlacementSpots.Count;
-    }
-
-    // Places a nametag on the next available spot
-    public void PlaceNameTag(NameTag nametag)
-    {
-        if (nametag == null)
-        {
-            Debug.LogWarning("TableController: Attempted to place null nametag!");
-            return;
-        }
-
-        if (!CanPlaceNameTag())
-        {
-            DebugLog($"TableController: Cannot place nametag - table is full ({totalNametagsPlaced}/{nametagPlacementSpots.Count})");
-            return;
-        }
-
-        DebugLog($"TableController: Placing nametag '{nametag.GuestName}' at spot {totalNametagsPlaced}");
-
-        // Find next available spot
-        if (totalNametagsPlaced < nametagPlacementSpots.Count)
-        {
-            Transform spot = nametagPlacementSpots[totalNametagsPlaced];
-
-            // Position the nametag
-            nametag.transform.position = spot.position;
-            nametag.transform.rotation = spot.rotation;
-
-            // Add to our tracking list
-            placedNametags.Add(nametag);
-            totalNametagsPlaced++;
-
-            // Play sound effect if available
-            if (audioSource != null && placementSound != null)
+            // Position the prompt if it's being shown
+            if (show && promptPosition != null)
             {
-                audioSource.clip = placementSound;
-                audioSource.Play();
-            }
-
-            // Update the quest objective for this nametag
-            if (nametagQuest != null)
-            {
-                // Only update if we have a valid objective index
-                if (objectiveIndex < nametagQuest.Objectives.Count)
-                {
-                    // Complete the specific objective for this nametag
-                    DebugLog($"NAMETAG QUEST: Completing objective {objectiveIndex} of {nametagQuest.Objectives.Count} for quest '{nametagQuest.questName}'");
-                    nametagQuest.CompleteObjective(objectiveIndex);
-
-                    // Increment to the next objective if configured to do so
-                    if (incrementObjectiveIndex)
-                    {
-                        objectiveIndex++;
-                        DebugLog($"Incremented to next objective index: {objectiveIndex}");
-                    }
-                }
-                else
-                {
-                    Debug.LogWarning($"Objective index {objectiveIndex} is out of range! Quest only has {nametagQuest.Objectives.Count} objectives.");
-                }
-
-                // Log completion status - DO NOT call CompleteQuest directly
-                if (totalNametagsPlaced == nametagPlacementSpots.Count)
-                {
-                    DebugLog($"All nametags placed! ({totalNametagsPlaced}/{nametagPlacementSpots.Count}) Quest completion will be handled by objectives system.");
-                }
-            }
-            else
-            {
-                DebugLog("No nametag quest assigned to TableController.");
-            }
-
-            // Notify the NameTagManager that we placed this tag
-            if (NameTagManager.Instance != null)
-            {
-                NameTagManager.Instance.NotifyNameTagPlaced();
-            }
-            else
-            {
-                Debug.LogWarning("NameTagManager.Instance is null! Cannot notify name tag placement.");
+                interactionPrompt.transform.position = promptPosition.position;
             }
         }
     }
 
-    // Returns the total number of placement spots on this table
-    public int GetTotalPlacementSpots()
-    {
-        return nametagPlacementSpots.Count;
-    }
-
-    // Returns how many nametags have been placed
-    public int GetPlacedNametagCount()
-    {
-        return totalNametagsPlaced;
-    }
-
-    // Check if a specific nametag is allowed to be placed (for validation based on order)
-    public bool CanPlaceSpecificNameTag(NameTag nametag)
-    {
-        if (!requireCorrectNametagOrder)
-            return true;
-
-        // Add custom logic here if you want specific nametags to go to specific spots
-        // For example: return nametag.GuestName == expectedGuestNames[totalNametagsPlaced];
-
-        return true;
-    }
-
-    // Get the next expected nametag name (if order matters)
-    public string GetNextExpectedNameTag()
-    {
-        if (!requireCorrectNametagOrder || totalNametagsPlaced >= nametagPlacementSpots.Count)
-            return string.Empty;
-
-        // Add custom logic here if you have specific expected nametag order
-        // For example: return expectedGuestNames[totalNametagsPlaced];
-
-        return "Any nametag";
-    }
-
-    // For debugging purposes
+    // Debug helper
     private void DebugLog(string message)
     {
-        if (showDebugMessages)
+        if (debugMode)
         {
-            Debug.Log($"[TableController:{gameObject.name}] {message}");
+            Debug.Log("[TableController:Dining Table] " + message);
         }
     }
 
-    // For editor debugging
-    public void ResetTable()
+    // Public method to force quest completion (can be called from inspector for testing)
+    public void ForceCompleteQuest()
     {
-        totalNametagsPlaced = 0;
-        placedNametags.Clear();
-        objectiveIndex = startingObjectiveIndex;
-        DebugLog("Table has been reset");
-    }
-
-    // For visual debugging of placement spots
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.green;
-
-        if (nametagPlacementSpots != null)
+        if (!questCompleted)
         {
-            foreach (Transform spot in nametagPlacementSpots)
-            {
-                if (spot != null)
-                {
-                    Gizmos.DrawWireSphere(spot.position, 0.05f);
-                    Gizmos.DrawLine(transform.position, spot.position);
-                }
-            }
+            DebugLog("Force completing nametag quest!");
+            CompleteNametagQuest();
         }
     }
 }

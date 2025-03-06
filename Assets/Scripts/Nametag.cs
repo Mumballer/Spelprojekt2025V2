@@ -1,157 +1,159 @@
 using UnityEngine;
-using System.Collections;
 
 public class NameTag : MonoBehaviour
 {
-    [Header("Nametag Settings")]
+    [Header("Nametag Information")]
     [SerializeField] private string guestName;
-    [SerializeField] private Transform originalParent;
-    [SerializeField] private Vector3 originalPosition;
-    [SerializeField] private Quaternion originalRotation;
-    [SerializeField] private Vector3 originalScale;
+    [TextArea]
+    public string guestDescription;
 
-    [Header("Interaction Settings")]
-    [SerializeField] private GameObject promptText;
+    [Header("Visual Elements")]
+    public Renderer nametagRenderer;
+    public TextMesh nameText;
 
-    [Header("Sound Effects")]
-    [SerializeField] private AudioClip pickupSound;
-    [SerializeField] private AudioClip placeSound;
+    [Header("Interaction")]
+    public Collider nametagCollider;
+    public float pickupDistance = 2f;
+    public bool isPickedUp = false;
 
-    private bool isPickedUp = false;
-    private AudioSource audioSource;
-    private Rigidbody rb;
-    private Collider col;
-    private bool isPlaced = false;
+    [Header("Physics")]
+    public bool disablePhysicsWhenPlaced = true;
 
-    public bool IsPickedUp => isPickedUp;
-    public bool IsPlaced => isPlaced;
-    public string GuestName => guestName;
+    private Vector3 originalPosition;
+    private Quaternion originalRotation;
+    private Rigidbody nametagRigidbody;
+    private bool wasKinematic;
 
-    private void Awake()
+    // Property for guest name
+    public string GuestName
     {
-        originalParent = transform.parent;
-        originalPosition = transform.localPosition;
-        originalRotation = transform.localRotation;
-        originalScale = transform.localScale;
-
-        rb = GetComponent<Rigidbody>();
-        col = GetComponent<Collider>();
-        audioSource = GetComponent<AudioSource>();
-
-        if (audioSource == null && (pickupSound != null || placeSound != null))
+        get { return guestName; }
+        set
         {
-            audioSource = gameObject.AddComponent<AudioSource>();
-            audioSource.playOnAwake = false;
-            audioSource.spatialBlend = 1f;
+            guestName = value;
+            // Update text mesh if available
+            if (nameText != null)
+                nameText.text = value;
         }
     }
 
-    private void Start()
+    void Start()
     {
-        if (promptText != null)
+        // Store the original position and rotation
+        originalPosition = transform.position;
+        originalRotation = transform.rotation;
+
+        // Setup the nametag text if available
+        if (nameText != null)
         {
-            promptText.SetActive(false);
+            nameText.text = guestName;
+        }
+
+        // Cache the rigidbody if we have one
+        nametagRigidbody = GetComponent<Rigidbody>();
+        if (nametagRigidbody != null)
+        {
+            wasKinematic = nametagRigidbody.isKinematic;
         }
     }
 
-    public void ShowPrompt(bool show)
+    // Modified to accept optional Transform parameter
+    public void PickUp(Transform holder = null)
     {
-        if (promptText != null)
-        {
-            promptText.SetActive(show);
-        }
-    }
-
-    public void PickUp(Transform holdPoint)
-    {
-        if (isPickedUp) return;
-
         isPickedUp = true;
-        isPlaced = false;
 
-        if (rb != null)
+        // Parent to holder if provided
+        if (holder != null)
         {
-            rb.isKinematic = true;
+            transform.SetParent(holder);
+            transform.localPosition = Vector3.zero;
         }
 
-        if (col != null)
+        // Disable physics if we have a rigidbody
+        if (nametagRigidbody != null)
         {
-            col.enabled = false;
-        }
-
-        transform.SetParent(holdPoint);
-        transform.localPosition = Vector3.zero;
-        transform.localRotation = Quaternion.identity;
-        transform.localScale = originalScale;
-
-        if (audioSource != null && pickupSound != null)
-        {
-            audioSource.clip = pickupSound;
-            audioSource.Play();
-        }
-
-        ShowPrompt(false);
-
-        if (NameTagManager.Instance != null)
-        {
-            NameTagManager.Instance.NotifyNameTagPickup(this);
+            nametagRigidbody.isKinematic = true;
+            nametagRigidbody.linearVelocity = Vector3.zero;
+            nametagRigidbody.angularVelocity = Vector3.zero;
         }
     }
 
-    public void PlaceOnTable(Vector3 position, Quaternion rotation, Transform tableTransform)
+    public void Drop()
     {
-        if (!isPickedUp) return;
-
         isPickedUp = false;
-        isPlaced = true;
 
+        // Remove parent if we have one
         transform.SetParent(null);
 
-        transform.position = position;
-        transform.rotation = rotation;
-        transform.localScale = originalScale;
-
-        transform.SetParent(tableTransform);
-
-        if (col != null)
+        // Re-enable physics if we have a rigidbody
+        if (nametagRigidbody != null)
         {
-            col.enabled = true;
-        }
-
-        if (audioSource != null && placeSound != null)
-        {
-            audioSource.clip = placeSound;
-            audioSource.Play();
-        }
-
-        Debug.Log($"Placed {guestName}'s nametag at position {position}");
-
-        if (NameTagManager.Instance != null)
-        {
-            NameTagManager.Instance.NotifyNameTagPlaced(this);
+            nametagRigidbody.isKinematic = wasKinematic;
         }
     }
 
-    public void Reset()
+    public void ResetToOriginalPosition()
     {
-        if (!isPickedUp) return;
+        transform.position = originalPosition;
+        transform.rotation = originalRotation;
+        transform.SetParent(null); // Ensure no parent
+        Drop();
+    }
 
+    // For backward compatibility
+    public string GetGuestName()
+    {
+        return guestName;
+    }
+
+    // When the nametag is placed on the table
+    public void PlaceOnTable(Vector3 position, Quaternion rotation)
+    {
+        transform.position = position;
+        transform.rotation = rotation;
+        transform.SetParent(null); // Detach from any holder
         isPickedUp = false;
-        isPlaced = false;
 
-        if (rb != null)
+        // Disable physics when placed if requested
+        if (disablePhysicsWhenPlaced && nametagRigidbody != null)
         {
-            rb.isKinematic = false;
+            nametagRigidbody.isKinematic = true;
+            nametagRigidbody.linearVelocity = Vector3.zero;
+            nametagRigidbody.angularVelocity = Vector3.zero;
         }
+    }
 
-        if (col != null)
+    // Can be used to highlight the nametag when selectable
+    public void SetHighlighted(bool highlighted)
+    {
+        if (nametagRenderer != null)
         {
-            col.enabled = true;
+            // You can implement highlighting logic here
+            // For example, changing material color or emissive properties
+            Material mat = nametagRenderer.material;
+            if (mat != null)
+            {
+                if (highlighted)
+                {
+                    // Example: Make it slightly brighter
+                    mat.color = new Color(
+                        mat.color.r * 1.2f,
+                        mat.color.g * 1.2f,
+                        mat.color.b * 1.2f
+                    );
+                }
+                else
+                {
+                    // Reset to original color
+                    mat.color = Color.white;
+                }
+            }
         }
+    }
 
-        transform.SetParent(originalParent);
-        transform.localPosition = originalPosition;
-        transform.localRotation = originalRotation;
-        transform.localScale = originalScale;
+    // Helper method to determine if this nametag is interactable by the player
+    public bool IsInteractable(Vector3 playerPosition)
+    {
+        return Vector3.Distance(transform.position, playerPosition) <= pickupDistance;
     }
 }
