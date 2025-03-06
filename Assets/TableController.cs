@@ -114,12 +114,6 @@ public class TableController : MonoBehaviour
             }
         }
 
-        // Debug status
-        if (debugMode)
-        {
-            //DebugLog($"Checking nametags: {filledSpots}/{nametagSpots.Length} filled, {correctlyPlaced}/{nametagSpots.Length} correct");
-        }
-
         // Check if all spots are filled with correct nametags
         bool allPlaced = requireCorrectPositions ?
             (correctlyPlaced == nametagSpots.Length) :
@@ -127,7 +121,7 @@ public class TableController : MonoBehaviour
 
         if (allPlaced && !questCompleted)
         {
-            //DebugLog("All nametags placed! (" + filledSpots + "/" + nametagSpots.Length + ")");
+            DebugLog("All nametags placed! (" + filledSpots + "/" + nametagSpots.Length + ")");
 
             // Play sound effect
             if (audioSource != null && allCorrectSound != null)
@@ -170,13 +164,13 @@ public class TableController : MonoBehaviour
     {
         if (debugMode)
         {
-            //DebugLog($"Nametag removed: {guestName}");
+            DebugLog($"Nametag removed: {guestName}");
         }
 
         placedNameTags.Remove(guestName);
     }
 
-    // Completes the nametag quest, handling both regular Quests and specialized NameTagQuests
+    // Completes the nametag quest
     private void CompleteNametagQuest()
     {
         if (questCompleted) return;
@@ -185,27 +179,29 @@ public class TableController : MonoBehaviour
 
         if (relatedQuest == null)
         {
-            //Debug.LogWarning("[TableController] No quest assigned!");
+            Debug.LogWarning("[TableController] No quest assigned!");
             return;
         }
 
-        //DebugLog("Completing nametag quest...");
+        DebugLog("Completing nametag quest...");
 
-        // Check if we have a specialized NameTagQuest
-        NameTagQuest nameTagQuest = relatedQuest as NameTagQuest;
-        if (nameTagQuest != null)
+        // FIXED: Complete the quest using QuestManager
+        if (QuestManager.Instance != null)
         {
-            //DebugLog("Using specialized NameTagQuest completion logic");
-            nameTagQuest.MarkAllNameTagsPlaced();
+            // Complete all objectives and the quest
+            for (int i = 0; i < relatedQuest.Objectives.Count; i++)
+            {
+                QuestManager.Instance.CompleteObjective(relatedQuest, i);
+            }
 
-            // Also call HandleQuestCompletion to trigger scene loading if needed
-            nameTagQuest.HandleQuestCompletion();
+            // Ensure the quest is fully completed
+            QuestManager.Instance.CompleteQuest(relatedQuest);
+
+            DebugLog($"Completed quest '{relatedQuest.questName}' via QuestManager");
         }
         else
         {
-            // Standard quest completion
-            //DebugLog("Using standard Quest completion logic");
-            relatedQuest.CompleteQuest();
+            Debug.LogError("[TableController] QuestManager instance not found!");
         }
     }
 
@@ -275,7 +271,7 @@ public class TableController : MonoBehaviour
     {
         if (debugMode)
         {
-            //Debug.Log("[TableController:Dining Table] " + message);
+            Debug.Log("[TableController] " + message);
         }
     }
 

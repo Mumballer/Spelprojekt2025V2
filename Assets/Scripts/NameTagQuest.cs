@@ -1,136 +1,97 @@
-using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Nametag Quest", menuName = "Quests/Nametag Quest")]
-public class NameTagQuest : Quest
+public class NameTagQuest : MonoBehaviour
 {
-    [Header("Nametag Quest Settings")]
-    public string eventName = "Dinner Party";
-    public string placeNametagsObjective = "Place all the nametags in the correct spots";
-    public int totalNameTags = 6;
-    public bool createIndividualObjectives = false;
-    public List<string> guestNames = new List<string>();
+    [SerializeField] private string questName = "Set up the nametags.";
+    [SerializeField] private string questDescription = "Help set up the nametags for the meeting.";
+    [SerializeField] private Quest questPrefab;
 
-    [Header("Completion Settings")]
-    public bool completeWhenAllPlaced = true;
-    public string nextSceneToLoad = "";
-    public float sceneLoadDelay = 2.0f;
+    private Quest nameTagQuest;
 
-    public void SetupNameTagQuest()
+    // References to name tags
+    [SerializeField] private NameTag[] nameTags;
+
+    // Track found name tags
+    private int nameTagsFound = 0;
+    private bool questCompleted = false;
+
+    void Start()
     {
-        // Clear existing objectives
-        Objectives.Clear();
-
-        if (createIndividualObjectives && guestNames.Count > 0)
-        {
-            // Add individual nametag objectives
-            foreach (string guest in guestNames)
-            {
-                QuestObjective nametagObjective = new QuestObjective
-                {
-                    description = $"Place {guest}'s nametag on the table",
-                    isCompleted = false
-                };
-                Objectives.Add(nametagObjective);
-            }
-        }
-        else
-        {
-            // Add a single objective for all nametags
-            QuestObjective nametagObjective = new QuestObjective
-            {
-                description = placeNametagsObjective,
-                isCompleted = false
-            };
-            Objectives.Add(nametagObjective);
-        }
-
-        // Set quest name and description if not already set
-        if (string.IsNullOrEmpty(questName))
-        {
-            questName = "Set The Table";
-        }
-
-        if (string.IsNullOrEmpty(description))
-        {
-            description = $"Place all the nametags correctly for the {eventName}.";
-        }
+        InitializeQuest();
     }
 
-    // Override OnEnable to set up the quest when created
-    private void OnEnable()
+    private void InitializeQuest()
     {
-        SetupNameTagQuest();
-    }
-
-    // Mark a specific guest's nametag as placed - for individual objectives mode
-    public void MarkGuestNameTagPlaced(string guestName)
-    {
-        if (!createIndividualObjectives || guestNames.Count == 0)
+        if (questPrefab == null)
         {
+            Debug.LogError("Quest prefab not assigned to NameTagQuest!");
             return;
         }
 
-        int index = -1;
-        for (int i = 0; i < guestNames.Count; i++)
-        {
-            if (guestNames[i] == guestName)
-            {
-                index = i;
-                break;
-            }
-        }
+        nameTagQuest = Instantiate(questPrefab);
+        nameTagQuest.questName = questName;
+        nameTagQuest.description = questDescription;
 
-        if (index >= 0 && index < Objectives.Count)
+        // Add objectives - fixed constructor calls with required parameters
+        nameTagQuest.Objectives.Add(new QuestObjective("Find all the name tags", false));
+
+        // Make quest available
+        if (QuestManager.Instance != null)
         {
-            CompleteObjective(index);
+            QuestManager.Instance.AddQuest(nameTagQuest);
         }
     }
 
-    // Use this when all nametags are placed (single objective mode)
-    public void MarkAllNameTagsPlaced()
+    public void NameTagFound()
     {
-        if (createIndividualObjectives)
-        {
-            // Complete all remaining objectives
-            for (int i = 0; i < Objectives.Count; i++)
-            {
-                if (!Objectives[i].isCompleted)
-                {
-                    CompleteObjective(i);
-                }
-            }
-        }
-        else if (Objectives.Count > 0)
-        {
-            // Complete the main objective
-            CompleteObjective(0);
-        }
+        if (questCompleted) return;
 
-        if (completeWhenAllPlaced)
-        {
-            // Call the non-overridden CompleteQuest in the base class
-            CompleteQuest();
+        nameTagsFound++;
+        Debug.Log($"Name tag found! Total found: {nameTagsFound}/{nameTags.Length}");
 
-            // Then handle scene transition if needed
-            HandleQuestCompletion();
+        // Check if all name tags are found
+        if (nameTagsFound >= nameTags.Length)
+        {
+            Debug.Log("All name tags found! Quest objective complete.");
+            CompleteNameTagObjective();
         }
     }
 
-    // Handle post-completion actions (not an override)
-    public void HandleQuestCompletion()
+    private void CompleteNameTagObjective()
     {
-        if (IsCompleted && !string.IsNullOrEmpty(nextSceneToLoad))
+        if (nameTagQuest != null && QuestManager.Instance != null)
         {
-            Debug.Log($"NameTagQuest '{questName}' completed - Scene to load: {nextSceneToLoad}");
+            QuestManager.Instance.CompleteObjective(nameTagQuest, 0);
+            Debug.Log("Name tag quest objective completed!");
 
-            // Use FindFirstObjectByType instead of FindObjectOfType (fixes warning)
-            var sceneLoader = Object.FindFirstObjectByType<QuestSceneLoader>();
-            if (sceneLoader != null)
+            // Check if this completes the entire quest
+            if (nameTagQuest.IsCompleted)
             {
-                // Trigger scene loading check
-                sceneLoader.CheckQuestAndLoadScene();
+                CompleteNameTagQuest();
             }
         }
+    }
+
+    // Fixed method to use QuestManager instead of direct call
+    private void CompleteNameTagQuest()
+    {
+        if (nameTagQuest != null && QuestManager.Instance != null)
+        {
+            QuestManager.Instance.CompleteQuest(nameTagQuest);
+            questCompleted = true;
+            Debug.Log("Name tag quest completed!");
+        }
+    }
+
+    public Quest GetQuest()
+    {
+        return nameTagQuest;
+    }
+
+    public bool IsQuestCompleted()
+    {
+        return questCompleted || (nameTagQuest != null && nameTagQuest.IsCompleted);
     }
 }

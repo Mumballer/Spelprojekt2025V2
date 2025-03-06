@@ -1,58 +1,53 @@
-using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Music Quest", menuName = "Quests/Music Quest")]
-public class MusicQuest : Quest
+public class MusicQuest : MonoBehaviour
 {
-    [Header("Music Quest Settings")]
-    public string musicName = "Gramophone Music";
-    public string startMusicObjective = "Start playing music on the gramophone";
-    public string stopMusicObjective = "Stop the music on the gramophone";
-    public bool requireBothStartAndStop = true;
+    [SerializeField] private string questName = "Play the Gramophone Music";
+    [SerializeField] private string questDescription = "Turn on the gramophone and then turn it off.";
+    [SerializeField] private Quest questPrefab;
 
-    [Header("Completion Settings")]
-    public bool completeOnMusicStart = false;
-    public bool completeOnMusicStop = false;
+    private Quest musicQuest;
 
-    public void SetupMusicQuest()
+    void Start()
     {
-        // Clear existing objectives
-        Objectives.Clear();
+        InitializeQuest();
+    }
 
-        // Add start music objective
-        QuestObjective startObjective = new QuestObjective
+    private void InitializeQuest()
+    {
+        if (questPrefab == null)
         {
-            description = startMusicObjective,
-            isCompleted = false
-        };
-        Objectives.Add(startObjective);
-
-        // Add stop music objective if required
-        if (requireBothStartAndStop)
-        {
-            QuestObjective stopObjective = new QuestObjective
-            {
-                description = stopMusicObjective,
-                isCompleted = false
-            };
-            Objectives.Add(stopObjective);
+            Debug.LogError("Quest prefab not assigned to MusicQuest!");
+            return;
         }
 
-        // Set quest name and description if not already set
-        if (string.IsNullOrEmpty(questName))
-        {
-            questName = "Play the " + musicName;
-        }
+        musicQuest = Instantiate(questPrefab);
+        musicQuest.questName = questName;
+        musicQuest.description = questDescription;
 
-        if (string.IsNullOrEmpty(description))
+        // Add objectives - fixed constructor calls with required parameters
+        musicQuest.Objectives.Add(new QuestObjective("Turn off the gramophone", false));
+        musicQuest.Objectives.Add(new QuestObjective("Turn on the gramophone", false));
+
+        // Make quest available
+        if (QuestManager.Instance != null)
         {
-            description = "Find and play the " + musicName + " on the gramophone.";
+            QuestManager.Instance.AddQuest(musicQuest);
         }
     }
 
-    // Override OnEnable to set up the quest when created
-    private void OnEnable()
+    public Quest GetQuest()
     {
-        SetupMusicQuest();
+        return musicQuest;
+    }
+
+    public void CompleteObjective(int index)
+    {
+        if (musicQuest != null && QuestManager.Instance != null)
+        {
+            QuestManager.Instance.CompleteObjective(musicQuest, index);
+        }
     }
 }
