@@ -8,10 +8,10 @@ public class NameTag : MonoBehaviour
     [SerializeField] private Transform originalParent;
     [SerializeField] private Vector3 originalPosition;
     [SerializeField] private Quaternion originalRotation;
+    [SerializeField] private Vector3 originalScale;
 
     [Header("Interaction Settings")]
     [SerializeField] private GameObject promptText;
-    [SerializeField] private float interactionDistance = 3f;
 
     [Header("Sound Effects")]
     [SerializeField] private AudioClip pickupSound;
@@ -21,18 +21,19 @@ public class NameTag : MonoBehaviour
     private AudioSource audioSource;
     private Rigidbody rb;
     private Collider col;
+    private bool isPlaced = false;
 
     public bool IsPickedUp => isPickedUp;
+    public bool IsPlaced => isPlaced;
     public string GuestName => guestName;
 
     private void Awake()
     {
-        // Store original position and parent
         originalParent = transform.parent;
         originalPosition = transform.localPosition;
         originalRotation = transform.localRotation;
+        originalScale = transform.localScale;
 
-        // Get components
         rb = GetComponent<Rigidbody>();
         col = GetComponent<Collider>();
         audioSource = GetComponent<AudioSource>();
@@ -41,7 +42,7 @@ public class NameTag : MonoBehaviour
         {
             audioSource = gameObject.AddComponent<AudioSource>();
             audioSource.playOnAwake = false;
-            audioSource.spatialBlend = 1f; // 3D sound
+            audioSource.spatialBlend = 1f;
         }
     }
 
@@ -66,65 +67,68 @@ public class NameTag : MonoBehaviour
         if (isPickedUp) return;
 
         isPickedUp = true;
+        isPlaced = false;
 
-        // Disable physics
         if (rb != null)
         {
             rb.isKinematic = true;
         }
 
-        // Disable collider to prevent clipping
         if (col != null)
         {
             col.enabled = false;
         }
 
-        // Parent to the hold point
         transform.SetParent(holdPoint);
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
+        transform.localScale = originalScale;
 
-        // Play sound
         if (audioSource != null && pickupSound != null)
         {
             audioSource.clip = pickupSound;
             audioSource.Play();
         }
 
-        // Hide prompt
         ShowPrompt(false);
 
-        // Notify the manager - use the NotifyNameTagPickup method instead
         if (NameTagManager.Instance != null)
         {
             NameTagManager.Instance.NotifyNameTagPickup(this);
         }
     }
 
-    public void Place(Transform spot)
+    public void PlaceOnTable(Vector3 position, Quaternion rotation, Transform tableTransform)
     {
         if (!isPickedUp) return;
 
         isPickedUp = false;
+        isPlaced = true;
 
-        // Parent to the placement spot
-        transform.SetParent(spot);
-        transform.localPosition = Vector3.zero;
-        transform.localRotation = Quaternion.identity;
+        transform.SetParent(null);
 
-        // Enable collider again
+        transform.position = position;
+        transform.rotation = rotation;
+        transform.localScale = originalScale;
+
+        transform.SetParent(tableTransform);
+
         if (col != null)
         {
             col.enabled = true;
         }
 
-        // Keep rigidbody kinematic to prevent it from falling
-
-        // Play sound
         if (audioSource != null && placeSound != null)
         {
             audioSource.clip = placeSound;
             audioSource.Play();
+        }
+
+        Debug.Log($"Placed {guestName}'s nametag at position {position}");
+
+        if (NameTagManager.Instance != null)
+        {
+            NameTagManager.Instance.NotifyNameTagPlaced(this);
         }
     }
 
@@ -133,22 +137,21 @@ public class NameTag : MonoBehaviour
         if (!isPickedUp) return;
 
         isPickedUp = false;
+        isPlaced = false;
 
-        // Re-enable physics
         if (rb != null)
         {
             rb.isKinematic = false;
         }
 
-        // Re-enable collider
         if (col != null)
         {
             col.enabled = true;
         }
 
-        // Return to original position
         transform.SetParent(originalParent);
         transform.localPosition = originalPosition;
         transform.localRotation = originalRotation;
+        transform.localScale = originalScale;
     }
 }

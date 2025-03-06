@@ -1,108 +1,105 @@
 using UnityEngine;
+using System;
 using System.Collections.Generic;
+using static UnityEditor.Progress;
 
-[CreateAssetMenu(fileName = "NewQuest", menuName = "Quests/Quest")]
+[CreateAssetMenu(fileName = "New Quest", menuName = "Quests/Quest")]
 public class Quest : ScriptableObject
 {
-    [Header("Quest Information")]
+    [Header("Quest Info")]
     public string questName;
-    [TextArea(3, 5)]
+    [TextArea(3, 10)]
     public string description;
 
-    [Header("Quest Status")]
-    [SerializeField] private bool _isActive;
-    [SerializeField] private bool _isCompleted;
+    [Header("Objectives")]
+    public List<QuestObjective> Objectives = new List<QuestObjective>();
 
-    [System.Serializable]
+    [Header("Rewards")]
+    public int experienceReward;
+    public int goldReward;
+    public Item[] itemRewards;
+
+    [Header("Follow-up Quests")]
+    public Quest[] followUpQuests;
+    public bool requiresManualAcceptance = true;
+
+    [HideInInspector]
+    public bool IsActive = false;
+    [HideInInspector]
+    public bool IsCompleted = false;
+
+    public event Action OnQuestActivated;
+    public event Action OnQuestCompleted;
+    public event Action<int> OnObjectiveCompleted;
+
+    [Serializable]
     public class QuestObjective
     {
-        [TextArea(1, 3)]
         public string description;
         public bool isCompleted;
     }
 
-    [Header("Quest Objectives")]
-    [SerializeField] private List<QuestObjective> _objectives = new List<QuestObjective>();
-
-    public bool IsActive
-    {
-        get { return _isActive; }
-        set { _isActive = value; }
-    }
-
-    public Quest CreateInstance()
-    {
-        Quest instance = Instantiate(this);
-        instance.ActivateQuest();
-        return instance;
-    }
-    public bool IsCompleted
-    {
-        get { return _isCompleted; }
-        set { _isCompleted = value; }
-    }
-
-    public List<QuestObjective> Objectives => _objectives;
-
     public void ActivateQuest()
     {
-        _isActive = true;
-        _isCompleted = false;
+        IsActive = true;
+        IsCompleted = false;
 
-        foreach (var objective in _objectives)
+        // Reset objectives
+        foreach (var objective in Objectives)
         {
             objective.isCompleted = false;
         }
 
-        Debug.Log($"Quest activated: {questName}");
+        OnQuestActivated?.Invoke();
     }
 
     public void CompleteQuest()
     {
-        _isActive = false;
-        _isCompleted = true;
+        IsActive = false;
+        IsCompleted = true;
 
-        foreach (var objective in _objectives)
+        // Mark all objectives as completed
+        foreach (var objective in Objectives)
         {
             objective.isCompleted = true;
         }
 
-        Debug.Log($"Quest completed: {questName}");
-    }
+        OnQuestCompleted?.Invoke();
 
-    public void CompleteObjective(int index)
-    {
-        if (index >= 0 && index < _objectives.Count)
+        // Notify the quest manager
+        if (QuestManager.Instance != null)
         {
-            _objectives[index].isCompleted = true;
-            Debug.Log($"Completed objective {index + 1} for quest: {questName}");
-            CheckQuestCompletion();
+            QuestManager.Instance.NotifyQuestCompleted(this);
         }
     }
 
-    public void CheckQuestCompletion()
+    public bool AreAllObjectivesCompleted()
     {
-        bool allCompleted = true;
-        foreach (var objective in _objectives)
+        if (Objectives == null || Objectives.Count == 0)
+            return true;
+
+        foreach (var objective in Objectives)
         {
             if (!objective.isCompleted)
-            {
-                allCompleted = false;
-                break;
-            }
+                return false;
         }
 
-        if (allCompleted && !_isCompleted)
-        {
-            CompleteQuest();
-        }
+        return true;
     }
 
-    private void OnEnable()
+    public float GetCompletionPercentage()
     {
-        if (string.IsNullOrEmpty(questName))
+        if (Objectives == null || Objectives.Count == 0)
+            return 0f;
+
+        int completedCount = 0;
+
+        foreach (var objective in Objectives)
         {
-            questName = "New Quest";
+            if (objective.isCompleted)
+                completedCount++;
         }
+
+        return (float)completedCount / Objectives.Count;
     }
 }

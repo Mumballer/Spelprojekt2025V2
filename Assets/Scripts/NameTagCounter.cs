@@ -3,7 +3,7 @@ using TMPro;
 
 public class NametagCounter : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI counterText; // This will replace the list of names
+    [SerializeField] private TextMeshProUGUI counterText;
     [SerializeField] private int totalNametags = 6;
     [SerializeField] private Color inProgressColor = Color.yellow;
     [SerializeField] private Color completedColor = Color.green;
@@ -12,10 +12,8 @@ public class NametagCounter : MonoBehaviour
 
     private void Start()
     {
-        // Initialize counter
         UpdateCounterDisplay();
 
-        // Subscribe to NameTagManager events
         if (NameTagManager.Instance != null)
         {
             NameTagManager.Instance.OnNameTagPlaced += OnNametagPlaced;
@@ -28,31 +26,23 @@ public class NametagCounter : MonoBehaviour
 
     private void OnDestroy()
     {
-        // Unsubscribe to prevent memory leaks
         if (NameTagManager.Instance != null)
         {
             NameTagManager.Instance.OnNameTagPlaced -= OnNametagPlaced;
         }
     }
 
-    private void OnNametagPlaced(ChairNameTagSpot spot, NameTag nameTag, bool isCorrect)
+    private void OnNametagPlaced(NameTag nameTag)
     {
-        // Only increment counter if placed correctly
-        if (isCorrect)
-        {
-            placedNametags++;
-            UpdateCounterDisplay();
-        }
+        placedNametags++;
+        UpdateCounterDisplay();
     }
 
     private void UpdateCounterDisplay()
     {
         if (counterText != null)
         {
-            // Just show the counter: "0/6 nametags placed"
             counterText.text = $"{placedNametags}/{totalNametags} nametags placed";
-
-            // Change color when complete
             counterText.color = (placedNametags >= totalNametags) ? completedColor : inProgressColor;
         }
     }

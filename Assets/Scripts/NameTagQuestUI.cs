@@ -10,7 +10,7 @@ public class NameTagQuestUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI progressText;
     [SerializeField] private TextMeshProUGUI hintText;
     [SerializeField] private TextMeshProUGUI currentNameTagText;
-    [SerializeField] private TextMeshProUGUI placedNamesText; // NEW: List of placed names
+    [SerializeField] private TextMeshProUGUI placedNamesText;
     [SerializeField] private Image progressBar;
     [SerializeField] private GameObject hintPanel;
 
@@ -19,16 +19,15 @@ public class NameTagQuestUI : MonoBehaviour
     [SerializeField] private Color correctColor = Color.green;
     [SerializeField] private Color incorrectColor = Color.red;
     [SerializeField] private Color neutralColor = Color.white;
-    [SerializeField] private Color placedNameColor = Color.green; // NEW: Color for placed names
+    [SerializeField] private Color placedNameColor = Color.green;
 
     private float hintTimer = 0f;
-    private Dictionary<string, bool> placedNames = new Dictionary<string, bool>(); // NEW: Track placed nametags
+    private Dictionary<string, bool> placedNames = new Dictionary<string, bool>();
 
     private void Start()
     {
         if (NameTagManager.Instance != null)
         {
-            // Subscribe to events from the NameTagManager
             NameTagManager.Instance.OnProgressUpdated += UpdateProgress;
             NameTagManager.Instance.OnNameTagPlaced += OnNameTagPlaced;
             NameTagManager.Instance.OnNameTagPickup += OnNameTagPickup;
@@ -38,7 +37,6 @@ public class NameTagQuestUI : MonoBehaviour
             Debug.LogWarning("NameTagManager instance not found. UI won't update.");
         }
 
-        // Initialize UI
         if (hintPanel != null)
         {
             hintPanel.SetActive(false);
@@ -49,13 +47,11 @@ public class NameTagQuestUI : MonoBehaviour
             currentNameTagText.text = "";
         }
 
-        // Initialize progress display
         UpdateProgress(0, 0);
     }
 
     private void OnDestroy()
     {
-        // Unsubscribe to prevent memory leaks
         if (NameTagManager.Instance != null)
         {
             NameTagManager.Instance.OnProgressUpdated -= UpdateProgress;
@@ -66,7 +62,6 @@ public class NameTagQuestUI : MonoBehaviour
 
     private void Update()
     {
-        // Handle hint timer
         if (hintTimer > 0)
         {
             hintTimer -= Time.deltaTime;
@@ -106,10 +101,10 @@ public class NameTagQuestUI : MonoBehaviour
             currentNameTagText.text = $"Holding: {nameTag.GuestName}'s nametag";
         }
 
-        ShowHint($"Find {nameTag.GuestName}'s place at the table.", neutralColor);
+        ShowHint($"Place {nameTag.GuestName}'s nametag on the table.", neutralColor);
     }
 
-    private void OnNameTagPlaced(ChairNameTagSpot chairSpot, NameTag nameTag, bool isCorrect)
+    private void OnNameTagPlaced(NameTag nameTag)
     {
         if (nameTag == null) return;
 
@@ -118,37 +113,24 @@ public class NameTagQuestUI : MonoBehaviour
             currentNameTagText.text = "";
         }
 
-        // NEW: Track correctly placed names
-        if (isCorrect)
-        {
-            // Add to dictionary of placed names
-            placedNames[nameTag.GuestName] = true;
-            UpdatePlacedNamesList();
+        placedNames[nameTag.GuestName] = true;
+        UpdatePlacedNamesList();
 
-            ShowHint($"Correct! {nameTag.GuestName}'s nametag placed.", correctColor);
-        }
-        else
-        {
-            ShowHint($"That doesn't seem right. Try another spot for {nameTag.GuestName}.", incorrectColor);
-        }
+        ShowHint($"{nameTag.GuestName}'s nametag placed on the table.", correctColor);
     }
 
-    // NEW: Method to update the placed names list display
     private void UpdatePlacedNamesList()
     {
         if (placedNamesText == null) return;
 
-        // Start with rich text format
-        string displayText = "<b>Correctly Placed:</b>\n";
+        string displayText = "<b>Placed Nametags:</b>\n";
 
-        // No names placed yet
         if (placedNames.Count == 0)
         {
             displayText += "None yet";
         }
         else
         {
-            // Add each name in green
             foreach (string name in placedNames.Keys)
             {
                 string colorHex = ColorUtility.ToHtmlStringRGB(placedNameColor);
@@ -156,7 +138,6 @@ public class NameTagQuestUI : MonoBehaviour
             }
         }
 
-        // Update the UI
         placedNamesText.text = displayText;
     }
 

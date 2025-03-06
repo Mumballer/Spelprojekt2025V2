@@ -37,21 +37,18 @@ public class NameTagQuestDisplay : MonoBehaviour
             }
         }
 
-        // Initial display
         RefreshQuestDisplay();
 
-        // Subscribe to nametag events if needed
         if (NameTagManager.Instance != null)
         {
-            NameTagManager.Instance.OnNameTagPlaced += (spot, tag, isCorrect) => {
-                if (isCorrect) RefreshQuestDisplay();
+            NameTagManager.Instance.OnNameTagPlaced += (nameTag) => {
+                RefreshQuestDisplay();
             };
         }
     }
 
     private void Update()
     {
-        // Periodically refresh display to catch updates
         refreshTimer += Time.deltaTime;
         if (refreshTimer >= refreshInterval)
         {
@@ -64,10 +61,8 @@ public class NameTagQuestDisplay : MonoBehaviour
     {
         if (nametagQuest == null || questEntryUI == null) return;
 
-        // Check if quest is complete
         isQuestComplete = nametagQuest.IsCompleted;
 
-        // Update the UI
         questEntryUI.SetupQuest(
             nametagQuest,
             isQuestComplete,
