@@ -1,22 +1,20 @@
 using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
 
 public class CameraShake : MonoBehaviour
 {
-    [SerializeField] private float shakeAmount = 0.02f; //Shake amount
-    private Vector3 initialPos; // initialposition av shake
+    [SerializeField] private float shakeAmount; // Shake intensity
+    private Transform playerCamera; // Reference to the player's camera
+    private Vector3 initialLocalPos; // Initial local position of the camera
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        initialPos = transform.position;
+        playerCamera = transform; // Assuming this script is on the camera
+        initialLocalPos = playerCamera.localPosition; // Store initial local position
     }
 
-    // Update is called once per frame
     void Update()
     {
-        transform.position = initialPos + Random.insideUnitSphere * shakeAmount; //random shake
+        // Add shake as an offset instead of overriding position
+        playerCamera.localPosition = initialLocalPos + (Random.insideUnitSphere * shakeAmount);
     }
 }
-

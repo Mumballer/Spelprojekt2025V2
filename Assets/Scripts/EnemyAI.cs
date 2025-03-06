@@ -21,9 +21,12 @@ public class EnemyAI : MonoBehaviour
     public float maxVolume;
     Animation enemyAnimation;
     AudioSource footstepAudio;
-    public string walkAnim = "Walk";
-    public string runAnim = "Run";
+    AudioSource Boom;
+    bool hasPlayed = false;
+    //public string walkAnim = "Walk";
+    //public string runAnim = "Run";
     public Transform player;
+    public GameObject childObject;
     //private bool isJumpscaring = false;
     //public Image JumpscareImage;
 
@@ -34,20 +37,24 @@ public class EnemyAI : MonoBehaviour
     void Start()
     {
         stalkerAgent = GetComponent<NavMeshAgent>();
-        
+
         stalkerAgent.Stop();
         enemyAnimation = theEnemy.GetComponent<Animation>();
         footstepAudio = theEnemy.GetComponent<AudioSource>();
-        footstepAudio.spatialBlend = 1f;
-        //JumpscareImage.enabled = false;
+        Boom = childObject.GetComponent<AudioSource>(); 
         
+
+
+        //footstepAudio.spatialBlend = 1f;
+        //JumpscareImage.enabled = false;
+
         // Ensure chase music is not playing at the start
         //Chasemusic.Stop();
     }
 
     void Update()
     {
-        
+
 
         stalkerAgent.SetDestination(player.position);
         stalkerAgent.SetDestination(stalkerDes.transform.position);
@@ -57,6 +64,11 @@ public class EnemyAI : MonoBehaviour
         //Debug.Log(distanceToPlayer + "Distance to player");
         if (distanceToPlayer <= footstepDistance)
         {
+            if (!hasPlayed)
+            {
+                Boom.Play();
+                hasPlayed = true;
+            }
 
             footstepAudio.volume = Mathf.Lerp(0, maxVolume, (footstepDistance - distanceToPlayer) / footstepDistance);
 
@@ -88,27 +100,30 @@ public class EnemyAI : MonoBehaviour
                 footstepAudio.Stop();
             }
         }
-        
+
 
         if (IsPlayerInSight() == true)
         {
             //enemySpeed = chaseSpeed;
+
+
             stalkerAgent.Resume();
-            enemyAnimation[runAnim].speed = animSpeed;
+            //enemyAnimation[runAnim].speed = animSpeed;
+             
             //transform.position = Vector3.MoveTowards(transform.position, stalkerDes.transform.position, enemySpeed);
-            if (!enemyAnimation.IsPlaying(runAnim))
+            /*if (!enemyAnimation.IsPlaying(runAnim))
             {
                 enemyAnimation.Play(runAnim);
 
 
-            }
+            }*/
         }
         else
         {
             //enemySpeed = 0f;
             stalkerAgent.Stop();
             //enemySpeed = normalSpeed;
-            enemyAnimation[walkAnim].speed = animSpeed;
+            //enemyAnimation[walkAnim].speed = animSpeed;
 
             /*if (!enemyAnimation.IsPlaying(walkAnim))
             {
@@ -125,7 +140,7 @@ public class EnemyAI : MonoBehaviour
             }*/
         }
 
-        
+
 
         if (stalkerAgent.remainingDistance > stalkerAgent.stoppingDistance)
         {
