@@ -404,11 +404,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 784720003797439417, guid: 991c86355eb1c0346a19f9315e5c5fb7, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 109
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 784720003797439417, guid: 991c86355eb1c0346a19f9315e5c5fb7, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 38
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 931340868847444778, guid: 991c86355eb1c0346a19f9315e5c5fb7, type: 3}
       propertyPath: m_text
@@ -432,7 +432,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1149281417496580826, guid: 991c86355eb1c0346a19f9315e5c5fb7, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1149281417496580826, guid: 991c86355eb1c0346a19f9315e5c5fb7, type: 3}
+      propertyPath: m_Padding.m_Top
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 2915390239963961084, guid: 991c86355eb1c0346a19f9315e5c5fb7, type: 3}
       propertyPath: m_text
@@ -464,11 +468,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3096185596199045731, guid: 991c86355eb1c0346a19f9315e5c5fb7, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 109
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3096185596199045731, guid: 991c86355eb1c0346a19f9315e5c5fb7, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 195
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4299171199234359949, guid: 991c86355eb1c0346a19f9315e5c5fb7, type: 3}
       propertyPath: m_Name
@@ -488,11 +492,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5394579641838032430, guid: 991c86355eb1c0346a19f9315e5c5fb7, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 107
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5394579641838032430, guid: 991c86355eb1c0346a19f9315e5c5fb7, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 129
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6592287330186908523, guid: 991c86355eb1c0346a19f9315e5c5fb7, type: 3}
       propertyPath: m_Name
@@ -10821,12 +10825,17 @@ MonoBehaviour:
   noQuestsMessage: {fileID: 0}
   activeQuestsTab: {fileID: 0}
   completedQuestsTab: {fileID: 0}
+  availableQuestsTab: {fileID: 0}
   selectedTabColor: {r: 1, g: 1, b: 1, a: 1}
   unselectedTabColor: {r: 0.7, g: 0.7, b: 0.7, a: 1}
   inProgressColor: {r: 1, g: 0.92, b: 0.016, a: 1}
   completedColor: {r: 0, g: 0.75, b: 0.22, a: 1}
   questTitleColor: {r: 1, g: 1, b: 1, a: 1}
   questCompletedTitleColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  availableQuestColor: {r: 0.4, g: 0.7, b: 1, a: 1}
+  notificationPrefab: {fileID: 0}
+  notificationContainer: {fileID: 0}
+  notificationDuration: 3
 --- !u!114 &854509739
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12358,6 +12367,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3b2d75f70da250a438acd299757d9fff, type: 2}
   - {fileID: 11400000, guid: d119fe9b472e05549a8907ba7f079b32, type: 2}
   completedQuests: []
+  availableQuests: []
 --- !u!4 &947302020
 Transform:
   m_ObjectHideFlags: 0
@@ -17188,7 +17198,6 @@ MonoBehaviour:
   mouseSensitivity: 2
   lookUpLimit: 80
   lookDownLimit: 80
-  itemHoldPoint: {fileID: 0}
 --- !u!136 &1251371574
 CapsuleCollider:
   m_ObjectHideFlags: 0

@@ -64,6 +64,18 @@ public class QuestUI : MonoBehaviour
             // Make sure the prefab is hidden
             questEntryPrefab.SetActive(false);
         }
+
+        // Make sure we have the required components
+        if (questListContainer != null && !questListContainer.GetComponent<VerticalLayoutGroup>())
+        {
+            VerticalLayoutGroup layout = questListContainer.gameObject.AddComponent<VerticalLayoutGroup>();
+            layout.childAlignment = TextAnchor.UpperCenter;
+            layout.childControlHeight = true;
+            layout.childControlWidth = true;
+            layout.childForceExpandHeight = false;
+            layout.childForceExpandWidth = true;
+            layout.spacing = 10;
+        }
     }
 
     private void Start()
@@ -196,6 +208,7 @@ public class QuestUI : MonoBehaviour
 
     private void RefreshQuestList()
     {
+        // Clear existing entries
         foreach (var entry in questEntries)
         {
             Destroy(entry);
@@ -205,8 +218,8 @@ public class QuestUI : MonoBehaviour
         if (QuestManager.Instance == null || questListContainer == null || questEntryPrefab == null)
             return;
 
+        // Get the appropriate quests based on current tab
         List<Quest> questsToShow;
-
         switch (currentTab)
         {
             case QuestTabType.Active:
@@ -223,37 +236,40 @@ public class QuestUI : MonoBehaviour
                 break;
         }
 
+        // Show/hide empty state message
         if (noQuestsMessage != null)
         {
             noQuestsMessage.SetActive(questsToShow.Count == 0);
         }
 
-        // Disable any layout groups temporarily
+        // Temporarily disable layout groups to prevent immediate recalculation
         LayoutGroup[] layoutGroups = questListContainer.GetComponents<LayoutGroup>();
         foreach (var layout in layoutGroups)
         {
             layout.enabled = false;
         }
 
-        // If we have quests to show, hide the original prefab and show clones
+        // Create entries for each quest
         for (int i = 0; i < questsToShow.Count; i++)
         {
             var currentQuest = questsToShow[i];
 
-            // Instantiate DIRECTLY in the same parent as the prefab
+            // Instantiate as a direct child of the quest list container
             GameObject entryObj = Instantiate(questEntryPrefab, questListContainer);
 
-            // Force exact same position and properties in world space
+            // Important: Set the local position to zero to prevent it from going to the top
             RectTransform entryRect = entryObj.GetComponent<RectTransform>();
             if (entryRect != null)
             {
-                // Set exact same position as original prefab
-                entryRect.position = questEntryPrefab.GetComponent<RectTransform>().position;
+                // Keep the original scale and size, but reset the position
+                entryRect.localPosition = Vector3.zero;
                 entryRect.localScale = originalScale;
                 entryRect.sizeDelta = originalSizeDelta;
-                entryRect.anchorMin = originalAnchorMin;
-                entryRect.anchorMax = originalAnchorMax;
-                entryRect.pivot = originalPivot;
+
+                // Ensure anchors are set correctly for vertical layout
+                entryRect.anchorMin = new Vector2(0, 1);
+                entryRect.anchorMax = new Vector2(1, 1);
+                entryRect.pivot = new Vector2(0.5f, 1);
             }
 
             // Make it visible
@@ -285,6 +301,7 @@ public class QuestUI : MonoBehaviour
                         acceptButton.onClick.AddListener(() => {
                             QuestManager.Instance.AddQuest(currentQuest);
                             RefreshQuestList();
+                            ShowNotification($"Accepted quest: {currentQuest.questName}", Color.green);
                         });
                     }
                 }
@@ -297,10 +314,17 @@ public class QuestUI : MonoBehaviour
             questEntries.Add(entryObj);
         }
 
-        // Re-enable layout groups
+        // Re-enable layout groups to position entries correctly
         foreach (var layout in layoutGroups)
         {
             layout.enabled = true;
+        }
+
+        // Force layout rebuild
+        Canvas.ForceUpdateCanvases();
+        foreach (var layout in layoutGroups)
+        {
+            LayoutRebuilder.ForceRebuildLayoutImmediate(layout.GetComponent<RectTransform>());
         }
     }
 
