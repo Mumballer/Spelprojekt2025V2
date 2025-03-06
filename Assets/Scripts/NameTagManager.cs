@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System;
 using System.Collections.Generic;
 
@@ -8,6 +9,7 @@ public class NameTagManager : MonoBehaviour
     [SerializeField] private Transform playerHoldPoint;
     [SerializeField] private LayerMask nametagLayer;
     [SerializeField] private LayerMask tableLayer;
+    [SerializeField] private LayerMask nametagSpotLayer;
     [SerializeField] private float interactionDistance = 3f;
     [SerializeField] private KeyCode interactKey = KeyCode.E;
 
@@ -25,7 +27,8 @@ public class NameTagManager : MonoBehaviour
     private Camera mainCamera;
     private List<NameTag> allNameTags = new List<NameTag>();
     private TableController currentTable = null;
-    private NametagCounter nametagCounter; // Reference to your counter
+    private NametagCounter nametagCounter;
+    private NameTagSpot currentLookedAtSpot = null;
 
     public static NameTagManager Instance { get; private set; }
 
@@ -80,6 +83,31 @@ public class NameTagManager : MonoBehaviour
         }
 
         UpdateTableInteraction();
+        UpdateSpotLookAt();
+    }
+
+    private void UpdateSpotLookAt()
+    {
+        // Check if we're looking at a nametag spot
+        Ray ray = mainCamera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
+        RaycastHit hit;
+
+        // Clear current spot first
+        if (currentLookedAtSpot != null)
+        {
+            currentLookedAtSpot.ShowGuestInfoLabel(false);
+            currentLookedAtSpot = null;
+        }
+
+        if (Physics.Raycast(ray, out hit, interactionDistance, nametagSpotLayer))
+        {
+            NameTagSpot spot = hit.collider.GetComponent<NameTagSpot>();
+            if (spot != null)
+            {
+                currentLookedAtSpot = spot;
+                spot.ShowGuestInfoLabel(true);
+            }
+        }
     }
 
     private void UpdateTableInteraction()
@@ -100,7 +128,7 @@ public class NameTagManager : MonoBehaviour
         if (Physics.Raycast(ray, out hit, interactionDistance, tableLayer))
         {
             TableController table = hit.collider.GetComponent<TableController>();
-            if (table != null && table.CanPlaceNameTag())
+            if (table != null && table.CanPlaceNameTag(currentNameTag))
             {
                 table.ShowInteractionPrompt(true);
                 currentTable = table;
@@ -118,7 +146,7 @@ public class NameTagManager : MonoBehaviour
         if (Physics.Raycast(ray, out hit, interactionDistance, nametagLayer))
         {
             NameTag nameTag = hit.collider.GetComponent<NameTag>();
-            if (nameTag != null && !nameTag.IsPickedUp)
+            if (nameTag != null && !nameTag.isPickedUp)
             {
                 Debug.Log($"Picking up nametag: {nameTag.GuestName}");
                 nameTag.PickUp(playerHoldPoint);
@@ -142,21 +170,26 @@ public class NameTagManager : MonoBehaviour
             Debug.Log($"Hit object: {hit.collider.gameObject.name}");
 
             TableController table = hit.collider.GetComponent<TableController>();
-            if (table != null && table.CanPlaceNameTag())
+            if (table != null && table.CanPlaceNameTag(currentNameTag))
             {
                 Debug.Log("Found table, placing nametag");
 
-                // Place the nametag on the table
-                table.PlaceNameTag(currentNameTag);
+                // Get player position for table placement logic
+                Vector3 playerPosition = mainCamera.transform.position;
 
-                // Hide the original nametag
-                currentNameTag.gameObject.SetActive(false);
+                // Place the nametag on the table with player position reference
+                if (table.PlaceNameTag(currentNameTag, playerPosition))
+                {
+                    // Notify that nametag was placed
+                    NotifyNameTagPlaced(currentNameTag);
 
-                // Clear references
-                currentNameTag = null;
+                    // Clear reference
+                    NameTag placedTag = currentNameTag;
+                    currentNameTag = null;
 
-                // Hide the prompt
-                table.ShowInteractionPrompt(false);
+                    // Hide the prompt
+                    table.ShowInteractionPrompt(false);
+                }
             }
         }
         else

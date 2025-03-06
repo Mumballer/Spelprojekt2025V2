@@ -1,76 +1,43 @@
 using UnityEngine;
-using TMPro;
+using UnityEngine.UI;
 
 public class NametagCounter : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI counterText;
+    [SerializeField] private Text counterText;
     [SerializeField] private int totalNametags = 6;
-    [SerializeField] private Color inProgressColor = Color.yellow;
-    [SerializeField] private Color completedColor = Color.green;
+    [SerializeField] private string displayFormat = "Nametags: {0}/{1}";
 
-    [Header("Quest Integration")]
-    [SerializeField] private Quest relatedQuest;
-    [SerializeField] private int objectiveIndex = 0;
-
-    private int nametagsPlaced = 0;
-    private bool objectiveComplete = false;
+    private int placedNametags = 0;
 
     private void Start()
     {
-        UpdateCounterDisplay();
+        // Make sure we have a text component
+        if (counterText == null)
+        {
+            counterText = GetComponent<Text>();
+        }
+
+        UpdateDisplay();
     }
 
     public void IncrementNametagCount()
     {
-        nametagsPlaced++;
+        placedNametags++;
+        placedNametags = Mathf.Min(placedNametags, totalNametags); // Don't exceed total
+        UpdateDisplay();
+    }
 
-        if (nametagsPlaced > totalNametags)
+    public void SetNametagCount(int count)
+    {
+        placedNametags = Mathf.Clamp(count, 0, totalNametags);
+        UpdateDisplay();
+    }
+
+    private void UpdateDisplay()
+    {
+        if (counterText != null)
         {
-            nametagsPlaced = totalNametags;
+            counterText.text = string.Format(displayFormat, placedNametags, totalNametags);
         }
-
-        UpdateCounterDisplay();
-
-        // If all nametags placed, complete the quest objective (only once)
-        if (nametagsPlaced >= totalNametags && !objectiveComplete)
-        {
-            objectiveComplete = true;
-
-            // Only update quest if it's active
-            if (relatedQuest != null && QuestManager.Instance != null && QuestManager.Instance.IsQuestActive(relatedQuest))
-            {
-                QuestManager.Instance.CompleteObjective(relatedQuest, objectiveIndex);
-                Debug.Log($"All nametags placed! Completed objective {objectiveIndex} for quest {relatedQuest.questName}");
-            }
-        }
-    }
-
-    private void UpdateCounterDisplay()
-    {
-        if (counterText == null) return;
-
-        string colorHex = nametagsPlaced >= totalNametags ?
-            ColorUtility.ToHtmlStringRGB(completedColor) :
-            ColorUtility.ToHtmlStringRGB(inProgressColor);
-
-        counterText.text = $"<color=#{colorHex}>{nametagsPlaced}/{totalNametags} Nametags Placed</color>";
-    }
-
-    public int GetNametagsPlaced()
-    {
-        return nametagsPlaced;
-    }
-
-    public bool AllNametagsPlaced()
-    {
-        return nametagsPlaced >= totalNametags;
-    }
-
-    // For testing/debugging
-    public void ResetCounter()
-    {
-        nametagsPlaced = 0;
-        objectiveComplete = false;
-        UpdateCounterDisplay();
     }
 }
