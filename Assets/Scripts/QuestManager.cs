@@ -21,6 +21,7 @@ public class QuestManager : MonoBehaviour
 
     [Header("Debug Options")]
     [SerializeField] private bool enableDebugLogs = true;
+    [SerializeField] private bool verboseQuestLogs = true; // Added for extra detailed logs
 
     void Awake()
     {
@@ -42,6 +43,16 @@ public class QuestManager : MonoBehaviour
 
         DebugLog($"Adding quest '{quest.questName}' - ID: {quest.QuestId}");
 
+        // Check for duplicates before adding
+        foreach (var existingQuest in activeQuests)
+        {
+            if (existingQuest.questName == quest.questName && existingQuest != quest)
+            {
+                Debug.LogWarning($"[QuestManager] Duplicate quest detected! '{quest.questName}' already exists in activeQuests.");
+                // Still add it to match existing behavior, but warn about it
+            }
+        }
+
         if (!activeQuests.Contains(quest))
         {
             activeQuests.Add(quest);
@@ -55,6 +66,16 @@ public class QuestManager : MonoBehaviour
         if (quest == null) return;
 
         DebugLog($"Accepting quest '{quest.questName}' - ID: {quest.QuestId}");
+
+        // Check for duplicates before adding
+        foreach (var existingQuest in activeQuests)
+        {
+            if (existingQuest.questName == quest.questName && existingQuest != quest)
+            {
+                Debug.LogWarning($"[QuestManager] Duplicate quest detected! '{quest.questName}' already exists in activeQuests.");
+                // Still add it to match existing behavior, but warn about it
+            }
+        }
 
         if (!activeQuests.Contains(quest))
         {
@@ -144,13 +165,82 @@ public class QuestManager : MonoBehaviour
         }
     }
 
+    private static Quest FindQuestByName(string questName)
+    {
+        Quest[] allQuests = FindObjectsOfType<Quest>();
+        foreach (var quest in allQuests)
+        {
+            if (quest.questName == questName)
+            {
+                return quest;
+            }
+        }
+        return null;
+    }
+
     // Convenience Methods
 
     public void NotifyQuestCompleted(Quest quest) => CompleteQuest(quest);
 
-    // Getters
+    // Enhanced Getters with Debugging
 
-    public List<Quest> GetActiveQuests() => new List<Quest>(activeQuests);
+    public List<Quest> GetActiveQuests()
+    {
+        Debug.Log($"[QuestManager] GetActiveQuests called, found {activeQuests.Count} active quests");
+
+        // Create a filtered list without duplicates
+        List<Quest> filteredQuests = new List<Quest>();
+        HashSet<string> questNames = new HashSet<string>();
+
+        foreach (Quest quest in activeQuests)
+        {
+            if (quest == null)
+            {
+                Debug.LogError("[QuestManager] Found NULL quest in activeQuests list!");
+                continue;
+            }
+
+            if (verboseQuestLogs)
+            {
+                // Fix: call IsActive() and IsCompleted() as methods if they are methods
+                Debug.Log($"[QuestManager] Checking quest: {quest.questName}, ID: {quest.QuestId}");
+            }
+
+            // Check for duplicate quest names
+            if (questNames.Contains(quest.questName))
+            {
+                Debug.LogWarning($"[QuestManager] DUPLICATE DETECTED: Quest '{quest.questName}' appears multiple times in active quests!");
+
+                // For debugging - check if it's the same object or a different one
+                foreach (var existingQuest in filteredQuests)
+                {
+                    if (existingQuest.questName == quest.questName)
+                    {
+                        Debug.LogWarning($"[QuestManager] Comparing duplicate quests: Same object? {ReferenceEquals(existingQuest, quest)}, Existing ID: {existingQuest.QuestId}, This ID: {quest.QuestId}");
+                    }
+                }
+
+                // Still add it to match existing behavior, but we've warned about it
+                filteredQuests.Add(quest);
+            }
+            else
+            {
+                questNames.Add(quest.questName);
+                filteredQuests.Add(quest);
+
+                if (verboseQuestLogs)
+                {
+                    Debug.Log($"[QuestManager] Added active quest: {quest.questName}");
+                }
+            }
+        }
+
+        Debug.Log($"[QuestManager] Returning {filteredQuests.Count} active quests");
+
+        // Return a new list to avoid external code modifying our internal list
+        return new List<Quest>(activeQuests);
+    }
+
     public List<Quest> GetCompletedQuests() => new List<Quest>(completedQuests);
     public List<Quest> GetAvailableQuests() => new List<Quest>(availableQuests);
 
@@ -162,5 +252,39 @@ public class QuestManager : MonoBehaviour
         {
             Debug.Log($"[QuestManager] {message}");
         }
+    }
+
+    // Debug method to find and remove duplicate quests (call from a debug menu or button)
+    public void DebugRemoveDuplicateQuests()
+    {
+        Debug.Log("[QuestManager] Starting duplicate quest cleanup...");
+
+        Dictionary<string, Quest> uniqueQuestsByName = new Dictionary<string, Quest>();
+        List<Quest> duplicatesToRemove = new List<Quest>();
+
+        // Find duplicates
+        foreach (var quest in activeQuests)
+        {
+            if (quest == null) continue;
+
+            if (uniqueQuestsByName.ContainsKey(quest.questName))
+            {
+                Debug.LogWarning($"[QuestManager] Found duplicate quest: {quest.questName}");
+                duplicatesToRemove.Add(quest);
+            }
+            else
+            {
+                uniqueQuestsByName[quest.questName] = quest;
+            }
+        }
+
+        // Remove duplicates
+        foreach (var dupe in duplicatesToRemove)
+        {
+            Debug.Log($"[QuestManager] Removing duplicate quest: {dupe.questName}");
+            activeQuests.Remove(dupe);
+        }
+
+        Debug.Log($"[QuestManager] Removed {duplicatesToRemove.Count} duplicate quests");
     }
 }
