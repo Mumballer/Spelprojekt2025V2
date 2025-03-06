@@ -1,37 +1,64 @@
 using UnityEngine;
-using UnityEngine.UI; 
+using UnityEngine.UI;
 
 public class NameTagPlacingManager : MonoBehaviour
 {
-    public Text uiText; // Reference to the UI Text component
-    private NameTag currentNametag; // Current nametag being held
+    public static NameTagPlacingManager Instance { get; private set; } // Singleton instance
+    public Text uiText; // UI text to display nametag information
+    public Transform counterGroup; // Container for counter nametags
+    public Transform tableGroup; // Container for table nametags
 
-    public void PickUpNametag(NameTag nametag)
+    private NameTags currentTag; // Currently held nametag
+    private bool isSwapping = false; // Is the player trying to swap a nametag?
+
+    private void Awake()
     {
-        if (currentNametag == null)
+        if (Instance == null)
         {
-            currentNametag = nametag;
-            nametag.gameObject.SetActive(false); // Hide the picked-up nametag
-            uiText.text = "Picked up: " + nametag.name;
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
         }
     }
 
-    public void TryPlaceNametag(SeatTag seatTag)
+    public void PickUpNametag(NameTags tag)
     {
-        if (currentNametag != null && currentNametag.name == seatTag.expectedName)
+        if (currentTag == null)
         {
-            // Show the corresponding table nametag
-            GameObject tableNametag = GameObject.Find(seatTag.expectedName);
-            if (tableNametag != null)
+            currentTag = tag;
+            tag.gameObject.SetActive(false); // Hide the counter nametag
+            uiText.text = $"Picked up: {tag.name}";
+        }
+    }
+
+    public void TryPlaceNametag(SeatTag seat)
+    {
+        if (currentTag != null && currentTag.name == seat.expectedName)
+        {
+            // Show the table nametag at the correct position
+            Transform tableNametagTransform = seat.transform.Find(currentTag.name);
+            if (tableNametagTransform != null)
             {
-                tableNametag.SetActive(true);
+                tableNametagTransform.gameObject.SetActive(true);
                 uiText.text = "Nametag placed correctly!";
             }
-            currentNametag = null;
+            currentTag = null;
         }
         else
         {
             uiText.text = "Wrong position!";
         }
+    }
+
+    public void HoverSeat(SeatTag seat)
+    {
+        uiText.text = $"Place: {seat.expectedName}";
+    }
+
+    public void StopHovering()
+    {
+        uiText.text = "";
     }
 }
