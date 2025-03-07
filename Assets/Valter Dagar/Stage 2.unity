@@ -5711,6 +5711,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 647f9484ec73e2f42ad841659d0c9f89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  nametagQuest: {fileID: 0}
+  autoAddQuest: 0
+  tableSpots: []
+  updateDelay: 1.5
+  checkInterval: 0.5
+  startTrackingDelay: 2
 --- !u!4 &368118671
 Transform:
   m_ObjectHideFlags: 0
@@ -6986,6 +6992,8 @@ MonoBehaviour:
   questContainer: {fileID: 1125559949}
   noQuestsMessage: {fileID: 0}
   autoRemoveCompletedQuests: 1
+  completionDisplayTime: 2
+  enableDebugLogging: 1
 --- !u!4 &481977276
 Transform:
   m_ObjectHideFlags: 0
@@ -10279,6 +10287,135 @@ Transform:
   - {fileID: 1490160880}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -89.546, z: 0}
+--- !u!1 &713902131
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 713902132}
+  - component: {fileID: 713902133}
+  m_Layer: 3
+  m_Name: Music
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &713902132
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 713902131}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1251371577}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &713902133
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 713902131}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 52668c5654e5e1d4ea03dd5138f4b515, type: 3}
+  m_Resource: {fileID: 8300000, guid: 52668c5654e5e1d4ea03dd5138f4b515, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &716731007
 GameObject:
   m_ObjectHideFlags: 0
@@ -13253,6 +13390,8 @@ MonoBehaviour:
   questContainer: {fileID: 1125559949}
   noQuestsMessage: {fileID: 0}
   autoRemoveCompletedQuests: 1
+  completionDisplayTime: 2
+  enableDebugLogging: 1
 --- !u!114 &900998606
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18831,11 +18970,17 @@ MonoBehaviour:
   walkSpeed: 5
   runSpeed: 8
   gravity: -9.81
-  groundCheckDistance: 0.4
+  groundCheck: {fileID: 0}
+  groundCheckRadius: 0.2
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 0
   cameraTransform: {fileID: 1122226044}
   mouseSensitivity: 2
   lookUpLimit: 80
   lookDownLimit: 80
+  walkAudioSource: {fileID: 0}
+  runAudioSource: {fileID: 0}
 --- !u!136 &1251371574
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -18926,6 +19071,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1122226044}
+  - {fileID: 713902132}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1258411282
