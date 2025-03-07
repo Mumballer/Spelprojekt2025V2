@@ -26,6 +26,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Valter Dagar/Stage 6.unity
     guid: 687d8697e647d57429bdcd3aa6d5277a
+  - enabled: 1
+    path: Assets/FinalScene.unity
+    guid: dfc207e9eddbee94aa663d69dc1a87c1
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 35845fe01580c41289b024647b1d1c53, type: 3}
   m_UseUCBPForAssetBundles: 0
