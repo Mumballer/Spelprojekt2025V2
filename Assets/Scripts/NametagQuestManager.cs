@@ -7,7 +7,7 @@ public class NametagQuestManager : MonoBehaviour
 {
     [Header("Quest Settings")]
     [SerializeField] private NametagQuest nametagQuest;
-    [SerializeField] private bool autoAddQuest = false; // New option to control auto-adding
+    [SerializeField] private bool autoAddQuest = false; // Controls auto-adding
 
     [Header("Placement Tracking")]
     [SerializeField] private TableSpot[] tableSpots;
@@ -15,15 +15,27 @@ public class NametagQuestManager : MonoBehaviour
     [SerializeField] private float checkInterval = 0.5f; // How often to check for nametag placements
     [SerializeField] private float startTrackingDelay = 2.0f; // Delay before starting to track after quest add
 
+    [Header("Activation Controls")]
+    [SerializeField] private bool activateOnStart = false; // Controls if tracking activates on start
+    [SerializeField] private bool requireQuestActive = true; // Require quest to be active to track nametags
+    [SerializeField] private KeyCode toggleKey = KeyCode.None; // Optional key to toggle tracking
+
+    [Header("Debug")]
+    [SerializeField] private bool debugLogs = true;
+
     private HashSet<string> placedNametags = new HashSet<string>();
     private HashSet<string> pendingNametags = new HashSet<string>(); // Track nametags being processed
     private Dictionary<TableSpot, bool> processedSpots = new Dictionary<TableSpot, bool>();
     private bool questInitialized = false;
     private bool isTrackingActive = false;
     private Coroutine trackingCoroutine = null;
+    private bool isSubscribedToEvents = false;
 
     // Singleton instance for direct access
     public static NametagQuestManager Instance { get; private set; }
+
+    // Public property to check if tracking is active
+    public bool IsTrackingActive => isTrackingActive;
 
     private void Awake()
     {
@@ -54,7 +66,7 @@ public class NametagQuestManager : MonoBehaviour
         {
             // Use the new FindObjectsByType method instead of FindObjectsOfType
             tableSpots = UnityEngine.Object.FindObjectsByType<TableSpot>(FindObjectsSortMode.None);
-            Debug.Log($"Found {tableSpots.Length} table spots in the scene");
+            DebugLog($"Found {tableSpots.Length} table spots in the scene");
         }
 
         // Verify we have enough table spots for the quest
@@ -66,11 +78,19 @@ public class NametagQuestManager : MonoBehaviour
         // Initialize the processed spots dictionary
         InitializeProcessedSpots();
 
-        // Subscribe to table spot events
-        RegisterTableSpotEvents();
-
         // Make sure quest is reset to initial state
         ResetQuestState();
+
+        // Only activate tracking on start if that option is enabled
+        if (activateOnStart)
+        {
+            DebugLog("Activating tracking on start");
+            StartTrackingWithDelay(startTrackingDelay);
+        }
+        else
+        {
+            DebugLog("Tracking not active at start (activateOnStart = false)");
+        }
 
         // Only auto-add the quest if the option is enabled (off by default)
         if (autoAddQuest && QuestManager.Instance != null)
@@ -84,8 +104,19 @@ public class NametagQuestManager : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        // Optional key to toggle tracking
+        if (toggleKey != KeyCode.None && Input.GetKeyDown(toggleKey))
+        {
+            ToggleTracking();
+        }
+    }
+
     private void RegisterTableSpotEvents()
     {
+        if (isSubscribedToEvents) return;
+
         foreach (TableSpot spot in tableSpots)
         {
             if (spot != null)
@@ -94,7 +125,7 @@ public class NametagQuestManager : MonoBehaviour
                 {
                     // Register for the placement event
                     spot.OnNametagPlaced += HandleNametagPlaced;
-                    Debug.Log($"Successfully registered event handler for spot: {spot.name}");
+                    DebugLog($"Successfully registered event handler for spot: {spot.name}");
                 }
                 catch (Exception e)
                 {
@@ -102,11 +133,15 @@ public class NametagQuestManager : MonoBehaviour
                 }
             }
         }
-        Debug.Log("Registered for TableSpot placement events");
+
+        isSubscribedToEvents = true;
+        DebugLog("Registered for TableSpot placement events");
     }
 
     private void UnregisterTableSpotEvents()
     {
+        if (!isSubscribedToEvents) return;
+
         foreach (TableSpot spot in tableSpots)
         {
             if (spot != null)
@@ -122,38 +157,41 @@ public class NametagQuestManager : MonoBehaviour
                 }
             }
         }
+
+        isSubscribedToEvents = false;
+        DebugLog("Unregistered from TableSpot placement events");
     }
 
     // Direct handler for nametag placement events
     public void HandleNametagPlaced(TableSpot spot, string nametagName)
     {
-        Debug.Log($"NametagQuestManager received placement event: '{nametagName}' at {spot.name}");
+        DebugLog($"NametagQuestManager received placement event: '{nametagName}' at {spot.name}");
 
         // Ignore if not tracking
         if (!isTrackingActive)
         {
-            Debug.Log($"Ignoring placement of '{nametagName}' - tracking not active");
+            DebugLog($"Ignoring placement of '{nametagName}' - tracking not active");
             return;
         }
 
-        // Ignore if quest not active
-        if (QuestManager.Instance == null || !QuestManager.Instance.IsQuestActive(nametagQuest))
+        // Ignore if quest not active and that's required
+        if (requireQuestActive && (QuestManager.Instance == null || !QuestManager.Instance.IsQuestActive(nametagQuest)))
         {
-            Debug.Log($"Ignoring placement of '{nametagName}' - quest not active");
+            DebugLog($"Ignoring placement of '{nametagName}' - quest not active");
             return;
         }
 
         // Validate this is a nametag we care about
         if (!System.Array.Exists(nametagQuest.nametagNames, name => name == nametagName))
         {
-            Debug.Log($"Ignoring placement of '{nametagName}' - not part of quest nametags");
+            DebugLog($"Ignoring placement of '{nametagName}' - not part of quest nametags");
             return;
         }
 
         // Check if we've already counted this nametag
         if (placedNametags.Contains(nametagName) || pendingNametags.Contains(nametagName))
         {
-            Debug.Log($"Ignoring placement of '{nametagName}' - already counted");
+            DebugLog($"Ignoring placement of '{nametagName}' - already counted");
             return;
         }
 
@@ -162,7 +200,7 @@ public class NametagQuestManager : MonoBehaviour
 
         // Add to pending list
         pendingNametags.Add(nametagName);
-        Debug.Log($"Added '{nametagName}' to pending nametags");
+        DebugLog($"Added '{nametagName}' to pending nametags");
 
         // Start coroutine to update the counter after a delay
         StartCoroutine(UpdateCounterWithDelay(nametagName));
@@ -196,7 +234,7 @@ public class NametagQuestManager : MonoBehaviour
             // Mark as initialized
             questInitialized = true;
 
-            Debug.Log("Nametag quest reset to initial state");
+            DebugLog("Nametag quest reset to initial state");
         }
     }
 
@@ -222,10 +260,13 @@ public class NametagQuestManager : MonoBehaviour
             if (!isQuestActive)
             {
                 QuestManager.Instance.AddQuest(nametagQuest);
-                Debug.Log($"Added nametag quest: {nametagQuest.questName}");
+                DebugLog($"Added nametag quest: {nametagQuest.questName}");
 
                 // Start tracking with a delay to avoid counting pre-existing nametags
-                StartTrackingWithDelay(startTrackingDelay);
+                if (activateOnStart)
+                {
+                    StartTrackingWithDelay(startTrackingDelay);
+                }
             }
             else
             {
@@ -244,6 +285,34 @@ public class NametagQuestManager : MonoBehaviour
         return nametagQuest;
     }
 
+    // Public method to manually toggle tracking
+    public void ToggleTracking()
+    {
+        if (isTrackingActive)
+        {
+            StopTracking();
+        }
+        else
+        {
+            ForceActivateTracking();
+        }
+    }
+
+    // Public method to force tracking active
+    public void ForceActivateTracking()
+    {
+        if (isTrackingActive) return;  // Already active
+
+        DebugLog("Manually activating nametag tracking");
+        isTrackingActive = true;
+
+        // Make sure we're subscribed to events
+        RegisterTableSpotEvents();
+
+        // Check for existing placed nametags
+        CheckAllTableSpots();
+    }
+
     // Start tracking after a delay
     private void StartTrackingWithDelay(float delay)
     {
@@ -259,14 +328,17 @@ public class NametagQuestManager : MonoBehaviour
     // Coroutine to start tracking after a delay
     private IEnumerator StartTrackingDelayed(float delay)
     {
-        Debug.Log($"Will start tracking nametags after {delay} seconds");
+        DebugLog($"Will start tracking nametags after {delay} seconds");
 
         // Wait for the specified delay
         yield return new WaitForSeconds(delay);
 
+        // Make sure we're subscribed to events
+        RegisterTableSpotEvents();
+
         // Start tracking
         isTrackingActive = true;
-        Debug.Log("Starting to track nametag placements");
+        DebugLog("Starting to track nametag placements");
 
         // Check for any already placed nametags that might have been missed
         CheckAllTableSpots();
@@ -275,7 +347,10 @@ public class NametagQuestManager : MonoBehaviour
     // Stop tracking nametags
     private void StopTracking()
     {
+        if (!isTrackingActive) return;  // Already stopped
+
         isTrackingActive = false;
+        DebugLog("Stopped tracking nametag placements");
 
         // Stop the coroutine if it's running
         if (trackingCoroutine != null)
@@ -284,13 +359,14 @@ public class NametagQuestManager : MonoBehaviour
             trackingCoroutine = null;
         }
 
-        Debug.Log("Stopped tracking nametag placements");
+        // Optionally unregister from events to reduce overhead when not tracking
+        UnregisterTableSpotEvents();
     }
 
     // Check all table spots for correct nametag placements (once)
     private void CheckAllTableSpots()
     {
-        Debug.Log("Checking all table spots for already placed nametags");
+        DebugLog("Checking all table spots for already placed nametags");
 
         foreach (TableSpot spot in tableSpots)
         {
@@ -305,7 +381,7 @@ public class NametagQuestManager : MonoBehaviour
                 // Validate this is a nametag we care about
                 if (System.Array.Exists(nametagQuest.nametagNames, name => name == nametagName))
                 {
-                    Debug.Log($"Found already placed nametag: '{nametagName}' at {spot.name}");
+                    DebugLog($"Found already placed nametag: '{nametagName}' at {spot.name}");
 
                     // Check if we've already counted this nametag
                     if (!placedNametags.Contains(nametagName) && !pendingNametags.Contains(nametagName))
@@ -316,7 +392,7 @@ public class NametagQuestManager : MonoBehaviour
                         // Add directly to placed nametags (no delay for pre-existing)
                         placedNametags.Add(nametagName);
 
-                        Debug.Log($"Counted pre-existing nametag: '{nametagName}'");
+                        DebugLog($"Counted pre-existing nametag: '{nametagName}'");
                     }
                 }
             }
@@ -350,41 +426,54 @@ public class NametagQuestManager : MonoBehaviour
         // Update the counter in the quest objective
         UpdateQuestObjective(newCount);
 
-        Debug.Log($"NametagQuestManager: Counter updated - {newCount}/{nametagQuest.nametagNames.Length} nametags placed");
+        DebugLog($"Counter updated - {newCount}/{nametagQuest.nametagNames.Length} nametags placed");
     }
 
     // Update the quest objective text and completion state
     private void UpdateQuestObjective(int count)
     {
-        if (nametagQuest != null && nametagQuest.Objectives.Count > 0 &&
-            QuestManager.Instance != null && QuestManager.Instance.IsQuestActive(nametagQuest))
+        if (nametagQuest != null && nametagQuest.Objectives.Count > 0)
         {
+            // If requireQuestActive is true, only update when quest is active
+            if (requireQuestActive && (QuestManager.Instance == null || !QuestManager.Instance.IsQuestActive(nametagQuest)))
+            {
+                DebugLog("Not updating quest objective - quest not active");
+                return;
+            }
+
             // Log all placed nametags for debugging
             string placedNames = string.Join(", ", placedNametags);
-            Debug.Log($"Placed nametags: {placedNames}");
+            DebugLog($"Placed nametags: {placedNames}");
 
-            // Use the method to update objective text AND trigger UI refresh
+            // Update the objective text - this will update the UI if quest is active
             string newText = $"Place nametags at the table ({count}/{nametagQuest.nametagNames.Length})";
             nametagQuest.UpdateObjectiveText(0, newText);
 
             // Check if all nametags are placed
             bool isComplete = count >= nametagQuest.nametagNames.Length;
-            Debug.Log($"Quest completion check: {count}/{nametagQuest.nametagNames.Length} placed, isComplete: {isComplete}");
+            DebugLog($"Quest completion check: {count}/{nametagQuest.nametagNames.Length} placed, isComplete: {isComplete}");
 
-            // Update objective completion state if needed
-            if (isComplete && !nametagQuest.Objectives[0].isCompleted)
+            // Only complete the objective if the quest is active in QuestManager
+            if (QuestManager.Instance != null && QuestManager.Instance.IsQuestActive(nametagQuest))
             {
-                // Mark objective as complete
-                nametagQuest.CompleteObjective(0);
-                Debug.Log("All nametags placed! Quest completed.");
-            }
-            else if (!isComplete && nametagQuest.Objectives[0].isCompleted)
-            {
-                // We need to mark it as incomplete
-                nametagQuest.Objectives[0].isCompleted = false;
+                // Update objective completion state if needed
+                if (isComplete && !nametagQuest.Objectives[0].isCompleted)
+                {
+                    // Mark objective as complete
+                    nametagQuest.CompleteObjective(0);
+                    DebugLog("All nametags placed! Quest completed.");
 
-                // Trigger UI refresh
-                nametagQuest.UpdateObjectiveText(0, newText);
+                    // Optionally stop tracking when complete
+                    StopTracking();
+                }
+                else if (!isComplete && nametagQuest.Objectives[0].isCompleted)
+                {
+                    // We need to mark it as incomplete
+                    nametagQuest.Objectives[0].isCompleted = false;
+
+                    // Trigger UI refresh
+                    nametagQuest.UpdateObjectiveText(0, newText);
+                }
             }
         }
     }
@@ -401,7 +490,7 @@ public class NametagQuestManager : MonoBehaviour
         // Reset the quest state
         ResetQuestState();
 
-        Debug.Log("Nametag tracking reset");
+        DebugLog("Nametag tracking reset");
     }
 
     // Force quest completion (can be called from inspector or for testing)
@@ -412,7 +501,19 @@ public class NametagQuestManager : MonoBehaviour
         {
             // Complete the objective
             nametagQuest.CompleteObjective(0);
-            Debug.Log("Quest completion forced");
+            DebugLog("Quest completion forced");
+
+            // Stop tracking when complete
+            StopTracking();
+        }
+    }
+
+    // Helper method for debug logs
+    private void DebugLog(string message)
+    {
+        if (debugLogs)
+        {
+            Debug.Log($"[NametagQuestManager] {message}");
         }
     }
 
@@ -420,7 +521,7 @@ public class NametagQuestManager : MonoBehaviour
     {
         UnregisterTableSpotEvents();
         StopTracking();
-        Debug.Log("NametagQuestManager destroyed");
+        DebugLog("NametagQuestManager destroyed");
 
         // Clear the singleton reference if this is the current instance
         if (Instance == this)

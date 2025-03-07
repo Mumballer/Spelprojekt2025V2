@@ -57,9 +57,14 @@ public class QuestDisplayManager : MonoBehaviour
     }
 
     void Start()
+
+
     {
+
+        Debug.Log("Script is attached to this GameObject", this.gameObject);
         // Find the nametag quest manager
         nametagQuestManager = FindObjectOfType<NametagQuestManager>();
+
         if (nametagQuestManager != null)
         {
             DebugLog("Found NametagQuestManager reference");
