@@ -15,13 +15,32 @@ public class TableSpot : MonoBehaviour
     public bool isInteractable = true;
     public float feedbackDuration = 1.0f;
     [Tooltip("Maximum distance the player can be to interact with this spot")]
-    public float interactionDistance = 2.0f; // Add this line - distance player can interact from
+    public float interactionDistance = 2.0f;
+
+    [Header("Nametag Counting")]
+    [SerializeField] private bool countTowardsTotal = true; // Whether this spot counts towards the total
+    [SerializeField] private static int targetNametagCount = 6; // When this many nametags are placed, complete the quest
+    [SerializeField] private bool autoCompleteQuest = true; // Whether to auto-complete the quest when target is reached
 
     [Header("Debug")]
     public bool showDebug = false;
 
     // Event that fires when a nametag is placed at this spot
     public event Action<TableSpot, string> OnNametagPlaced;
+
+    // Static event for when the nametag count changes
+    public static event Action<int, int> OnNametagCountChanged; // (current, total)
+
+    // Static event for when all nametags are placed
+    public static event Action OnAllNametagsPlaced;
+
+    // Static counter for placed nametags
+    private static int placedNametagCount = 0;
+    private static int totalNametagSpots = 0;
+    private static bool questCompleted = false;
+
+    // Flag to track if this spot already has a placed nametag that was counted
+    private bool hasBeenCounted = false;
 
     // Reference to player for checking held nametags
     private GameObject player;
@@ -30,6 +49,23 @@ public class TableSpot : MonoBehaviour
     private Renderer spotRenderer;
     private Material originalMaterial;
     private bool playerInRange = false;
+
+    // Static constructor to reset count when domain reloads
+    static TableSpot()
+    {
+        placedNametagCount = 0;
+        totalNametagSpots = 0;
+        questCompleted = false;
+    }
+
+    private void Awake()
+    {
+        // Register this spot in the total count if it should be counted
+        if (countTowardsTotal)
+        {
+            totalNametagSpots++;
+        }
+    }
 
     private void Start()
     {
@@ -67,6 +103,22 @@ public class TableSpot : MonoBehaviour
             {
                 Debug.LogError($"TableSpot has tableNametag reference but no Nametag component on {tableNametag.name}");
             }
+        }
+    }
+
+    private void OnDestroy()
+    {
+        // Reduce the total count when this spot is destroyed
+        if (countTowardsTotal)
+        {
+            totalNametagSpots--;
+        }
+
+        // Reduce the placed count if this spot was counted
+        if (hasBeenCounted)
+        {
+            placedNametagCount--;
+            NotifyCountChanged();
         }
     }
 
@@ -118,6 +170,12 @@ public class TableSpot : MonoBehaviour
             {
                 // Make the existing nametag visible
                 nametagComponent.PlaceNametag();
+
+                // Count this nametag if it hasn't been counted yet
+                if (countTowardsTotal && !hasBeenCounted)
+                {
+                    IncrementNametagCount();
+                }
 
                 // Fire the event with this spot and the nametag name
                 if (OnNametagPlaced != null)
@@ -174,6 +232,12 @@ public class TableSpot : MonoBehaviour
                         ShowFeedback(correctPlacementMaterial, feedbackDuration);
                     }
 
+                    // Count this nametag if it should be counted
+                    if (countTowardsTotal && !hasBeenCounted)
+                    {
+                        IncrementNametagCount();
+                    }
+
                     // Fire event
                     if (OnNametagPlaced != null)
                     {
@@ -199,6 +263,124 @@ public class TableSpot : MonoBehaviour
                 Debug.Log("No nametag is being carried by the player.");
             }
         }
+    }
+
+    // Method to increment the nametag count
+    private void IncrementNametagCount()
+    {
+        placedNametagCount++;
+        hasBeenCounted = true;
+        Debug.Log($"Nametag count increased to {placedNametagCount}/{targetNametagCount}");
+
+        NotifyCountChanged();
+
+        // Check if we've reached the target count
+        if (placedNametagCount >= targetNametagCount && !questCompleted && autoCompleteQuest)
+        {
+            CompleteNametagQuest();
+        }
+    }
+
+    // NEW: Method to complete the nametag quest
+    private void CompleteNametagQuest()
+    {
+        if (questCompleted) return; // Prevent multiple completions
+
+        Debug.Log($"All {targetNametagCount} nametags placed! Completing quest...");
+        questCompleted = true;
+
+        // Trigger the all nametags placed event
+        if (OnAllNametagsPlaced != null)
+        {
+            OnAllNametagsPlaced.Invoke();
+        }
+
+        // Find and complete the nametag quest
+        CompleteQuestInManager();
+    }
+
+    // Find and complete the nametag quest in the quest manager
+    private void CompleteQuestInManager()
+    {
+        // Try to find the NametagQuestManager first
+        NametagQuestManager nametagManager = FindObjectOfType<NametagQuestManager>();
+        if (nametagManager != null)
+        {
+            // Try to complete via ForceCompleteQuest method if it exists
+            System.Reflection.MethodInfo forceComplete = nametagManager.GetType().GetMethod("ForceCompleteQuest");
+            if (forceComplete != null)
+            {
+                forceComplete.Invoke(nametagManager, null);
+                Debug.Log("Completed nametag quest via NametagQuestManager.ForceCompleteQuest");
+                return;
+            }
+
+            // Try to get the quest reference and complete it via QuestManager
+            Quest nametagQuest = nametagManager.GetNametagQuest();
+            if (nametagQuest != null && QuestManager.Instance != null)
+            {
+                // Check if the quest is active
+                if (QuestManager.Instance.IsQuestActive(nametagQuest))
+                {
+                    // Complete the first objective (assuming this is the nametag placement objective)
+                    nametagQuest.CompleteObjective(0);
+                    Debug.Log("Completed nametag quest via objective completion");
+                    return;
+                }
+            }
+        }
+
+        // Fallback: try to find any NametagQuest in active quests
+        if (QuestManager.Instance != null)
+        {
+            foreach (var quest in QuestManager.Instance.GetActiveQuests())
+            {
+                if (quest is NametagQuest ||
+                    (quest != null && quest.questName.Contains("Nametag") || quest.questName.Contains("Dinner")))
+                {
+                    // Complete the first objective (assuming this is the nametag placement objective)
+                    quest.CompleteObjective(0);
+                    Debug.Log($"Completed quest: {quest.questName}");
+                    return;
+                }
+            }
+        }
+
+        Debug.LogWarning("Could not find nametag quest to complete!");
+    }
+
+    // Notify listeners that the count changed
+    private void NotifyCountChanged()
+    {
+        if (OnNametagCountChanged != null)
+        {
+            OnNametagCountChanged.Invoke(placedNametagCount, targetNametagCount);
+        }
+    }
+
+    // Static method to get current count
+    public static int GetPlacedNametagCount()
+    {
+        return placedNametagCount;
+    }
+
+    // Static method to get target count
+    public static int GetTargetNametagCount()
+    {
+        return targetNametagCount;
+    }
+
+    // Static method to set the target count
+    public static void SetTargetNametagCount(int count)
+    {
+        targetNametagCount = Mathf.Max(1, count);
+    }
+
+    // Static method to reset the count (for testing or scene changes)
+    public static void ResetNametagCount()
+    {
+        placedNametagCount = 0;
+        questCompleted = false;
     }
 
     // Show visual feedback for nametag placement
@@ -235,6 +417,14 @@ public class TableSpot : MonoBehaviour
     // Clear the nametag from this spot
     public void ClearSpot()
     {
+        // Decrement count if this spot was counted
+        if (hasBeenCounted && countTowardsTotal)
+        {
+            placedNametagCount--;
+            hasBeenCounted = false;
+            NotifyCountChanged();
+        }
+
         tableNametag = null;
 
         if (showDebug)

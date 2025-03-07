@@ -460,6 +460,10 @@ MonoBehaviour:
   noQuestsMessage: {fileID: 0}
   autoRemoveCompletedQuests: 1
   completionDisplayTime: 2
+  directlyTrackNametagQuest: 1
+  refreshInterval: 0.5
+  removeDuplicateQuests: 1
+  logDuplicateRemovals: 1
   enableDebugLogging: 1
 --- !u!1 &66578333
 GameObject:
@@ -6631,7 +6635,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 647f9484ec73e2f42ad841659d0c9f89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nametagQuest: {fileID: 11400000, guid: f45e4f7577217e8429226626dd29f0e8, type: 2}
+  nametagQuest: {fileID: 11400000, guid: 02d4bf8fd11c2f946bf923b81cc6b3d6, type: 2}
   autoAddQuest: 0
   tableSpots:
   - {fileID: 190613757}
@@ -13276,7 +13280,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2e5732049dff2743b249700b3f06da2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  questToCheck: {fileID: 11400000, guid: f45e4f7577217e8429226626dd29f0e8, type: 2}
+  questToCheck: {fileID: 11400000, guid: 02d4bf8fd11c2f946bf923b81cc6b3d6, type: 2}
   sceneToLoad: Stage 2
   loadDelay: 0
   checkOnStart: 0
@@ -17432,11 +17436,17 @@ MonoBehaviour:
   walkSpeed: 5
   runSpeed: 8
   gravity: -9.81
-  groundCheckDistance: 0.4
+  groundCheck: {fileID: 0}
+  groundCheckRadius: 0.2
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 0
   cameraTransform: {fileID: 1122226044}
   mouseSensitivity: 2
   lookUpLimit: 80
   lookDownLimit: 80
+  walkAudioSource: {fileID: 0}
+  runAudioSource: {fileID: 0}
 --- !u!136 &1251371574
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -22008,12 +22018,12 @@ MonoBehaviour:
       - text: I suppose..
         nextDialog:
           lines: []
-        quest: {fileID: 11400000, guid: f45e4f7577217e8429226626dd29f0e8, type: 2}
+        quest: {fileID: 11400000, guid: 02d4bf8fd11c2f946bf923b81cc6b3d6, type: 2}
       character: {fileID: 11400000, guid: c2405cd586ae9254c862d66121dfc807, type: 2}
   autoTrigger: 0
   triggerDistance: 3
   interactionPrompt: {fileID: 1029177602}
-  questToComplete: {fileID: 11400000, guid: f45e4f7577217e8429226626dd29f0e8, type: 2}
+  questToComplete: {fileID: 11400000, guid: 02d4bf8fd11c2f946bf923b81cc6b3d6, type: 2}
   objectiveIndex: 0
   completeQuestAfterDialog: 0
 --- !u!65 &1548107260
@@ -27612,7 +27622,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1888225719
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27620,7 +27630,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1888225718}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8657779f447eafe4fbba8ccfebec96f0, type: 3}
   m_Name: 
@@ -27630,6 +27640,10 @@ MonoBehaviour:
   noQuestsMessage: {fileID: 0}
   autoRemoveCompletedQuests: 1
   completionDisplayTime: 2
+  directlyTrackNametagQuest: 1
+  refreshInterval: 0.5
+  removeDuplicateQuests: 1
+  logDuplicateRemovals: 1
   enableDebugLogging: 1
 --- !u!4 &1888225720
 Transform:
