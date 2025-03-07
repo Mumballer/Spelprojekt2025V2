@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using System.Collections;
 public class Jumpscare : MonoBehaviour
 {
     public RawImage JumpscareImage; // Changed to RawImage if that's what you're using
@@ -26,6 +28,7 @@ public class Jumpscare : MonoBehaviour
         // Check if JumpscareImage is assigned
         if (JumpscareImage != null)
         {
+            JumpscareImage.gameObject.SetActive(true);
             JumpscareImage.enabled = true;
         }
         else
@@ -47,7 +50,18 @@ public class Jumpscare : MonoBehaviour
         if (other.CompareTag("Enemy"))
         {
             StartJumpscare();
+            StartCoroutine(WaitAndChangeScene());
+
         }
+
+    }
+    private IEnumerator WaitAndChangeScene()
+    {
+        // Vänta i 2 sekunder
+        yield return new WaitForSeconds(2);
+
+        // Byt scen, exempelvis till scenen med index 1
+        SceneManager.LoadScene("Stage 5");  // Byt till den scen du vill
     }
 
     // Make sure to add this method since you're invoking it
