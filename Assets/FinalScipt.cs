@@ -4,7 +4,8 @@ public class FinalScipt : MonoBehaviour
 {
 
     public Animation anim;
-
+    public AudioSource FinalBeep;
+    public AudioSource Song;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -12,6 +13,11 @@ public class FinalScipt : MonoBehaviour
         anim.Play();
     }
 
+    public void Beep()
+    {
+        FinalBeep.Play();
+        Song.Stop();
+    }
     public void Quit()
     {
         Debug.Log("Game is quitting..."); // Useful for testing in the editor
