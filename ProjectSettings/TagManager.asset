@@ -12,6 +12,8 @@ TagManager:
   - Nico
   - SceneChanger
   - Enemy
+  - "S\xE4ng"
+  - Bed
   layers:
   - Default
   - TransparentFX
