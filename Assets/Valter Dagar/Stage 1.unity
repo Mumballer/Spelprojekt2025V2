@@ -1833,8 +1833,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   assignedNametag: calvinnametag
   nametagUIText: {fileID: 127244274}
-  tableNametagScript: {fileID: 0}
-  kitchenNametagScript: {fileID: 0}
+  tableNametagScript: {fileID: 1680139363}
+  kitchenNametagScript: {fileID: 1838966328}
 --- !u!1 &127244272
 GameObject:
   m_ObjectHideFlags: 0
@@ -23369,8 +23369,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: e9a3161e8b97418409d205283f67cb15, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_Sprite: {fileID: 21300000, guid: 8daafea4bcb2f194eb21d71faf817a27, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -23388,13 +23388,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1680139357}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.17363642, y: 0.0020199276, z: -0.01145558, w: 0.98474115}
-  m_LocalPosition: {x: 4.692083, y: -0.31, z: -0.13331437}
-  m_LocalScale: {x: 0.11252817, y: 0.056036428, z: 1.682541}
+  m_LocalRotation: {x: 0.03135497, y: 0.006789941, z: 0.019450432, w: 0.999296}
+  m_LocalPosition: {x: 2.21, y: -2.24, z: -0.093}
+  m_LocalScale: {x: 0.090797365, y: 0.032261852, z: 0.9686894}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 120900576}
-  m_LocalEulerAnglesHint: {x: 20, y: 0, z: -1.333}
+  m_LocalEulerAnglesHint: {x: 3.578, y: 0.849, z: 2.257}
 --- !u!114 &1680139363
 MonoBehaviour:
   m_ObjectHideFlags: 0
