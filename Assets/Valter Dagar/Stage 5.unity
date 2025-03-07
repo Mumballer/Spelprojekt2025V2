@@ -13612,11 +13612,17 @@ MonoBehaviour:
   walkSpeed: 0
   runSpeed: 0
   gravity: 0
-  groundCheckDistance: 0.4
+  groundCheck: {fileID: 0}
+  groundCheckRadius: 0.2
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 0
   cameraTransform: {fileID: 1122226044}
   mouseSensitivity: 2
   lookUpLimit: 80
   lookDownLimit: 60
+  walkAudioSource: {fileID: 0}
+  runAudioSource: {fileID: 0}
 --- !u!136 &1251371574
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -15908,6 +15914,7 @@ GameObject:
   - component: {fileID: 1501024290}
   - component: {fileID: 1501024289}
   - component: {fileID: 1501024288}
+  - component: {fileID: 1501024292}
   - component: {fileID: 1501024291}
   m_Layer: 0
   m_Name: "L\xE4bbig"
@@ -16007,9 +16014,55 @@ MonoBehaviour:
   m_GameObject: {fileID: 1501024287}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc7117d6437f6d64a99df07f3f1990e4, type: 3}
+  m_Script: {fileID: 11500000, guid: e91d67447a7b50f43a1e5720964d0c9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dialog:
+    lines:
+    - text: "\u2026would be fine Nico, the Doctor said patients who keep their brain
+        active regress slower but you\u2019re wandering about as if you\u2019re lost
+        in your own house\u2026"
+      choices:
+      - text: To kranio mou einai tromera kleistofoviko..
+        nextDialog:
+          lines:
+          - text: Im so afraid of losing you darling, maybe we should visit the doctor
+              again.
+            choices:
+            - text: "Poios sto di\xE1olo eisai?! FYGE APO TO SPITI MOU"
+              nextDialog:
+                lines: []
+              quest: {fileID: 0}
+            character: {fileID: 11400000, guid: 5b9e851b6cd59574bbd2bbc397dab072, type: 2}
+        quest: {fileID: 0}
+      character: {fileID: 11400000, guid: 5b9e851b6cd59574bbd2bbc397dab072, type: 2}
+  autoTrigger: 0
+  triggerDistance: 3
+  interactionPrompt: {fileID: 0}
+  questToComplete: {fileID: 0}
+  objectiveIndex: 0
+  completeQuestAfterDialog: 0
+--- !u!65 &1501024292
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1501024287}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 77.5083, y: 109.62501, z: 3.931507}
+  m_Center: {x: 0, y: 0, z: -1.8657537}
 --- !u!1 &1503610504
 GameObject:
   m_ObjectHideFlags: 0
