@@ -13,9 +13,11 @@ MonoBehaviour:
   m_Name: Music Quest
   m_EditorClassIdentifier: 
   questName: Play the Gramophone Music
-  description: Find and play the Gramophone Music on the gramophone.
+  description: Find and play music on the gramophone.
   questId: 7201dadd-356b-450d-b910-5ed910fb09db
-  objectives: []
+  objectives:
+  - description: Start playing music on the gramophone
+    isCompleted: 0
   musicName: Gramophone Music
   startMusicObjective: Start playing music on the gramophone
   stopMusicObjective: 
