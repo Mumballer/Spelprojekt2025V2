@@ -3,48 +3,31 @@ using UnityEngine.SceneManagement;
 
 public class BedInteraction : MonoBehaviour
 {
-    [SerializeField] private string playerTag = "Player";
-    [SerializeField] private KeyCode interactKey = KeyCode.E;
-
-    private bool playerInRange = false;
-
-    private void Start()
+    private void OnCollisionEnter(Collision collision)
     {
-        // Ensure this object has the "Bed" tag
-        if (gameObject.tag != "Bed")
-        {
-            gameObject.tag = "Bed";
-        }
-    }
-
-    private void Update()
-    {
-        if (playerInRange && Input.GetKeyDown(interactKey))
-        {
-            LoadNextScene();
-        }
+        Debug.Log("Collision detected with: " + collision.gameObject.name);
+        LoadNextScene();
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag(playerTag))
-        {
-            playerInRange = true;
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag(playerTag))
-        {
-            playerInRange = false;
-        }
+        Debug.Log("Trigger entered by: " + other.gameObject.name);
+        LoadNextScene();
     }
 
     private void LoadNextScene()
     {
-        // Load next scene in build order
+        Debug.Log("Loading next scene...");
         int currentIndex = SceneManager.GetActiveScene().buildIndex;
-        SceneManager.LoadScene(currentIndex + 1);
+        int nextIndex = currentIndex + 1;
+
+        if (nextIndex < SceneManager.sceneCountInBuildSettings)
+        {
+            SceneManager.LoadScene(nextIndex);
+        }
+        else
+        {
+            Debug.LogError("No next scene in build settings!");
+        }
     }
 }

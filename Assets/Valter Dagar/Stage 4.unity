@@ -426,20 +426,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 647f9484ec73e2f42ad841659d0c9f89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerHoldPoint: {fileID: 0}
-  nametagLayer:
-    serializedVersion: 2
-    m_Bits: 128
-  tableLayer:
-    serializedVersion: 2
-    m_Bits: 256
-  nametagSpotLayer:
-    serializedVersion: 2
-    m_Bits: 512
-  interactionDistance: 3
-  interactKey: 101
-  relatedQuest: {fileID: 11400000, guid: 3c3d656c6bd169147a3cec5e9ba66445, type: 2}
-  objectiveIndex: 6
 --- !u!4 &61259900
 Transform:
   m_ObjectHideFlags: 0
@@ -15299,7 +15285,7 @@ Transform:
   m_GameObject: {fileID: 1251371570}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.7119268, z: -0, w: 0.7022537}
-  m_LocalPosition: {x: -0.93, y: 2.06, z: 21.14}
+  m_LocalPosition: {x: -1.608, y: 2.55, z: 17.939}
   m_LocalScale: {x: 1, y: 1.6612626, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -19959,6 +19945,7 @@ GameObject:
   - component: {fileID: 1558956654}
   - component: {fileID: 1558956655}
   - component: {fileID: 1558956656}
+  - component: {fileID: 1558956657}
   m_Layer: 0
   m_Name: "DotterG\xE5Venster"
   m_TagString: Untagged
@@ -20068,6 +20055,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cc7117d6437f6d64a99df07f3f1990e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1558956657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1558956652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ad9f15f68ef44948803f49b3c654587, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1570612775

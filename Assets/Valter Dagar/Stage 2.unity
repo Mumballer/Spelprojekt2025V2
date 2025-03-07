@@ -885,24 +885,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae413450b3fb2fd42a7c6618d7824a4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  relatedQuest: {fileID: 11400000, guid: 3c3d656c6bd169147a3cec5e9ba66445, type: 2}
-  debugMode: 1
-  nametagSpots:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  expectedGuests: []
-  checkingInterval: 0.5
-  requireCorrectPositions: 1
-  interactionPrompt: {fileID: 1503185418}
-  interactionDistance: 2
-  promptPosition: {fileID: 0}
-  correctPlacementSound: {fileID: 0}
-  allCorrectSound: {fileID: 0}
-  audioSource: {fileID: 0}
 --- !u!1 &84368778
 GameObject:
   m_ObjectHideFlags: 0
@@ -1439,9 +1421,9 @@ GameObject:
   m_Component:
   - component: {fileID: 114044627}
   - component: {fileID: 114044626}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: "S\xE4ngREAL_1 (1)"
-  m_TagString: Untagged
+  m_TagString: Bed
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1704,14 +1686,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a8c8fa8055ed2a4dbb066497d68ab50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  guestName: Nico
-  guestDescription: 
-  nametagRenderer: {fileID: 0}
-  nameText: {fileID: 0}
-  nametagCollider: {fileID: 0}
-  pickupDistance: 2
-  isPickedUp: 0
-  disablePhysicsWhenPlaced: 1
 --- !u!212 &118224746
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3039,14 +3013,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5ecc2b8b9428e1409446eaaa8807823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  expectedGuest: Emma
-  snapPoint: {fileID: 178380119}
-  snapDistance: 0.2
-  guestInfoLabel: {fileID: 0}
-  showDebugVisuals: 1
-  availableColor: {r: 0, g: 1, b: 0, a: 1}
-  occupiedColor: {r: 1, g: 0, b: 0, a: 1}
-  gizmoSphereSize: 0.1
 --- !u!54 &178380121
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3107,14 +3073,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a8c8fa8055ed2a4dbb066497d68ab50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  guestName: Emma
-  guestDescription: 
-  nametagRenderer: {fileID: 178380124}
-  nameText: {fileID: 0}
-  nametagCollider: {fileID: 178380122}
-  pickupDistance: 2
-  isPickedUp: 0
-  disablePhysicsWhenPlaced: 1
 --- !u!212 &178380124
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -4482,14 +4440,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a8c8fa8055ed2a4dbb066497d68ab50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  guestName: Lisa
-  guestDescription: 
-  nametagRenderer: {fileID: 0}
-  nameText: {fileID: 0}
-  nametagCollider: {fileID: 0}
-  pickupDistance: 2
-  isPickedUp: 0
-  disablePhysicsWhenPlaced: 1
 --- !u!212 &278329446
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -5462,64 +5412,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &368118669
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 368118671}
-  - component: {fileID: 368118670}
-  m_Layer: 0
-  m_Name: NameTagManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &368118670
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 368118669}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 647f9484ec73e2f42ad841659d0c9f89, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerHoldPoint: {fileID: 0}
-  nametagLayer:
-    serializedVersion: 2
-    m_Bits: 128
-  tableLayer:
-    serializedVersion: 2
-    m_Bits: 256
-  nametagSpotLayer:
-    serializedVersion: 2
-    m_Bits: 512
-  interactionDistance: 3
-  interactKey: 101
-  relatedQuest: {fileID: 11400000, guid: 3c3d656c6bd169147a3cec5e9ba66445, type: 2}
-  objectiveIndex: 6
---- !u!4 &368118671
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 368118669}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0.12278779, y: 0.6963643, z: -0.12278779, w: 0.6963643}
-  m_LocalPosition: {x: 42.951, y: 2.284, z: 7.702}
-  m_LocalScale: {x: 0.006000002, y: 0.007, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &375210365
 GameObject:
   m_ObjectHideFlags: 0
@@ -5953,6 +5845,72 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 406272972}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &407101210
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 407101211}
+  - component: {fileID: 407101212}
+  - component: {fileID: 407101213}
+  m_Layer: 7
+  m_Name: Sleepysleepy
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &407101211
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 407101210}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 4.42, y: 2.45, z: 17.94}
+  m_LocalScale: {x: 0.3, y: 0.20000012, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &407101212
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 407101210}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 50.821976, y: 0.9999998, z: 5.0946527}
+  m_Center: {x: -2.1728516, y: 3.4158459e-15, z: 0.09615767}
+--- !u!114 &407101213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 407101210}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ad9f15f68ef44948803f49b3c654587, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &423656127
 GameObject:
   m_ObjectHideFlags: 0
@@ -6939,112 +6897,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 492205916}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1001 &494804063
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 2137503175}
-    m_Modifications:
-    - target: {fileID: 1981099168038367488, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 876dc1d28d5e936448ef762d1ec32aa0, type: 3}
-    - target: {fileID: 2490116536005928989, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
-      propertyPath: m_Pivot.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2490116536005928989, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
-      propertyPath: m_Pivot.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2490116536005928989, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2490116536005928989, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2490116536005928989, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
-      propertyPath: m_AnchorMin.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2490116536005928989, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2490116536005928989, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 2490116536005928989, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 2490116536005928989, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2490116536005928989, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2490116536005928989, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2490116536005928989, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2490116536005928989, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2490116536005928989, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2490116536005928989, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2490116536005928989, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2490116536005928989, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -164
-      objectReference: {fileID: 0}
-    - target: {fileID: 2490116536005928989, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2490116536005928989, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2490116536005928989, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3820932244574906744, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
-      propertyPath: m_Name
-      value: InteractPromptTabke
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
---- !u!224 &494804064 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 2490116536005928989, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
-  m_PrefabInstance: {fileID: 494804063}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &514013452
 GameObject:
   m_ObjectHideFlags: 0
@@ -10282,7 +10134,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gramophone: {fileID: 0}
   interactionPoint: {fileID: 0}
-  interactionPrompt: {fileID: 0}
+  interactionPrompt: {fileID: 1279667655}
   interactionDistance: 2
   playerLayer:
     serializedVersion: 2
@@ -10830,14 +10682,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5ecc2b8b9428e1409446eaaa8807823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  expectedGuest: 
-  snapPoint: {fileID: 768224381}
-  snapDistance: 0.2
-  guestInfoLabel: {fileID: 0}
-  showDebugVisuals: 1
-  availableColor: {r: 0, g: 1, b: 0, a: 1}
-  occupiedColor: {r: 1, g: 0, b: 0, a: 1}
-  gizmoSphereSize: 0.1
 --- !u!54 &768224383
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -10898,14 +10742,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a8c8fa8055ed2a4dbb066497d68ab50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  guestName: Luca
-  guestDescription: 
-  nametagRenderer: {fileID: 768224386}
-  nameText: {fileID: 0}
-  nametagCollider: {fileID: 768224384}
-  pickupDistance: 2
-  isPickedUp: 0
-  disablePhysicsWhenPlaced: 1
 --- !u!212 &768224386
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -11222,14 +11058,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5ecc2b8b9428e1409446eaaa8807823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  expectedGuest: Susan
-  snapPoint: {fileID: 781945387}
-  snapDistance: 0.2
-  guestInfoLabel: {fileID: 0}
-  showDebugVisuals: 1
-  availableColor: {r: 0, g: 1, b: 0, a: 1}
-  occupiedColor: {r: 1, g: 0, b: 0, a: 1}
-  gizmoSphereSize: 0.1
 --- !u!54 &781945389
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -11290,14 +11118,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a8c8fa8055ed2a4dbb066497d68ab50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  guestName: Susan
-  guestDescription: 
-  nametagRenderer: {fileID: 781945392}
-  nameText: {fileID: 0}
-  nametagCollider: {fileID: 781945390}
-  pickupDistance: 2
-  isPickedUp: 0
-  disablePhysicsWhenPlaced: 1
 --- !u!212 &781945392
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -11977,9 +11797,9 @@ GameObject:
   m_Component:
   - component: {fileID: 873107293}
   - component: {fileID: 873107292}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: "S\xE4ngREAL_1"
-  m_TagString: Untagged
+  m_TagString: Bed
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -14375,14 +14195,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a8c8fa8055ed2a4dbb066497d68ab50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  guestName: Susan
-  guestDescription: 
-  nametagRenderer: {fileID: 0}
-  nameText: {fileID: 0}
-  nametagCollider: {fileID: 0}
-  pickupDistance: 2
-  isPickedUp: 0
-  disablePhysicsWhenPlaced: 1
 --- !u!212 &994626987
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -14837,7 +14649,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1028255156}
-  m_Layer: 0
+  - component: {fileID: 1028255157}
+  - component: {fileID: 1028255158}
+  m_Layer: 7
   m_Name: "stors\xE4ng"
   m_TagString: Bed
   m_Icon: {fileID: 0}
@@ -14864,6 +14678,39 @@ Transform:
   - {fileID: 114044627}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1028255157
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1028255155}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 15.812161, y: 48.83369, z: 3.6059453}
+  m_Center: {x: -7.406082, y: 8.653285, z: 0.43650973}
+--- !u!114 &1028255158
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1028255155}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ad9f15f68ef44948803f49b3c654587, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1043275996
 GameObject:
   m_ObjectHideFlags: 0
@@ -19176,14 +19023,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5ecc2b8b9428e1409446eaaa8807823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  expectedGuest: Lisa
-  snapPoint: {fileID: 1288532028}
-  snapDistance: 0.2
-  guestInfoLabel: {fileID: 0}
-  showDebugVisuals: 1
-  availableColor: {r: 0, g: 1, b: 0, a: 1}
-  occupiedColor: {r: 1, g: 0, b: 0, a: 1}
-  gizmoSphereSize: 0.1
 --- !u!54 &1288532030
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -19244,14 +19083,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a8c8fa8055ed2a4dbb066497d68ab50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  guestName: Lisa
-  guestDescription: 
-  nametagRenderer: {fileID: 1288532033}
-  nameText: {fileID: 0}
-  nametagCollider: {fileID: 1288532031}
-  pickupDistance: 2
-  isPickedUp: 0
-  disablePhysicsWhenPlaced: 1
 --- !u!212 &1288532033
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -21452,11 +21283,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c92da429ea863e24b90c519d847c3d97, type: 3}
---- !u!1 &1503185418 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3820932244574906744, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
-  m_PrefabInstance: {fileID: 494804063}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1503610504
 GameObject:
   m_ObjectHideFlags: 0
@@ -22992,9 +22818,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1575854183}
   - component: {fileID: 1575854182}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: "S\xE4ngREAL_2 (1)"
-  m_TagString: Untagged
+  m_TagString: Bed
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -24790,14 +24616,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a8c8fa8055ed2a4dbb066497d68ab50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  guestName: Nico
-  guestDescription: 
-  nametagRenderer: {fileID: 1758411898}
-  nameText: {fileID: 0}
-  nametagCollider: {fileID: 1758411897}
-  pickupDistance: 2
-  isPickedUp: 0
-  disablePhysicsWhenPlaced: 1
 --- !u!114 &1758411895
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24810,14 +24628,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5ecc2b8b9428e1409446eaaa8807823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  expectedGuest: 
-  snapPoint: {fileID: 1758411893}
-  snapDistance: 0.2
-  guestInfoLabel: {fileID: 0}
-  showDebugVisuals: 1
-  availableColor: {r: 0, g: 1, b: 0, a: 1}
-  occupiedColor: {r: 1, g: 0, b: 0, a: 1}
-  gizmoSphereSize: 0.1
 --- !u!54 &1758411896
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -25123,14 +24933,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a8c8fa8055ed2a4dbb066497d68ab50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  guestName: Emma
-  guestDescription: 
-  nametagRenderer: {fileID: 0}
-  nameText: {fileID: 0}
-  nametagCollider: {fileID: 0}
-  pickupDistance: 2
-  isPickedUp: 0
-  disablePhysicsWhenPlaced: 1
 --- !u!212 &1772380941
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -27143,14 +26945,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a8c8fa8055ed2a4dbb066497d68ab50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  guestName: Calvin
-  guestDescription: 
-  nametagRenderer: {fileID: 0}
-  nameText: {fileID: 0}
-  nametagCollider: {fileID: 0}
-  pickupDistance: 2
-  isPickedUp: 0
-  disablePhysicsWhenPlaced: 1
 --- !u!65 &1853911345
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -27691,9 +27485,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1866027907}
   - component: {fileID: 1866027906}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: "S\xE4ngREAL_2"
-  m_TagString: Untagged
+  m_TagString: Bed
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -28343,14 +28137,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a8c8fa8055ed2a4dbb066497d68ab50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  guestName: Luca
-  guestDescription: 
-  nametagRenderer: {fileID: 0}
-  nameText: {fileID: 0}
-  nametagCollider: {fileID: 0}
-  pickupDistance: 2
-  isPickedUp: 0
-  disablePhysicsWhenPlaced: 1
 --- !u!212 &1890606855
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -31092,14 +30878,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5ecc2b8b9428e1409446eaaa8807823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  expectedGuest: Calvin
-  snapPoint: {fileID: 2023349491}
-  snapDistance: 0.2
-  guestInfoLabel: {fileID: 0}
-  showDebugVisuals: 1
-  availableColor: {r: 0, g: 1, b: 0, a: 1}
-  occupiedColor: {r: 1, g: 0, b: 0, a: 1}
-  gizmoSphereSize: 0.1
 --- !u!54 &2023349493
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -31139,14 +30917,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a8c8fa8055ed2a4dbb066497d68ab50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  guestName: Calvin
-  guestDescription: Calvin
-  nametagRenderer: {fileID: 2023349496}
-  nameText: {fileID: 0}
-  nametagCollider: {fileID: 2023349495}
-  pickupDistance: 2
-  isPickedUp: 0
-  disablePhysicsWhenPlaced: 1
 --- !u!65 &2023349495
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -31732,9 +31502,9 @@ GameObject:
   - component: {fileID: 2088701671}
   - component: {fileID: 2088701670}
   - component: {fileID: 2088701672}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: "S\xE4ngREAL_0"
-  m_TagString: Untagged
+  m_TagString: Bed
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -32136,17 +31906,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e5edde9b7fe81e4180a49465869383e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactionPoint: {fileID: 2110373035}
-  interactionPrompt: {fileID: 1509917618}
-  interactionDistance: 2
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  interactKey: 101
-  quest: {fileID: 11400000, guid: a069e25193c8e0641b434ac4f97fb1f5, type: 2}
-  questDialog:
-    lines: []
-  giveQuestAfterDialog: 1
 --- !u!114 &2110373032
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -32839,7 +32598,6 @@ RectTransform:
   - {fileID: 1368117538}
   - {fileID: 1414736702}
   - {fileID: 1279667654}
-  - {fileID: 494804064}
   - {fileID: 23653729}
   - {fileID: 900998604}
   - {fileID: 770210331}
@@ -33202,6 +32960,7 @@ SceneRoots:
   - {fileID: 1772196043}
   - {fileID: 1285650313}
   - {fileID: 1028255156}
+  - {fileID: 407101211}
   - {fileID: 903432892}
   - {fileID: 1251371577}
   - {fileID: 1771619820}
@@ -33235,7 +32994,6 @@ SceneRoots:
   - {fileID: 1828752464}
   - {fileID: 670437267}
   - {fileID: 289292042}
-  - {fileID: 368118671}
   - {fileID: 1772380942}
   - {fileID: 808369613}
   - {fileID: 2110373035}
