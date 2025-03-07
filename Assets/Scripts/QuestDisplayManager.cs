@@ -10,15 +10,103 @@ public class QuestDisplayManager : MonoBehaviour
     [SerializeField] private bool autoRemoveCompletedQuests = true; // Option to auto-remove quests
     [SerializeField] private float completionDisplayTime = 2f; // Time to show completed quests before removing
 
-    private Dictionary<Quest, QuestEntryUI> questEntries = new Dictionary<Quest, QuestEntryUI>();
+    [Header("Special Quest Handling")]
+    [SerializeField] private bool directlyTrackNametagQuest = true;
+    [SerializeField] private float refreshInterval = 0.5f; // How often to refresh for nametag updates
+    [SerializeField] private bool isNametagQuestAuthority = true; // Set this true to make this the main script that adds nametag quests
+
+    [Header("Duplicate Handling")]
+    [SerializeField] private bool removeDuplicateQuests = true;
+    [SerializeField] private bool logDuplicateRemovals = true;
+
+    private Dictionary<string, QuestEntryUI> questEntriesByKey = new Dictionary<string, QuestEntryUI>(); // New dictionary using key instead of reference
+    private Dictionary<Quest, QuestEntryUI> questEntries = new Dictionary<Quest, QuestEntryUI>(); // Keep for backward compatibility
     private HashSet<Quest> pendingRemoval = new HashSet<Quest>(); // Track quests being removed
+    private NametagQuestManager nametagQuestManager; // Reference to nametag manager
+    private Coroutine periodicRefreshCoroutine;
 
     [Header("Debug Options")]
     [SerializeField] private bool enableDebugLogging = true;
 
+    // Helper method to get a unique key for a quest (name + type)
+    private string GetQuestKey(Quest quest)
+    {
+        if (quest == null) return "";
+        return quest.questName + "_" + quest.GetType().Name;
+    }
+
+    // Helper method to find a quest entry by key
+    private QuestEntryUI FindQuestEntryByKey(string key)
+    {
+        if (questEntriesByKey.ContainsKey(key))
+            return questEntriesByKey[key];
+        return null;
+    }
+
+    // Helper method to find a quest by name and type
+    private Quest FindQuestByNameAndType(string questName, System.Type questType)
+    {
+        if (QuestManager.Instance == null) return null;
+
+        foreach (var quest in QuestManager.Instance.GetActiveQuests())
+        {
+            if (quest != null && quest.questName == questName && quest.GetType() == questType)
+                return quest;
+        }
+        return null;
+    }
+
     void Start()
     {
+        // Find the nametag quest manager
+        nametagQuestManager = FindObjectOfType<NametagQuestManager>();
+        if (nametagQuestManager != null)
+        {
+            DebugLog("Found NametagQuestManager reference");
+
+            // Only manage nametag quests if this is the authority
+            if (directlyTrackNametagQuest && isNametagQuestAuthority)
+            {
+                // Try to activate tracking
+                System.Reflection.MethodInfo method = nametagQuestManager.GetType().GetMethod("ForceActivateTracking");
+                if (method != null)
+                {
+                    method.Invoke(nametagQuestManager, null);
+                    DebugLog("Activated nametag tracking from QuestDisplayManager");
+                }
+                else
+                {
+                    DebugLog("WARNING: NametagQuestManager doesn't have ForceActivateTracking method!");
+                }
+
+                // Get the quest and safely add it if needed
+                Quest nametagQuest = nametagQuestManager.GetNametagQuest();
+                if (nametagQuest != null && QuestManager.Instance != null)
+                {
+                    SafelyAddQuest(nametagQuest);
+                }
+            }
+        }
+        else
+        {
+            DebugLog("WARNING: No NametagQuestManager found in scene!");
+        }
+
+        // Remove any duplicates at startup
+        if (removeDuplicateQuests)
+        {
+            int count = RemoveDuplicateQuests();
+            if (count > 0)
+                DebugLog($"Removed {count} duplicate quests at startup");
+        }
+
         RefreshQuestDisplay();
+
+        // Start periodic refresh to catch nametag updates
+        if (directlyTrackNametagQuest && nametagQuestManager != null)
+        {
+            periodicRefreshCoroutine = StartCoroutine(PeriodicRefresh());
+        }
     }
 
     void OnEnable()
@@ -42,6 +130,74 @@ public class QuestDisplayManager : MonoBehaviour
             QuestManager.Instance.OnQuestCompleted -= OnQuestCompleted;
             QuestManager.Instance.OnQuestRemoved -= OnQuestRemoved;
             QuestManager.Instance.OnObjectiveCompleted -= OnObjectiveChanged;
+        }
+
+        // Stop the refresh coroutine
+        if (periodicRefreshCoroutine != null)
+        {
+            StopCoroutine(periodicRefreshCoroutine);
+            periodicRefreshCoroutine = null;
+        }
+    }
+
+    // Safely add a quest, preventing duplicates
+    public void SafelyAddQuest(Quest quest)
+    {
+        if (quest == null || QuestManager.Instance == null) return;
+
+        string questKey = GetQuestKey(quest);
+        bool isDuplicate = false;
+
+        // Check active quests for duplicates
+        foreach (var activeQuest in QuestManager.Instance.GetActiveQuests())
+        {
+            if (activeQuest != null && GetQuestKey(activeQuest) == questKey)
+            {
+                isDuplicate = true;
+                DebugLog($"Quest already active (by name+type): {quest.questName}");
+                break;
+            }
+        }
+
+        // Only add if not a duplicate
+        if (!isDuplicate)
+        {
+            DebugLog($"Safely adding quest: {quest.questName}");
+            QuestManager.Instance.AddQuest(quest);
+        }
+    }
+
+    // Periodically refresh the display to catch nametag updates
+    private IEnumerator PeriodicRefresh()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(refreshInterval);
+
+            // Only refresh if we have a nametag quest active
+            if (nametagQuestManager != null)
+            {
+                Quest nametagQuest = nametagQuestManager.GetNametagQuest();
+                if (nametagQuest != null)
+                {
+                    string questKey = GetQuestKey(nametagQuest);
+                    QuestEntryUI entryUI = FindQuestEntryByKey(questKey);
+
+                    if (entryUI != null)
+                    {
+                        entryUI.RefreshDisplay();
+                    }
+                    else
+                    {
+                        // Try to find the actual active version of this quest
+                        Quest activeQuest = FindQuestByNameAndType(nametagQuest.questName, nametagQuest.GetType());
+                        if (activeQuest != null && questEntries.ContainsKey(activeQuest))
+                        {
+                            questEntries[activeQuest].RefreshDisplay();
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -76,28 +232,53 @@ public class QuestDisplayManager : MonoBehaviour
     // Determine how long to wait before removing a completed quest
     private float DetermineRemovalDelay(Quest quest)
     {
-        // Only remove MusicQuest quickly - all other quests get the standard display time
+        // Quick removal for MusicQuest
         if (quest is MusicQuest)
-        {
-            return 0.1f; // Quick removal for MusicQuest
-        }
+            return 0.1f;
+        // Special case for NametagQuest (keep visible a bit longer)
+        else if (quest is NametagQuest)
+            return completionDisplayTime * 1.5f; // Show nametag completion longer
         else
-        {
             return completionDisplayTime; // Standard time for all other quests
-        }
     }
 
     // Handle quest removed from manager
     void OnQuestRemoved(Quest quest)
     {
+        if (quest == null) return;
+
         DebugLog($"Quest removed: {quest.questName} (Type: {quest.GetType().Name})");
 
-        // Remove the quest from UI immediately
+        // Get key for this quest
+        string questKey = GetQuestKey(quest);
+
+        // Remove from both dictionaries
         if (questEntries.ContainsKey(quest))
         {
-            Destroy(questEntries[quest].gameObject);
+            QuestEntryUI entryUI = questEntries[quest];
             questEntries.Remove(quest);
+            questEntriesByKey.Remove(questKey);
+
+            Destroy(entryUI.gameObject);
             DebugLog($"Quest UI entry removed: {quest.questName}");
+        }
+        else if (questEntriesByKey.ContainsKey(questKey))
+        {
+            QuestEntryUI entryUI = questEntriesByKey[questKey];
+            questEntriesByKey.Remove(questKey);
+
+            // Also remove from the reference dictionary
+            foreach (var kvp in new Dictionary<Quest, QuestEntryUI>(questEntries))
+            {
+                if (kvp.Value == entryUI)
+                {
+                    questEntries.Remove(kvp.Key);
+                    break;
+                }
+            }
+
+            Destroy(entryUI.gameObject);
+            DebugLog($"Quest UI entry removed by key: {quest.questName}");
         }
 
         // Remove from pending if it was there
@@ -113,11 +294,24 @@ public class QuestDisplayManager : MonoBehaviour
     // Update display when objective changes
     void OnObjectiveChanged(Quest quest, int objectiveIndex)
     {
+        if (quest == null) return;
+
         DebugLog($"Objective changed for quest: {quest.questName}, index: {objectiveIndex}");
 
+        // Try direct reference first
         if (questEntries.ContainsKey(quest))
         {
             questEntries[quest].RefreshDisplay();
+        }
+        else
+        {
+            // Try by key if direct reference fails
+            string questKey = GetQuestKey(quest);
+            QuestEntryUI entryUI = FindQuestEntryByKey(questKey);
+            if (entryUI != null)
+            {
+                entryUI.RefreshDisplay();
+            }
         }
 
         // Handle special case for completed MusicQuest objectives
@@ -140,20 +334,43 @@ public class QuestDisplayManager : MonoBehaviour
                 quest.CheckQuestCompletion();
             }
         }
+
+        // Special case for NametagQuest - similar to MusicQuest handling
+        if (quest is NametagQuest nametagQuest)
+        {
+            bool allCompleted = true;
+            foreach (var objective in quest.Objectives)
+            {
+                if (!objective.isCompleted)
+                {
+                    allCompleted = false;
+                    break;
+                }
+            }
+
+            // If all objectives are completed, force completion check
+            if (allCompleted && !quest.IsCompleted)
+            {
+                DebugLog($"All objectives completed for NametagQuest, forcing completion check");
+                quest.CheckQuestCompletion();
+            }
+        }
     }
 
     // Coroutine to remove completed quests after a delay
     private IEnumerator RemoveCompletedQuestWithDelay(Quest quest, float delay)
     {
+        if (quest == null) yield break;
+
         DebugLog($"Waiting {delay} seconds before removing quest: {quest.questName}");
 
         // Wait for the specified delay
         yield return new WaitForSeconds(delay);
 
         // Force immediate removal of MusicQuest instances from QuestManager
-        if (quest is MusicQuest)
+        if (quest is MusicQuest || quest is NametagQuest)
         {
-            DebugLog($"Force removing MusicQuest from QuestManager: {quest.questName}");
+            DebugLog($"Force removing special quest from QuestManager: {quest.questName}");
             if (QuestManager.Instance != null)
             {
                 QuestManager.Instance.RemoveQuest(quest);
@@ -163,26 +380,125 @@ public class QuestDisplayManager : MonoBehaviour
         // Remove the quest from pending list
         pendingRemoval.Remove(quest);
 
-        // Then remove the quest from UI if still needed
+        // Get the quest key
+        string questKey = GetQuestKey(quest);
+
+        // Then remove the quest from UI if still needed - try both references
         if (questEntries.ContainsKey(quest))
         {
-            DebugLog($"Removing quest from UI: {quest.questName}");
-
-            Destroy(questEntries[quest].gameObject);
-            questEntries.Remove(quest);
-
-            // If not a MusicQuest (which was already removed), remove from QuestManager
-            if (!(quest is MusicQuest) && QuestManager.Instance != null)
+            RemoveQuestFromUI(quest);
+        }
+        else
+        {
+            QuestEntryUI entryUI = FindQuestEntryByKey(questKey);
+            if (entryUI != null)
             {
-                QuestManager.Instance.RemoveQuest(quest);
-            }
-
-            // Update the "No Quests" message
-            if (noQuestsMessage != null)
-            {
-                noQuestsMessage.SetActive(questEntries.Count == 0);
+                RemoveQuestEntryUI(entryUI, questKey);
             }
         }
+    }
+
+    // Helper to remove a quest from the UI
+    private void RemoveQuestFromUI(Quest quest)
+    {
+        if (quest == null) return;
+
+        DebugLog($"Removing quest from UI: {quest.questName}");
+
+        string questKey = GetQuestKey(quest);
+        if (questEntries.ContainsKey(quest))
+        {
+            QuestEntryUI entryUI = questEntries[quest];
+            Destroy(entryUI.gameObject);
+            questEntries.Remove(quest);
+            questEntriesByKey.Remove(questKey);
+        }
+
+        // If not already removed, remove from QuestManager
+        if (!(quest is MusicQuest || quest is NametagQuest) && QuestManager.Instance != null)
+        {
+            QuestManager.Instance.RemoveQuest(quest);
+        }
+
+        // Update the "No Quests" message
+        if (noQuestsMessage != null)
+        {
+            noQuestsMessage.SetActive(questEntries.Count == 0);
+        }
+    }
+
+    // Helper to remove a quest entry UI
+    private void RemoveQuestEntryUI(QuestEntryUI entryUI, string questKey)
+    {
+        if (entryUI == null) return;
+
+        DebugLog($"Removing quest entry UI for key: {questKey}");
+
+        Destroy(entryUI.gameObject);
+        questEntriesByKey.Remove(questKey);
+
+        // Also remove from the reference dictionary
+        Quest questToRemove = null;
+        foreach (var kvp in questEntries)
+        {
+            if (kvp.Value == entryUI)
+            {
+                questToRemove = kvp.Key;
+                break;
+            }
+        }
+
+        if (questToRemove != null)
+            questEntries.Remove(questToRemove);
+
+        // Update the "No Quests" message
+        if (noQuestsMessage != null)
+        {
+            noQuestsMessage.SetActive(questEntries.Count == 0);
+        }
+    }
+
+    // Method to handle duplicate quests
+    private int RemoveDuplicateQuests()
+    {
+        if (QuestManager.Instance == null) return 0;
+
+        Dictionary<string, Quest> uniqueQuests = new Dictionary<string, Quest>();
+        List<Quest> duplicatesToRemove = new List<Quest>();
+
+        foreach (Quest quest in QuestManager.Instance.GetActiveQuests())
+        {
+            if (quest == null) continue;
+
+            string questKey = GetQuestKey(quest);
+
+            if (uniqueQuests.ContainsKey(questKey))
+            {
+                duplicatesToRemove.Add(quest);
+
+                if (logDuplicateRemovals)
+                {
+                    DebugLog($"Marked duplicate quest for removal: {quest.questName} ({quest.GetType().Name})");
+                }
+            }
+            else
+            {
+                uniqueQuests[questKey] = quest;
+            }
+        }
+
+        // Now remove all duplicates
+        foreach (Quest duplicate in duplicatesToRemove)
+        {
+            QuestManager.Instance.RemoveQuest(duplicate);
+        }
+
+        if (duplicatesToRemove.Count > 0 && logDuplicateRemovals)
+        {
+            DebugLog($"Removed {duplicatesToRemove.Count} duplicate quests");
+        }
+
+        return duplicatesToRemove.Count;
     }
 
     // Rebuilds the entire quest display
@@ -193,15 +509,34 @@ public class QuestDisplayManager : MonoBehaviour
 
         DebugLog("Refreshing quest display");
 
+        // Remove duplicates first if enabled
+        if (removeDuplicateQuests)
+        {
+            RemoveDuplicateQuests();
+        }
+
         // Get current active quests
         List<Quest> activeQuests = QuestManager.Instance.GetActiveQuests();
         DebugLog($"Active quests count: {activeQuests.Count}");
 
+        // Track which quest entries to keep
+        HashSet<string> activeQuestKeys = new HashSet<string>();
+        foreach (Quest quest in activeQuests)
+        {
+            if (quest != null)
+                activeQuestKeys.Add(GetQuestKey(quest));
+        }
+
         // Remove entries that aren't active anymore
         List<Quest> questsToRemove = new List<Quest>();
-        foreach (var quest in questEntries.Keys)
+        foreach (var kvp in questEntries)
         {
-            if (!activeQuests.Contains(quest) && !pendingRemoval.Contains(quest))
+            Quest quest = kvp.Key;
+            if (quest == null) continue;
+
+            string questKey = GetQuestKey(quest);
+
+            if (!activeQuestKeys.Contains(questKey) && !pendingRemoval.Contains(quest))
             {
                 questsToRemove.Add(quest);
                 DebugLog($"Quest no longer active and will be removed: {quest.questName}");
@@ -210,14 +545,21 @@ public class QuestDisplayManager : MonoBehaviour
 
         foreach (var quest in questsToRemove)
         {
-            Destroy(questEntries[quest].gameObject);
-            questEntries.Remove(quest);
+            RemoveQuestFromUI(quest);
         }
+
+        // Create a hash set of keys we already have UI for
+        HashSet<string> existingKeys = new HashSet<string>(questEntriesByKey.Keys);
 
         // Add new entries for quests not already displayed
         foreach (Quest quest in activeQuests)
         {
-            if (!questEntries.ContainsKey(quest))
+            if (quest == null) continue;
+
+            string questKey = GetQuestKey(quest);
+
+            // Check if we already have this quest type in the UI
+            if (!existingKeys.Contains(questKey))
             {
                 GameObject entryObj = Instantiate(questEntryPrefab, questContainer);
                 QuestEntryUI entryUI = entryObj.GetComponent<QuestEntryUI>();
@@ -225,21 +567,38 @@ public class QuestDisplayManager : MonoBehaviour
                 if (entryUI != null)
                 {
                     entryUI.Setup(quest);
-                    questEntries.Add(quest, entryUI);
+                    questEntries[quest] = entryUI;
+                    questEntriesByKey[questKey] = entryUI;
                     DebugLog($"Added new quest to display: {quest.questName} (Type: {quest.GetType().Name})");
                 }
             }
             else
             {
                 // Refresh the display for existing quests
-                questEntries[quest].RefreshDisplay();
-
-                // Special handling for MusicQuest that's completed but not yet scheduled for removal
-                if (quest is MusicQuest && quest.IsCompleted && !pendingRemoval.Contains(quest))
+                if (questEntries.ContainsKey(quest))
                 {
-                    DebugLog($"Found completed MusicQuest that hasn't been scheduled for removal: {quest.questName}");
+                    questEntries[quest].RefreshDisplay();
+                }
+                else
+                {
+                    QuestEntryUI entryUI = questEntriesByKey[questKey];
+                    if (entryUI != null)
+                    {
+                        // Update the entryUI's quest reference
+                        entryUI.Setup(quest);
+                        questEntries[quest] = entryUI;
+                        DebugLog($"Updated existing UI with new quest instance: {quest.questName}");
+                    }
+                }
+
+                // Special handling for quests that are completed but not yet scheduled for removal
+                if ((quest is MusicQuest || quest is NametagQuest) &&
+                    quest.IsCompleted && !pendingRemoval.Contains(quest))
+                {
+                    DebugLog($"Found completed special quest that hasn't been scheduled for removal: {quest.questName}");
                     pendingRemoval.Add(quest);
-                    StartCoroutine(RemoveCompletedQuestWithDelay(quest, 0.1f));
+                    StartCoroutine(RemoveCompletedQuestWithDelay(quest,
+                        quest is MusicQuest ? 0.1f : completionDisplayTime * 1.5f));
                 }
             }
         }
@@ -265,19 +624,45 @@ public class QuestDisplayManager : MonoBehaviour
     {
         DebugLog("Force refreshing all quests");
 
-        // Check for any stuck quests, especially MusicQuests
+        // Remove duplicates first to clean up the display
+        if (removeDuplicateQuests)
+        {
+            RemoveDuplicateQuests();
+        }
+
+        // If we have nametag manager, get its quest directly
+        if (nametagQuestManager != null && directlyTrackNametagQuest && isNametagQuestAuthority)
+        {
+            Quest nametagQuest = nametagQuestManager.GetNametagQuest();
+            if (nametagQuest != null)
+            {
+                // Only add if not already present
+                SafelyAddQuest(nametagQuest);
+            }
+
+            // Ensure tracking is active
+            System.Reflection.MethodInfo method = nametagQuestManager.GetType().GetMethod("ForceActivateTracking");
+            if (method != null)
+            {
+                method.Invoke(nametagQuestManager, null);
+                DebugLog("Re-activated nametag tracking from ForceRefresh");
+            }
+        }
+
+        // Check for any stuck quests
         if (QuestManager.Instance != null)
         {
             List<Quest> activeQuests = QuestManager.Instance.GetActiveQuests();
             foreach (Quest quest in activeQuests)
             {
-                if (quest is MusicQuest && quest.IsCompleted)
+                if ((quest is MusicQuest || quest is NametagQuest) && quest.IsCompleted)
                 {
-                    DebugLog($"Found stuck completed MusicQuest: {quest.questName}");
+                    DebugLog($"Found stuck completed special quest: {quest.questName}");
                     if (!pendingRemoval.Contains(quest))
                     {
                         pendingRemoval.Add(quest);
-                        StartCoroutine(RemoveCompletedQuestWithDelay(quest, 0.1f));
+                        StartCoroutine(RemoveCompletedQuestWithDelay(quest,
+                            quest is MusicQuest ? 0.1f : completionDisplayTime));
                     }
                 }
             }
