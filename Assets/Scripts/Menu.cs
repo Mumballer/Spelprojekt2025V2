@@ -1,3 +1,4 @@
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -6,12 +7,12 @@ public class Menu : MonoBehaviour
 
     public void PlayGame()
     {
-        //lodscene
+        SceneManager.LoadScene(0);
     }
 
     public void Options()
     {
-
+        SceneManager.LoadScene("Options");
     }
 
     public void QuitGame()
@@ -21,8 +22,7 @@ public class Menu : MonoBehaviour
 
     public void Back()
     {
-        int loadPrevious = PlayerPrefs.GetInt("Menu");
-        Application.LoadLevel(loadPrevious);
+        SceneManager.LoadScene("Menu");
     }
 
 
