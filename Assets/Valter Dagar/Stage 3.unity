@@ -14495,7 +14495,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2e5732049dff2743b249700b3f06da2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  questToCheck: {fileID: 11400000, guid: 3c3d656c6bd169147a3cec5e9ba66445, type: 2}
+  questToCheck: {fileID: 11400000, guid: 02d4bf8fd11c2f946bf923b81cc6b3d6, type: 2}
   sceneToLoad: Stage 4
   loadDelay: 0
   checkOnStart: 0
@@ -17061,7 +17061,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1135085797}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8657779f447eafe4fbba8ccfebec96f0, type: 3}
   m_Name: 
@@ -19263,6 +19263,7 @@ GameObject:
   - component: {fileID: 1251371572}
   - component: {fileID: 1251371571}
   - component: {fileID: 1251371578}
+  - component: {fileID: 1251371579}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -19438,7 +19439,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1122226044}
-  - {fileID: 1675056420}
   - {fileID: 264333436}
   - {fileID: 1377399960}
   - {fileID: 2068288621}
@@ -19541,6 +19541,28 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1251371579
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1251371570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0dd70535c9f54540b26f92a9b6e8e90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  musicQuest: {fileID: 11400000, guid: 894f28788adc80e469ab0cffe987f423, type: 2}
+  findQuestIfNotAssigned: 1
+  activateOnStart: 1
+  activationDelay: 0
+  autoStartMusic: 0
+  autoStartDelay: 2
+  autoStopMusic: 0
+  autoStopDelay: 5
+  gramophoneToFind: {fileID: 1965089419}
+  debugMode: 1
 --- !u!1 &1258411282
 GameObject:
   m_ObjectHideFlags: 0
@@ -23823,61 +23845,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 30.10756, y: 54.812496, z: 0.20000008}
   m_Center: {x: 4.323336, y: 0, z: 0.000001968679}
---- !u!1 &1553043341
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1553043343}
-  - component: {fileID: 1553043342}
-  m_Layer: 0
-  m_Name: QuestDisplayManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1553043342
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1553043341}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8657779f447eafe4fbba8ccfebec96f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  questEntryPrefab: {fileID: 1932322944}
-  questContainer: {fileID: 2122044545}
-  noQuestsMessage: {fileID: 0}
-  autoRemoveCompletedQuests: 1
-  completionDisplayTime: 2
-  directlyTrackNametagQuest: 1
-  refreshInterval: 0.5
-  isNametagQuestAuthority: 1
-  removeDuplicateQuests: 1
-  logDuplicateRemovals: 1
-  enableDebugLogging: 1
---- !u!4 &1553043343
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1553043341}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0.12278779, y: 0.6963643, z: -0.12278779, w: 0.6963643}
-  m_LocalPosition: {x: 42.951, y: 2.284, z: 7.702}
-  m_LocalScale: {x: 0.006000004, y: 0.007, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1570219735
 GameObject:
   m_ObjectHideFlags: 0
@@ -25704,135 +25671,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &1675056419
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1675056420}
-  - component: {fileID: 1675056421}
-  m_Layer: 0
-  m_Name: Music
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1675056420
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1675056419}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1251371577}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!82 &1675056421
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1675056419}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: f379e6bd82ab3464facc687b8dd0747a, type: 3}
-  m_Resource: {fileID: 8300000, guid: f379e6bd82ab3464facc687b8dd0747a, type: 3}
-  m_PlayOnAwake: 1
-  m_Volume: 0.485
-  m_Pitch: 1
-  Loop: 1
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!1 &1678023101
 GameObject:
   m_ObjectHideFlags: 0
@@ -27204,7 +27042,7 @@ MonoBehaviour:
   autoTrigger: 0
   triggerDistance: 3
   interactionPrompt: {fileID: 887691190}
-  questToComplete: {fileID: 11400000, guid: 1621748ed3cbf28469375d4c0370c857, type: 2}
+  questToComplete: {fileID: 11400000, guid: 02d4bf8fd11c2f946bf923b81cc6b3d6, type: 2}
   objectiveIndex: 0
   completeQuestAfterDialog: 0
 --- !u!1 &1771619819
@@ -29941,7 +29779,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 647f9484ec73e2f42ad841659d0c9f89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nametagQuest: {fileID: 11400000, guid: 1621748ed3cbf28469375d4c0370c857, type: 2}
+  nametagQuest: {fileID: 11400000, guid: 02d4bf8fd11c2f946bf923b81cc6b3d6, type: 2}
   autoAddQuest: 0
   tableSpots:
   - {fileID: 608204916}
@@ -29953,6 +29791,10 @@ MonoBehaviour:
   updateDelay: 1.5
   checkInterval: 0.5
   startTrackingDelay: 2
+  activateOnStart: 0
+  requireQuestActive: 1
+  toggleKey: 0
+  debugLogs: 1
 --- !u!4 &1894695989
 Transform:
   m_ObjectHideFlags: 0
@@ -31803,8 +31645,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 87.9905, y: 179.02385, z: 1.7701238}
-  m_Center: {x: -5.241092, y: -34.6991, z: 0.010694264}
+  m_Size: {x: 87.9905, y: 179.02385, z: 2.0550754}
+  m_Center: {x: -5.2410917, y: -34.6991, z: 0.15316916}
 --- !u!114 &1965089424
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -35136,7 +34978,6 @@ SceneRoots:
   - {fileID: 1504682250}
   - {fileID: 1514370439}
   - {fileID: 981654815}
-  - {fileID: 1553043343}
   - {fileID: 1894695989}
   - {fileID: 205924026}
   - {fileID: 804836411}
