@@ -5,13 +5,19 @@ using TMPro;
 public class DialogPortraitSystem : MonoBehaviour
 {
     [Header("UI References")]
+    // container för porträttet
     [SerializeField] private GameObject portraitContainer;
+    // bildkomponent för porträttet
     [SerializeField] private Image portraitImage;
+    // text för karaktärsnamn
     [SerializeField] private TextMeshProUGUI characterNameText;
+    // ram för porträtt
     [SerializeField] private RectTransform portraitFrame;
 
     [Header("Default Portrait Settings")]
+    // standardstorlek för porträtt
     [SerializeField] private float defaultPortraitSize = 100f;
+    // standardposition för porträtt
     [SerializeField] private Vector2 defaultPortraitOffset = Vector2.zero;
 
     private void Start()
@@ -32,21 +38,22 @@ public class DialogPortraitSystem : MonoBehaviour
 
         if (portraitContainer != null && portraitImage != null && characterNameText != null)
         {
+            // visar porträttet
             portraitContainer.SetActive(true);
             portraitImage.sprite = character.portraitSprite;
             characterNameText.text = character.characterName;
 
             if (portraitFrame != null)
             {
-                // Use character-specific settings if available, otherwise use defaults
+                // använd karaktärens inställningar
                 float size = character.portraitSize > 0 ? character.portraitSize : defaultPortraitSize;
                 Vector2 offset = character.portraitOffset != Vector2.zero ? character.portraitOffset : defaultPortraitOffset;
 
-                // Set the portrait image size
+                // ställ in bildstorlek
                 portraitFrame.sizeDelta = new Vector2(size, size);
                 portraitFrame.anchoredPosition = offset;
 
-                // Ensure the portrait image is centered within its frame
+                // centrera bilden i ramen
                 RectTransform imageRect = portraitImage.GetComponent<RectTransform>();
                 if (imageRect != null && imageRect != portraitFrame)
                 {
@@ -57,7 +64,6 @@ public class DialogPortraitSystem : MonoBehaviour
                     imageRect.sizeDelta = new Vector2(size, size);
                 }
 
-                // Log for debugging
                 Debug.Log($"Setting portrait for {character.characterName}: Size={size}, Offset={offset}");
             }
         }

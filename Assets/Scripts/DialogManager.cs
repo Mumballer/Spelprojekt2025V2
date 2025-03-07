@@ -8,29 +8,40 @@ using System;
 public class DialogManager : MonoBehaviour
 {
     [Header("Dialog UI")]
+    // dialogruta i ui
     [SerializeField] GameObject dialogBox;
+    // textkomponent för dialog
     [SerializeField] TextMeshProUGUI dialogText;
+    // hastighet för textvisning
     [SerializeField] int lettersPerSecond = 30;
+    // container för valalternativ
     [SerializeField] GameObject choicesContainer;
+    // prefab för valalternativ
     [SerializeField] GameObject choiceButtonPrefab;
+    // tid mellan dialoger
     [SerializeField] private float cooldownDuration = 5f;
+    // maxbredd för knappar
     [SerializeField] private float maxButtonWidth = 350f;
 
     [Header("Portrait System")]
+    // container för porträtt
     [SerializeField] private GameObject portraitContainer;
+    // bildkomponent för porträtt
     [SerializeField] private Image portraitImage;
+    // text för karaktärsnamn
     [SerializeField] private TextMeshProUGUI characterNameText;
     [SerializeField] private RectTransform portraitFrame;
     [SerializeField] private float defaultPortraitSize = 100f;
     [SerializeField] private Vector2 defaultPortraitOffset = Vector2.zero;
 
     [Header("3D Settings")]
+    // interaktionsavstånd för npc
     [SerializeField] private float interactionDistance = 3f;
     [SerializeField] private LayerMask interactableLayers;
 
     public event Action OnShowDialog;
     public event Action OnHideDialog;
-    public event Action<Dialog> OnDialogComplete; // New event for quest integration
+    public event Action<Dialog> OnDialogComplete;
     public static DialogManager Instance { get; private set; }
 
     private Dialog dialog;
@@ -46,6 +57,7 @@ public class DialogManager : MonoBehaviour
 
     private void Awake()
     {
+        // sätt singletonen
         Instance = this;
         playerController = UnityEngine.Object.FindFirstObjectByType<PlayerController>();
         mainCamera = Camera.main;
@@ -82,6 +94,7 @@ public class DialogManager : MonoBehaviour
     private void SetupChoicesContainer()
     {
         if (choicesContainer == null) return;
+        // skapar layout för val
         VerticalLayoutGroup layoutGroup = choicesContainer.GetComponent<VerticalLayoutGroup>();
         if (layoutGroup == null)
         {
@@ -120,6 +133,7 @@ public class DialogManager : MonoBehaviour
     {
         if (!CanStartDialog() || mainCamera == null) return;
 
+        // kastar raycasting för interaktion
         Ray ray = mainCamera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
         if (Physics.Raycast(ray, out RaycastHit hit, interactionDistance, interactableLayers))
         {
@@ -150,7 +164,7 @@ public class DialogManager : MonoBehaviour
 
         yield return new WaitForEndOfFrame();
 
-        // Fire the event BEFORE setting IsDialogActive
+        // aktiverar händelser
         OnShowDialog?.Invoke();
         IsDialogActive = true;
 
@@ -178,6 +192,7 @@ public class DialogManager : MonoBehaviour
 
             Debug.Log($"E pressed. Current line: {currentLine}, Total lines: {dialog.Lines.Count}");
 
+            // avsluta dialog om sista raden
             if (currentLine >= dialog.Lines.Count - 1)
             {
                 Debug.Log("On last line, ending dialog");
@@ -185,6 +200,7 @@ public class DialogManager : MonoBehaviour
                 return;
             }
 
+            // gå till nästa rad
             currentLine++;
             Debug.Log($"Moving to line {currentLine}");
             typingCoroutine = StartCoroutine(TypeDialog(dialog.Lines[currentLine]));
@@ -204,21 +220,22 @@ public class DialogManager : MonoBehaviour
 
         if (dialogLine.Character != null)
         {
+            // visa porträtt
             portraitContainer.SetActive(true);
             portraitImage.sprite = dialogLine.Character.portraitSprite;
             characterNameText.text = dialogLine.Character.characterName;
 
-            // Only adjust the portrait frame/image, not the container
+            // justera porträttbilden
             if (portraitFrame != null)
             {
                 float size = dialogLine.Character.portraitSize > 0 ? dialogLine.Character.portraitSize : defaultPortraitSize;
                 Vector2 offset = dialogLine.Character.portraitOffset != Vector2.zero ? dialogLine.Character.portraitOffset : defaultPortraitOffset;
 
-                // Set the portrait image size
+                // storlek för porträtt
                 portraitFrame.sizeDelta = new Vector2(size, size);
                 portraitFrame.anchoredPosition = offset;
 
-                // Ensure the portrait image is centered within its frame
+                // centrera bilden i ramen
                 RectTransform imageRect = portraitImage.GetComponent<RectTransform>();
                 if (imageRect != null && imageRect != portraitFrame)
                 {
@@ -229,7 +246,6 @@ public class DialogManager : MonoBehaviour
                     imageRect.sizeDelta = new Vector2(size, size);
                 }
 
-                // Log for debugging
                 Debug.Log($"Setting portrait for {dialogLine.Character.characterName}: Size={size}, Offset={offset}");
             }
         }
@@ -238,6 +254,7 @@ public class DialogManager : MonoBehaviour
             portraitContainer.SetActive(false);
         }
 
+        // bokstav för bokstav animation
         foreach (var letter in dialogLine.Text.ToCharArray())
         {
             dialogText.text += letter;
@@ -268,6 +285,7 @@ public class DialogManager : MonoBehaviour
         }
         currentChoiceButtons.Clear();
 
+        // visar valalternativ
         choicesContainer.SetActive(true);
         choiceButtonPrefab.SetActive(false);
 
@@ -288,7 +306,7 @@ public class DialogManager : MonoBehaviour
             }
             else
             {
-
+                // manuell konfiguration om knapp saknas
                 TextMeshProUGUI buttonText = buttonObj.GetComponentInChildren<TextMeshProUGUI>();
                 if (buttonText != null)
                 {
@@ -324,6 +342,7 @@ public class DialogManager : MonoBehaviour
                 }
             }
 
+            // koppla knapp till val
             Button button = buttonObj.GetComponent<Button>();
             if (button != null)
             {
@@ -353,6 +372,7 @@ public class DialogManager : MonoBehaviour
         textComponent.ForceMeshUpdate();
         float preferredWidth = textComponent.preferredWidth;
 
+        // aktivera textbrytning om för bred
         if (preferredWidth > maxWidth)
         {
             SetWordWrapping(textComponent, true);
@@ -378,8 +398,7 @@ public class DialogManager : MonoBehaviour
         }
         else
         {
-            // Fall back to the older enableWordWrapping property with a warning suppression
-#pragma warning disable CS0618 // Disable obsolete warning
+#pragma warning disable CS0618
             textComponent.enableWordWrapping = enableWrapping;
 #pragma warning restore CS0618
         }
@@ -389,6 +408,7 @@ public class DialogManager : MonoBehaviour
     {
         yield return new WaitForEndOfFrame();
 
+        // ta bort alla knappval
         foreach (var btn in new List<GameObject>(currentChoiceButtons))
         {
             if (btn != null)
@@ -424,11 +444,9 @@ public class DialogManager : MonoBehaviour
         }
     }
 
-
-
     private void EndDialog()
     {
-        // Store reference to the current dialog before clearing it
+        // sparar referens till dialog
         Dialog completedDialog = this.dialog;
 
         foreach (var button in currentChoiceButtons)
@@ -452,6 +470,7 @@ public class DialogManager : MonoBehaviour
         IsDialogActive = false;
         currentLine = 0;
 
+        // återställ mus
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
@@ -459,7 +478,7 @@ public class DialogManager : MonoBehaviour
 
         StartCoroutine(DialogCooldown());
 
-        // Fire events AFTER setting IsDialogActive to false
+        // aktivera händelser
         OnHideDialog?.Invoke();
 
         if (completedDialog != null)

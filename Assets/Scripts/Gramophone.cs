@@ -4,20 +4,23 @@ using System.Collections;
 public class Gramophone : MonoBehaviour
 {
     [Header("Audio Settings")]
+    // musikfil att spela
     [SerializeField] private AudioClip musicClip;
+    // volym för musiken
     [SerializeField] private float volumeLevel = 0.5f;
+    // tid för volymändring
     [SerializeField] private float fadeTime = 1.0f;
 
     private AudioSource audioSource;
     private bool isPlaying = false;
     private Coroutine fadeCoroutine;
 
-    // Public property to check if music is playing
+    // kolla om spelas
     public bool IsPlaying => isPlaying;
 
     private void Start()
     {
-        // Set up audio source
+        // konfigurera ljudkälla
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null)
         {
@@ -31,7 +34,7 @@ public class Gramophone : MonoBehaviour
         audioSource.spatialBlend = 1f; // 3D sound
     }
 
-    // Public method for toggling music state
+    // växla musikstatus
     public void ToggleMusic()
     {
         isPlaying = !isPlaying;
@@ -58,6 +61,7 @@ public class Gramophone : MonoBehaviour
         if (fadeCoroutine != null)
             StopCoroutine(fadeCoroutine);
 
+        // öka volymen gradvis
         fadeCoroutine = StartCoroutine(FadeAudio(0, volumeLevel, fadeTime));
     }
 
@@ -66,6 +70,7 @@ public class Gramophone : MonoBehaviour
         if (fadeCoroutine != null)
             StopCoroutine(fadeCoroutine);
 
+        // sänk volymen gradvis
         fadeCoroutine = StartCoroutine(FadeAudio(audioSource.volume, 0, fadeTime));
     }
 
@@ -74,6 +79,7 @@ public class Gramophone : MonoBehaviour
         float timeElapsed = 0;
         audioSource.volume = startVolume;
 
+        // mjuk volymförändring
         while (timeElapsed < duration)
         {
             audioSource.volume = Mathf.Lerp(startVolume, targetVolume, timeElapsed / duration);
@@ -91,7 +97,7 @@ public class Gramophone : MonoBehaviour
         fadeCoroutine = null;
     }
 
-    // For editor testing
+    // för testning
     public void ForcePlayMusic()
     {
         isPlaying = true;

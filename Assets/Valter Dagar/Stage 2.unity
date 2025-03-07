@@ -5712,11 +5712,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nametagQuest: {fileID: 0}
-  autoAddQuest: 0
   tableSpots: []
   updateDelay: 1.5
   checkInterval: 0.5
   startTrackingDelay: 2
+  activateOnStart: 0
+  requireQuestActive: 1
+  toggleKey: 0
+  debugLogs: 1
 --- !u!4 &368118671
 Transform:
   m_ObjectHideFlags: 0
@@ -6993,6 +6996,15 @@ MonoBehaviour:
   noQuestsMessage: {fileID: 0}
   autoRemoveCompletedQuests: 1
   completionDisplayTime: 2
+  directlyTrackNametagQuest: 1
+  refreshInterval: 0.5
+  isNametagQuestAuthority: 1
+  removeDuplicateQuests: 1
+  logDuplicateRemovals: 1
+  duplicateCheckDelay: 1
+  performMultipleChecks: 1
+  numberOfChecks: 3
+  checkInterval: 0.5
   enableDebugLogging: 1
 --- !u!4 &481977276
 Transform:
@@ -9353,7 +9365,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2e5732049dff2743b249700b3f06da2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  questToCheck: {fileID: 11400000, guid: 3c3d656c6bd169147a3cec5e9ba66445, type: 2}
+  questToCheck: {fileID: 11400000, guid: 894f28788adc80e469ab0cffe987f423, type: 2}
   sceneToLoad: Stage 3
   loadDelay: 0
   checkOnStart: 0
@@ -13262,6 +13274,15 @@ MonoBehaviour:
   noQuestsMessage: {fileID: 0}
   autoRemoveCompletedQuests: 1
   completionDisplayTime: 2
+  directlyTrackNametagQuest: 1
+  refreshInterval: 0.5
+  isNametagQuestAuthority: 1
+  removeDuplicateQuests: 1
+  logDuplicateRemovals: 1
+  duplicateCheckDelay: 1
+  performMultipleChecks: 1
+  numberOfChecks: 3
+  checkInterval: 0.5
   enableDebugLogging: 1
 --- !u!114 &900998606
 MonoBehaviour:
@@ -13776,7 +13797,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &921755736
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -3,15 +3,22 @@ using System.Collections;
 
 public class DialogTrigger : MonoBehaviour
 {
+    // dialogdata att visa
     [SerializeField] public Dialog dialog;
 
+    // automatisk aktivering
     [SerializeField] private bool autoTrigger = false;
+    // avstånd för aktivering
     [SerializeField] public float triggerDistance = 3f;
+    // visuell uppmaning
     [SerializeField] public GameObject interactionPrompt;
 
     [Header("Quest Integration")]
+    // uppdrag att avsluta
     [SerializeField] private Quest questToComplete;
+    // index för uppdragsmål
     [SerializeField] private int objectiveIndex;
+    // avsluta efter dialog
     [SerializeField] private bool completeQuestAfterDialog = false;
 
     private Transform playerTransform;
@@ -19,6 +26,7 @@ public class DialogTrigger : MonoBehaviour
 
     private void Start()
     {
+        // hitta spelaren
         PlayerController player = UnityEngine.Object.FindFirstObjectByType<PlayerController>();
         if (player != null)
         {
@@ -30,7 +38,7 @@ public class DialogTrigger : MonoBehaviour
             interactionPrompt.SetActive(false);
         }
 
-        // Subscribe to dialog events to handle prompt visibility
+        // ansluter till händelser
         if (DialogManager.Instance != null)
         {
             DialogManager.Instance.OnShowDialog += HidePrompt;
@@ -41,7 +49,7 @@ public class DialogTrigger : MonoBehaviour
 
     private void OnDestroy()
     {
-        // Unsubscribe from events
+        // rensar upp händelser
         if (DialogManager.Instance != null)
         {
             DialogManager.Instance.OnShowDialog -= HidePrompt;
@@ -58,7 +66,7 @@ public class DialogTrigger : MonoBehaviour
 
         if (distance <= triggerDistance)
         {
-            // Only show prompt if no dialog is active
+            // visa prompt om ingen dialog visas
             if (interactionPrompt != null && !DialogManager.Instance.IsDialogActive)
             {
                 interactionPrompt.SetActive(true);
@@ -84,7 +92,7 @@ public class DialogTrigger : MonoBehaviour
         }
     }
 
-    // Hide prompt when any dialog starts
+    // dölj uppmaning vid dialog
     private void HidePrompt()
     {
         if (interactionPrompt != null)
@@ -93,7 +101,7 @@ public class DialogTrigger : MonoBehaviour
         }
     }
 
-    // Check if we should show prompt when dialog ends
+    // kolla om uppmaning ska visas
     private void CheckShowPrompt()
     {
         if (playerTransform == null) return;
@@ -123,7 +131,7 @@ public class DialogTrigger : MonoBehaviour
         }
     }
 
-    // Handle quest completion after dialog
+    // hantera uppdrag efter dialog
     private void OnDialogCompleted(Dialog completedDialog)
     {
         if (completedDialog == dialog && completeQuestAfterDialog &&

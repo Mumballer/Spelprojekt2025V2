@@ -11689,15 +11689,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a81a7940cf255c4c9d236b3f6d3a537, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: Susan
-  isKitchenNametag: 0
-  nametagUIText: {fileID: 0}
-  nametagSprite: {fileID: 807988573}
-  interactionRadius: 1.5
-  playerTag: Player
-  currentTableSpot: {fileID: 608204916}
-  showDebugGizmos: 1
-  gizmoColor: {r: 0.9, g: 0.2, b: 0.3, a: 0.3}
+  nametagID: 
+  interactable: 1
+  pickupDistance: 2
+  renderers: []
+  visualsContainer: {fileID: 0}
+  highlightObject: {fileID: 0}
+  nameText: {fileID: 0}
+  fadeSpeed: 5
+  pickupSound: {fileID: 0}
+  placeSound: {fileID: 0}
+  showDebug: 0
 --- !u!54 &807988571
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -12788,15 +12790,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a81a7940cf255c4c9d236b3f6d3a537, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: Calvin
-  isKitchenNametag: 0
-  nametagUIText: {fileID: 0}
-  nametagSprite: {fileID: 878346212}
-  interactionRadius: 1.5
-  playerTag: Player
-  currentTableSpot: {fileID: 1856085781}
-  showDebugGizmos: 1
-  gizmoColor: {r: 0.9, g: 0.2, b: 0.3, a: 0.3}
+  nametagID: 
+  interactable: 1
+  pickupDistance: 2
+  renderers: []
+  visualsContainer: {fileID: 0}
+  highlightObject: {fileID: 0}
+  nameText: {fileID: 0}
+  fadeSpeed: 5
+  pickupSound: {fileID: 0}
+  placeSound: {fileID: 0}
+  showDebug: 0
 --- !u!54 &878346210
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -15276,7 +15280,7 @@ Transform:
   m_GameObject: {fileID: 1045155383}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
-  m_LocalPosition: {x: 0.006999238, y: 0, z: 485.59995}
+  m_LocalPosition: {x: 0, y: -0, z: 485.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -17061,7 +17065,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1135085797}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8657779f447eafe4fbba8ccfebec96f0, type: 3}
   m_Name: 
@@ -17076,6 +17080,10 @@ MonoBehaviour:
   isNametagQuestAuthority: 1
   removeDuplicateQuests: 1
   logDuplicateRemovals: 1
+  duplicateCheckDelay: 1
+  performMultipleChecks: 1
+  numberOfChecks: 3
+  checkInterval: 0.5
   enableDebugLogging: 1
 --- !u!114 &1135085800
 MonoBehaviour:
@@ -17249,15 +17257,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a81a7940cf255c4c9d236b3f6d3a537, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: Luca
-  isKitchenNametag: 0
-  nametagUIText: {fileID: 0}
-  nametagSprite: {fileID: 1143068136}
-  interactionRadius: 1.5
-  playerTag: Player
-  currentTableSpot: {fileID: 1102252046}
-  showDebugGizmos: 1
-  gizmoColor: {r: 0.9, g: 0.2, b: 0.3, a: 0.3}
+  nametagID: 
+  interactable: 1
+  pickupDistance: 2
+  renderers: []
+  visualsContainer: {fileID: 0}
+  highlightObject: {fileID: 0}
+  nameText: {fileID: 0}
+  fadeSpeed: 5
+  pickupSound: {fileID: 0}
+  placeSound: {fileID: 0}
+  showDebug: 0
 --- !u!54 &1143068134
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -17913,15 +17923,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a81a7940cf255c4c9d236b3f6d3a537, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: Calvin
-  isKitchenNametag: 1
-  nametagUIText: {fileID: 0}
-  nametagSprite: {fileID: 1170163368}
-  interactionRadius: 1
-  playerTag: Player
-  currentTableSpot: {fileID: 0}
-  showDebugGizmos: 1
-  gizmoColor: {r: 0.9, g: 0.2, b: 0.3, a: 0.3}
+  nametagID: 
+  interactable: 1
+  pickupDistance: 2
+  renderers: []
+  visualsContainer: {fileID: 0}
+  highlightObject: {fileID: 0}
+  nameText: {fileID: 0}
+  fadeSpeed: 5
+  pickupSound: {fileID: 0}
+  placeSound: {fileID: 0}
+  showDebug: 0
 --- !u!54 &1170163366
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -20000,15 +20012,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a81a7940cf255c4c9d236b3f6d3a537, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: Lisa
-  isKitchenNametag: 0
-  nametagUIText: {fileID: 0}
-  nametagSprite: {fileID: 1302473521}
-  interactionRadius: 1.5
-  playerTag: Player
-  currentTableSpot: {fileID: 1078507184}
-  showDebugGizmos: 1
-  gizmoColor: {r: 0.9, g: 0.2, b: 0.3, a: 0.3}
+  nametagID: 
+  interactable: 1
+  pickupDistance: 2
+  renderers: []
+  visualsContainer: {fileID: 0}
+  highlightObject: {fileID: 0}
+  nameText: {fileID: 0}
+  fadeSpeed: 5
+  pickupSound: {fileID: 0}
+  placeSound: {fileID: 0}
+  showDebug: 0
 --- !u!54 &1302473519
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -20144,15 +20158,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a81a7940cf255c4c9d236b3f6d3a537, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: Luca
-  isKitchenNametag: 1
-  nametagUIText: {fileID: 0}
-  nametagSprite: {fileID: 1306102196}
-  interactionRadius: 1
-  playerTag: Player
-  currentTableSpot: {fileID: 0}
-  showDebugGizmos: 1
-  gizmoColor: {r: 0.9, g: 0.2, b: 0.3, a: 0.3}
+  nametagID: 
+  interactable: 1
+  pickupDistance: 2
+  renderers: []
+  visualsContainer: {fileID: 0}
+  highlightObject: {fileID: 0}
+  nameText: {fileID: 0}
+  fadeSpeed: 5
+  pickupSound: {fileID: 0}
+  placeSound: {fileID: 0}
+  showDebug: 0
 --- !u!54 &1306102194
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -21416,15 +21432,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a81a7940cf255c4c9d236b3f6d3a537, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: Emma
-  isKitchenNametag: 1
-  nametagUIText: {fileID: 0}
-  nametagSprite: {fileID: 1423608942}
-  interactionRadius: 1
-  playerTag: Player
-  currentTableSpot: {fileID: 0}
-  showDebugGizmos: 1
-  gizmoColor: {r: 0.9, g: 0.2, b: 0.3, a: 0.3}
+  nametagID: 
+  interactable: 1
+  pickupDistance: 2
+  renderers: []
+  visualsContainer: {fileID: 0}
+  highlightObject: {fileID: 0}
+  nameText: {fileID: 0}
+  fadeSpeed: 5
+  pickupSound: {fileID: 0}
+  placeSound: {fileID: 0}
+  showDebug: 0
 --- !u!54 &1423608940
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -26340,15 +26358,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a81a7940cf255c4c9d236b3f6d3a537, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: Lisa
-  isKitchenNametag: 1
-  nametagUIText: {fileID: 0}
-  nametagSprite: {fileID: 1704410224}
-  interactionRadius: 1
-  playerTag: Player
-  currentTableSpot: {fileID: 0}
-  showDebugGizmos: 1
-  gizmoColor: {r: 0.9, g: 0.2, b: 0.3, a: 0.3}
+  nametagID: 
+  interactable: 1
+  pickupDistance: 2
+  renderers: []
+  visualsContainer: {fileID: 0}
+  highlightObject: {fileID: 0}
+  nameText: {fileID: 0}
+  fadeSpeed: 5
+  pickupSound: {fileID: 0}
+  placeSound: {fileID: 0}
+  showDebug: 0
 --- !u!54 &1704410222
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -29665,15 +29685,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a81a7940cf255c4c9d236b3f6d3a537, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: Nico
-  isKitchenNametag: 0
-  nametagUIText: {fileID: 0}
-  nametagSprite: {fileID: 1891451468}
-  interactionRadius: 1.5
-  playerTag: Player
-  currentTableSpot: {fileID: 1632471785}
-  showDebugGizmos: 1
-  gizmoColor: {r: 0.9, g: 0.2, b: 0.3, a: 0.3}
+  nametagID: 
+  interactable: 1
+  pickupDistance: 2
+  renderers: []
+  visualsContainer: {fileID: 0}
+  highlightObject: {fileID: 0}
+  nameText: {fileID: 0}
+  fadeSpeed: 5
+  pickupSound: {fileID: 0}
+  placeSound: {fileID: 0}
+  showDebug: 0
 --- !u!65 &1891451467
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -29780,7 +29802,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nametagQuest: {fileID: 11400000, guid: 02d4bf8fd11c2f946bf923b81cc6b3d6, type: 2}
-  autoAddQuest: 0
   tableSpots:
   - {fileID: 608204916}
   - {fileID: 2017960917}
@@ -33203,15 +33224,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a81a7940cf255c4c9d236b3f6d3a537, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: Emma
-  isKitchenNametag: 0
-  nametagUIText: {fileID: 0}
-  nametagSprite: {fileID: 2043814229}
-  interactionRadius: 1.5
-  playerTag: Player
-  currentTableSpot: {fileID: 2017960917}
-  showDebugGizmos: 1
-  gizmoColor: {r: 0.9, g: 0.2, b: 0.3, a: 0.3}
+  nametagID: 
+  interactable: 1
+  pickupDistance: 2
+  renderers: []
+  visualsContainer: {fileID: 0}
+  highlightObject: {fileID: 0}
+  nameText: {fileID: 0}
+  fadeSpeed: 5
+  pickupSound: {fileID: 0}
+  placeSound: {fileID: 0}
+  showDebug: 0
 --- !u!54 &2043814227
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -33465,15 +33488,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a81a7940cf255c4c9d236b3f6d3a537, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: Nico
-  isKitchenNametag: 1
-  nametagUIText: {fileID: 0}
-  nametagSprite: {fileID: 2069716855}
-  interactionRadius: 1
-  playerTag: Player
-  currentTableSpot: {fileID: 0}
-  showDebugGizmos: 1
-  gizmoColor: {r: 0.9, g: 0.2, b: 0.3, a: 0.3}
+  nametagID: 
+  interactable: 1
+  pickupDistance: 2
+  renderers: []
+  visualsContainer: {fileID: 0}
+  highlightObject: {fileID: 0}
+  nameText: {fileID: 0}
+  fadeSpeed: 5
+  pickupSound: {fileID: 0}
+  placeSound: {fileID: 0}
+  showDebug: 0
 --- !u!54 &2069716853
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -34653,15 +34678,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a81a7940cf255c4c9d236b3f6d3a537, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: Susan
-  isKitchenNametag: 1
-  nametagUIText: {fileID: 0}
-  nametagSprite: {fileID: 2145442371}
-  interactionRadius: 1
-  playerTag: Player
-  currentTableSpot: {fileID: 0}
-  showDebugGizmos: 1
-  gizmoColor: {r: 0.9, g: 0.2, b: 0.3, a: 0.3}
+  nametagID: 
+  interactable: 1
+  pickupDistance: 2
+  renderers: []
+  visualsContainer: {fileID: 0}
+  highlightObject: {fileID: 0}
+  nameText: {fileID: 0}
+  fadeSpeed: 5
+  pickupSound: {fileID: 0}
+  placeSound: {fileID: 0}
+  showDebug: 0
 --- !u!54 &2145442369
 Rigidbody:
   m_ObjectHideFlags: 0

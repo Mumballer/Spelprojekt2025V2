@@ -1,270 +1,370 @@
 using UnityEngine;
-using UnityEngine.UI;
+using System;
 using TMPro;
-using System.Collections;
 
 public class Nametag : MonoBehaviour
 {
     [Header("Nametag Settings")]
-    // Unique name of the nametag
-    public string name;
-    // Whether this nametag is on the kitchen counter (true) or the dinner table (false)
-    public bool isKitchenNametag = true;
+    [SerializeField] private string nametagID;
+    [SerializeField] private bool interactable = true;
+    [SerializeField] private float pickupDistance = 2.0f;
 
-    [Header("References")]
-    // Reference to the TextMeshProUGUI element for UI feedback
-    public TextMeshProUGUI nametagUIText;
-    // Reference to the nametag's SpriteRenderer
-    public SpriteRenderer nametagSprite;
+    [Header("Visual Effects")]
+    [SerializeField] private Renderer[] renderers;
+    [SerializeField] private GameObject visualsContainer;
+    [SerializeField] private GameObject highlightObject;
+    [SerializeField] private TextMeshPro nameText;
+    [SerializeField] private float fadeSpeed = 5f;
 
-    [Header("Interaction Settings")]
-    // The radius around this nametag where the player can interact (only used for kitchen nametags)
-    [SerializeField] private float interactionRadius = 1.5f;
-    // Optional - tag of the player object (default: "Player")
-    [SerializeField] private string playerTag = "Player";
+    [Header("Sound Effects")]
+    [SerializeField] private AudioClip pickupSound;
+    [SerializeField] private AudioClip placeSound;
 
-    [Header("Table Placement")]
-    // Reference to the table spot this nametag is placed at (if any)
-    [SerializeField] private TableSpot currentTableSpot;
+    [Header("Debug")]
+    [SerializeField] private bool showDebug = false;
 
-    [Header("Advanced Options")]
-    // Whether to draw debug gizmos in the editor
-    [SerializeField] private bool showDebugGizmos = true;
-    // Color of the interaction radius gizmo
-    [SerializeField] private Color gizmoColor = new Color(0.9f, 0.2f, 0.3f, 0.3f);
+    // events för interaktioner
+    public event Action<TableSpot, string> OnNametagPlaced;
+    public event Action OnNametagPickedUp;
 
-    // Flag to track if this nametag is picked up
-    private bool isPickedUp = false;
-    // Flag to check if the prompt is active
-    private bool isPromptActive = false;
-    // Flag to check if player is in interaction range
-    private bool playerInRange = false;
-    // Store the original color to restore it when needed
-    private Color originalColor;
-    // Reference to the player transform when in range
+    // interna variabler
+    private bool pickedUp = false;
+    private bool placed = false;
+    private Vector3 originalPosition;
+    private Quaternion originalRotation;
+    private TableSpot currentSpot;
+    private float currentAlpha = 1.0f;
+    private float targetAlpha = 1.0f;
     private Transform playerTransform;
+    private bool playerInRange = false;
+    private AudioSource audioSource;
 
-    private void Start()
+    void Awake()
     {
-        // Store the original color
-        if (nametagSprite != null)
+        // leta reda på och spara alla renderare om ingen är satt
+        if (renderers == null || renderers.Length == 0)
         {
-            originalColor = nametagSprite.color;
-        }
-        else
-        {
-            Debug.LogError($"Nametag is missing SpriteRenderer reference: {gameObject.name}");
+            renderers = GetComponentsInChildren<Renderer>();
         }
 
-        // If this is a table nametag, start invisible
-        if (!isKitchenNametag)
+        // spara originalposition för att kunna återställa senare
+        originalPosition = transform.position;
+        originalRotation = transform.rotation;
+
+        // sätt upp ljudkälla
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null && (pickupSound != null || placeSound != null))
         {
-            SetAlpha(0f);
+            audioSource = gameObject.AddComponent<AudioSource>();
+            audioSource.spatialBlend = 1.0f; // 3D ljud
+            audioSource.volume = 0.8f;
+        }
+    }
+
+    void Start()
+    {
+        // hitta spelaren, kan vara bra att ha
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+        {
+            playerTransform = player.transform;
+        }
+
+        // dölj highlight vid start
+        if (highlightObject != null)
+        {
+            highlightObject.SetActive(false);
+        }
+
+        // sätt namn om textkomponent finns
+        if (nameText != null && !string.IsNullOrEmpty(nametagID))
+        {
+            nameText.text = nametagID;
+        }
+        else if (string.IsNullOrEmpty(nametagID))
+        {
+            // använd gameobject-namn om inget ID är satt
+            nametagID = gameObject.name;
         }
     }
 
     void Update()
     {
-        // Only check for interaction if this is a kitchen nametag
-        if (isKitchenNametag)
-        {
-            // Check if player is in range
-            CheckPlayerDistance();
+        // kolla om spelaren är nära (för highlight etc)
+        CheckPlayerDistance();
 
-            // Process interaction when E is pressed
-            if (playerInRange && Input.GetKeyDown(KeyCode.E))
-            {
-                if (!isPromptActive && !isPickedUp)
-                {
-                    Interact();
-                }
-                else if (isPromptActive)
-                {
-                    ConfirmOrCancelPickup();
-                }
-            }
-        }
+        // hantera alpha-fade
+        UpdateVisibility();
     }
 
-    // Check if player is within interaction range
+    // kollar avståndet till spelaren
     private void CheckPlayerDistance()
     {
-        // Find the player if we haven't already
-        if (playerTransform == null)
+        if (playerTransform == null || !interactable) return;
+
+        float distance = Vector3.Distance(transform.position, playerTransform.position);
+        bool inRange = distance <= pickupDistance;
+
+        // uppdatera bara om statusen ändrats
+        if (inRange != playerInRange)
         {
-            GameObject playerObject = GameObject.FindGameObjectWithTag(playerTag);
-            if (playerObject != null)
+            playerInRange = inRange;
+
+            // visa highlight om spelaren är i närheten
+            if (highlightObject != null)
             {
-                playerTransform = playerObject.transform;
+                highlightObject.SetActive(playerInRange && !pickedUp && !placed);
             }
-        }
 
-        // If we have a player reference, check distance
-        if (playerTransform != null)
-        {
-            float distance = Vector3.Distance(transform.position, playerTransform.position);
-
-            // Check if player has entered range
-            if (distance <= interactionRadius && !playerInRange)
+            // anropa event-metoder för att andra skript ska kunna reagera
+            if (playerInRange)
             {
-                playerInRange = true;
                 OnPlayerEnterRange();
             }
-            // Check if player has left range
-            else if (distance > interactionRadius && playerInRange)
+            else
             {
-                playerInRange = false;
                 OnPlayerExitRange();
             }
         }
     }
 
-    // Called when player enters the interaction range
+    // när spelaren kommer inom räckhåll
     private void OnPlayerEnterRange()
     {
-        // Only show prompt for kitchen nametags that haven't been picked up
-        if (isKitchenNametag && !isPickedUp)
+        try
         {
-            nametagUIText.SetText("Press E to pick up " + name + " nametag");
+            if (showDebug)
+            {
+                Debug.Log($"Player entered range of nametag: {gameObject.name}");
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Error in OnPlayerEnterRange: {e.Message}");
         }
     }
 
-    // Called when player exits the interaction range
+    // när spelaren lämnar området
     private void OnPlayerExitRange()
     {
-        // Clear prompt if it's showing the basic interaction message
-        if (nametagUIText.text == "Press E to pick up " + name + " nametag")
+        try
         {
-            nametagUIText.SetText("");
+            if (showDebug)
+            {
+                Debug.Log($"Player exited range of nametag: {gameObject.name}");
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Error in OnPlayerExitRange: {e.Message}");
         }
     }
 
-    // Handle the interaction logic
-    public void Interact()
-    {
-        if (isKitchenNametag && !isPickedUp)
-        {
-            // Show the pickup prompt
-            nametagUIText.SetText("Pick up " + name + " Nametag? Press E to confirm");
-            isPromptActive = true;
-            // Use coroutine instead of Invoke for better control
-            StartCoroutine(HidePromptAfterDelay());
-        }
-    }
-
-    // Confirm or cancel the pickup based on the second E press
-    private void ConfirmOrCancelPickup()
-    {
-        if (isPromptActive)
-        {
-            // Confirm pickup
-            ConfirmPickup();
-        }
-    }
-
-    // Hide the prompt
-    private void HidePrompt()
-    {
-        if (isPromptActive)
-        {
-            nametagUIText.SetText("");
-            isPromptActive = false;
-        }
-    }
-
-    // Coroutine to hide the prompt after a delay
-    private IEnumerator HidePromptAfterDelay()
-    {
-        yield return new WaitForSeconds(2f);
-        HidePrompt();
-    }
-
-    // Call this function to confirm pickup
-    public void ConfirmPickup()
-    {
-        // Make the kitchen nametag disappear by reducing alpha
-        SetAlpha(0f);
-        isPickedUp = true;
-        Debug.Log("Nametag " + name + " has been picked up.");
-
-        // Update the UI to indicate the nametag is being carried
-        nametagUIText.SetText("Carrying " + name + " nametag");
-
-        // Clear the prompt after a moment
-        StartCoroutine(ClearCarryingTextAfterDelay());
-
-        // Reset the prompt state
-        isPromptActive = false;
-    }
-
-    // Coroutine to clear the "Carrying" text after a delay
-    private IEnumerator ClearCarryingTextAfterDelay()
-    {
-        yield return new WaitForSeconds(2f);
-        nametagUIText.SetText("");
-    }
-
-    public void PlaceNametag()
-    {
-        // Make the table nametag appear by setting to white and full opacity
-        if (nametagSprite != null)
-        {
-            // Set to pure white with full opacity
-            Color whiteColor = Color.white;
-            nametagSprite.color = whiteColor;
-        }
-
-        Debug.Log("Nametag " + name + " has been placed on the table.");
-    }
-
-
-
-    // Method to place nametag at a specific table spot
-    public void PlaceAtSpot(TableSpot spot)
-    {
-        // Make the nametag visible
-        SetAlpha(1f);
-
-        // Clear previous spot if any
-        if (currentTableSpot != null && currentTableSpot != spot)
-        {
-            currentTableSpot.ClearSpot();
-        }
-
-        // Store reference to new spot
-        currentTableSpot = spot;
-
-        // Tell the table spot about this nametag
-        spot.SetNametag(gameObject, name);
-
-        // Log placement
-        Debug.Log("Nametag " + name + " has been placed on the table at " + spot.name);
-    }
-
-    // Helper function to set the alpha of the nametag
+    // sätter genomskinlighet på namnbrickan (anropas från TableSpot)
     public void SetAlpha(float alpha)
     {
-        if (nametagSprite != null)
+        targetAlpha = Mathf.Clamp01(alpha);
+
+        // direkt uppdatering på alla material
+        if (renderers != null && renderers.Length > 0)
         {
-            Color newColor = originalColor;
-            newColor.a = alpha;
-            nametagSprite.color = newColor;
+            foreach (Renderer renderer in renderers)
+            {
+                if (renderer != null)
+                {
+                    foreach (Material mat in renderer.materials)
+                    {
+                        // kolla om materialet har en färgegenskap
+                        if (mat.HasProperty("_Color"))
+                        {
+                            Color color = mat.color;
+                            color.a = targetAlpha;
+                            mat.color = color;
+                        }
+                    }
+                }
+            }
+        }
+
+        currentAlpha = targetAlpha;
+
+        if (showDebug)
+        {
+            Debug.Log($"Nametag '{nametagID}' alpha set to {targetAlpha}");
         }
     }
 
-    // Public method to check if this nametag has been picked up
-    public bool IsPickedUp()
+    // gradvis uppdatering av genomskinlighet
+    private void UpdateVisibility()
     {
-        return isPickedUp;
+        if (Mathf.Approximately(currentAlpha, targetAlpha)) return;
+
+        currentAlpha = Mathf.MoveTowards(currentAlpha, targetAlpha, Time.deltaTime * fadeSpeed);
+
+        if (renderers != null)
+        {
+            foreach (Renderer renderer in renderers)
+            {
+                if (renderer != null)
+                {
+                    foreach (Material mat in renderer.materials)
+                    {
+                        if (mat.HasProperty("_Color"))
+                        {
+                            Color color = mat.color;
+                            color.a = currentAlpha;
+                            mat.color = color;
+                        }
+                    }
+                }
+            }
+        }
     }
 
-    // Draw gizmos to visualize the interaction range in the editor (only for kitchen nametags)
-    private void OnDrawGizmos()
+    // markerar att namnbrickan är placerad (kallas från TableSpot)
+    public void PlaceNametag()
     {
-        if (showDebugGizmos && isKitchenNametag)
+        placed = true;
+        pickedUp = false;
+
+        // visa namnbrickan
+        SetAlpha(1.0f);
+
+        // spela ljud om det finns
+        PlaySound(placeSound);
+
+        if (showDebug)
         {
-            Gizmos.color = gizmoColor;
-            Gizmos.DrawSphere(transform.position, interactionRadius);
+            Debug.Log($"Nametag '{nametagID}' placed at spot: {(currentSpot != null ? currentSpot.name : "unknown")}");
+        }
+
+        // notifiera att namnbrickan har placerats
+        if (currentSpot != null)
+        {
+            OnNametagPlaced?.Invoke(currentSpot, nametagID);
+        }
+    }
+
+    // fysiskt placerar namnbrickan på en plats (kallas från TableSpot)
+    public void PlaceAtSpot(TableSpot spot)
+    {
+        if (spot == null)
+        {
+            Debug.LogError("Cannot place nametag - TableSpot is null");
+            return;
+        }
+
+        // spara referensen till platsen
+        currentSpot = spot;
+
+        // flytta till platsens position/rotation
+        transform.position = spot.transform.position;
+        transform.rotation = spot.transform.rotation;
+
+        // leta efter en specifik platsmarkör om sådan finns
+        Transform nametagPosition = spot.transform.Find("NametagPosition");
+        if (nametagPosition != null)
+        {
+            transform.position = nametagPosition.position;
+            transform.rotation = nametagPosition.rotation;
+        }
+
+        // uppdatera status
+        placed = true;
+        pickedUp = false;
+
+        // visa namnbrickan
+        SetAlpha(1.0f);
+
+        // spela ljud om det finns
+        PlaySound(placeSound);
+
+        if (showDebug)
+        {
+            Debug.Log($"Positioned nametag '{nametagID}' at spot: {spot.name}");
+        }
+    }
+
+    // markerar att namnbrickan är upplockad
+    public void PickUp()
+    {
+        pickedUp = true;
+        placed = false;
+        currentSpot = null;
+
+        // spela ljud om det finns
+        PlaySound(pickupSound);
+
+        // notifiera att namnbrickan har plockats upp
+        OnNametagPickedUp?.Invoke();
+
+        if (showDebug)
+        {
+            Debug.Log($"Nametag '{nametagID}' picked up");
+        }
+    }
+
+    // lägger ner namnbrickan (inte på en specifik plats)
+    public void PutDown()
+    {
+        pickedUp = false;
+        placed = false;
+        currentSpot = null;
+
+        if (showDebug)
+        {
+            Debug.Log($"Nametag '{nametagID}' put down");
+        }
+    }
+
+    // kontrollera om namnbrickan är upplockad - krävs av TableSpot
+    public bool IsPickedUp()
+    {
+        return pickedUp;
+    }
+
+    // återställ namnbrickan till sin originalposition
+    public void ResetPosition()
+    {
+        transform.position = originalPosition;
+        transform.rotation = originalRotation;
+
+        pickedUp = false;
+        placed = false;
+        currentSpot = null;
+
+        if (showDebug)
+        {
+            Debug.Log($"Nametag '{nametagID}' reset to original position");
+        }
+    }
+
+    // hjälpmetod för att spela ljud
+    private void PlaySound(AudioClip clip)
+    {
+        if (audioSource != null && clip != null)
+        {
+            audioSource.PlayOneShot(clip);
+        }
+    }
+
+    // för visualisering i editorn
+    private void OnDrawGizmosSelected()
+    {
+        // visa interaktionsradie
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, pickupDistance);
+
+        // visa status
+        if (placed)
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireCube(transform.position + Vector3.up * 0.2f, new Vector3(0.1f, 0.1f, 0.1f));
+        }
+        else if (pickedUp)
+        {
+            Gizmos.color = Color.blue;
+            Gizmos.DrawWireCube(transform.position + Vector3.up * 0.2f, new Vector3(0.1f, 0.1f, 0.1f));
         }
     }
 }

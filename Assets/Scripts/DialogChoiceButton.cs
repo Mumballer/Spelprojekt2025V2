@@ -5,9 +5,13 @@ using TMPro;
 [RequireComponent(typeof(Button))]
 public class DialogChoiceButton : MonoBehaviour
 {
+    // text för knapp
     [SerializeField] private TextMeshProUGUI buttonText;
+    // avstånd för text
     [SerializeField] private float textPadding = 10f;
+    // minsta bredd
     [SerializeField] private float minWidth = 160f;
+    // minsta höjd
     [SerializeField] private float minHeight = 50f;
 
     private RectTransform rectTransform;
@@ -17,6 +21,7 @@ public class DialogChoiceButton : MonoBehaviour
     {
         rectTransform = GetComponent<RectTransform>();
 
+        // lägg till layoutelement
         layoutElement = GetComponent<LayoutElement>();
         if (layoutElement == null)
         {
@@ -30,6 +35,7 @@ public class DialogChoiceButton : MonoBehaviour
             buttonText = GetComponentInChildren<TextMeshProUGUI>();
         }
 
+        // skapa storleksanpassare
         ContentSizeFitter fitter = GetComponent<ContentSizeFitter>();
         if (fitter == null)
         {
@@ -43,6 +49,7 @@ public class DialogChoiceButton : MonoBehaviour
     {
         if (buttonText == null) return;
 
+        // sätt knapptext
         buttonText.text = text;
 
         RectTransform textRectTransform = buttonText.GetComponent<RectTransform>();
@@ -55,6 +62,7 @@ public class DialogChoiceButton : MonoBehaviour
             textRectTransform.offsetMax = new Vector2(-textPadding, -textPadding);
         }
 
+        // centrera text
         buttonText.alignment = TextAlignmentOptions.Center;
 
 #pragma warning disable CS0618
@@ -63,6 +71,7 @@ public class DialogChoiceButton : MonoBehaviour
 
         buttonText.overflowMode = TextOverflowModes.Overflow;
 
+        // tvingar omritning
         LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);
     }
 }

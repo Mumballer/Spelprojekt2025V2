@@ -4,15 +4,22 @@ using System.Collections;
 public class GramophoneQuestTrigger : MonoBehaviour
 {
     [Header("References")]
+    // referens till grammofon
     [SerializeField] private Gramophone gramophone;
+    // punkt för interaktion
     [SerializeField] private Transform interactionPoint;
+    // visuell interaktionsuppmaning
     [SerializeField] private GameObject interactionPrompt;
+    // avstånd för interaktion
     [SerializeField] private float interactionDistance = 2f;
     [SerializeField] private LayerMask playerLayer;
+    // knapp för interaktion
     [SerializeField] private KeyCode interactKey = KeyCode.E;
 
     [Header("Quest Settings")]
+    // uppdrag att aktivera
     [SerializeField] private Quest musicQuest;
+    // mål att slutföra
     [SerializeField] private int musicObjectiveIndex = 0;
 
     private bool playerInRange = false;
@@ -39,6 +46,7 @@ public class GramophoneQuestTrigger : MonoBehaviour
     {
         CheckPlayerDistance();
 
+        // hantera interaktion
         if (playerInRange && canInteract && Input.GetKeyDown(interactKey))
         {
             Interact();
@@ -49,6 +57,7 @@ public class GramophoneQuestTrigger : MonoBehaviour
     {
         if (interactionPoint == null) return;
 
+        // upptäck spelare nära
         Collider[] colliders = Physics.OverlapSphere(interactionPoint.position, interactionDistance, playerLayer);
         bool isPlayerNear = colliders.Length > 0;
 
@@ -64,15 +73,15 @@ public class GramophoneQuestTrigger : MonoBehaviour
 
     public void Interact()
     {
-        // Toggle music on the gramophone
+        // växla musik status
         if (gramophone != null)
         {
             gramophone.ToggleMusic();
 
-            // Complete the quest when the gramophone is interacted with
+            // slutför vid interaktion
             if (musicQuest != null && QuestManager.Instance != null && !questCompleted)
             {
-                // If quest is not active yet, add it
+                // aktivera uppdrag om inaktivt
                 if (!QuestManager.Instance.IsQuestActive(musicQuest) &&
                     !QuestManager.Instance.IsQuestCompleted(musicQuest))
                 {
@@ -80,7 +89,7 @@ public class GramophoneQuestTrigger : MonoBehaviour
                     QuestManager.Instance.AddQuest(musicQuest);
                 }
 
-                // Complete the objective
+                // slutför del mål
                 if (QuestManager.Instance.IsQuestActive(musicQuest))
                 {
                     Debug.Log($"Completing gramophone interaction objective");

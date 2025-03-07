@@ -18,12 +18,17 @@ public class QuestDisplayManager : MonoBehaviour
     [Header("Duplicate Handling")]
     [SerializeField] private bool removeDuplicateQuests = true;
     [SerializeField] private bool logDuplicateRemovals = true;
+    [SerializeField] private float duplicateCheckDelay = 1.0f; // Delay before checking for duplicates
+    [SerializeField] private bool performMultipleChecks = true; // Perform multiple checks to catch all duplicates
+    [SerializeField] private int numberOfChecks = 3; // Number of checks to perform
+    [SerializeField] private float checkInterval = 0.5f; // Time between checks
 
     private Dictionary<string, QuestEntryUI> questEntriesByKey = new Dictionary<string, QuestEntryUI>(); // New dictionary using key instead of reference
     private Dictionary<Quest, QuestEntryUI> questEntries = new Dictionary<Quest, QuestEntryUI>(); // Keep for backward compatibility
     private HashSet<Quest> pendingRemoval = new HashSet<Quest>(); // Track quests being removed
     private NametagQuestManager nametagQuestManager; // Reference to nametag manager
     private Coroutine periodicRefreshCoroutine;
+    private Coroutine duplicateCheckCoroutine;
 
     [Header("Debug Options")]
     [SerializeField] private bool enableDebugLogging = true;
@@ -57,14 +62,11 @@ public class QuestDisplayManager : MonoBehaviour
     }
 
     void Start()
-
-
     {
+        Debug.Log("QuestDisplayManager is attached to this GameObject", this.gameObject);
 
-        Debug.Log("Script is attached to this GameObject", this.gameObject);
         // Find the nametag quest manager
         nametagQuestManager = FindObjectOfType<NametagQuestManager>();
-
         if (nametagQuestManager != null)
         {
             DebugLog("Found NametagQuestManager reference");
@@ -97,12 +99,13 @@ public class QuestDisplayManager : MonoBehaviour
             DebugLog("WARNING: No NametagQuestManager found in scene!");
         }
 
-        // Remove any duplicates at startup
+        // Start delayed duplicate removal process
         if (removeDuplicateQuests)
         {
-            int count = RemoveDuplicateQuests();
-            if (count > 0)
-                DebugLog($"Removed {count} duplicate quests at startup");
+            if (duplicateCheckCoroutine != null)
+                StopCoroutine(duplicateCheckCoroutine);
+
+            duplicateCheckCoroutine = StartCoroutine(DelayedDuplicateRemoval());
         }
 
         RefreshQuestDisplay();
@@ -112,6 +115,44 @@ public class QuestDisplayManager : MonoBehaviour
         {
             periodicRefreshCoroutine = StartCoroutine(PeriodicRefresh());
         }
+    }
+
+    // NEW COROUTINE: Performs multiple checks for duplicates with delays
+    private IEnumerator DelayedDuplicateRemoval()
+    {
+        DebugLog($"Starting delayed duplicate check in {duplicateCheckDelay} seconds");
+
+        // Wait for initial delay
+        yield return new WaitForSeconds(duplicateCheckDelay);
+
+        // Perform initial cleanup
+        int removedCount = RemoveDuplicateQuests();
+        DebugLog($"Initial duplicate check removed {removedCount} duplicates");
+
+        // If we need to perform multiple checks
+        if (performMultipleChecks)
+        {
+            for (int i = 0; i < numberOfChecks; i++)
+            {
+                // Wait between checks
+                yield return new WaitForSeconds(checkInterval);
+
+                // Perform another cleanup
+                removedCount = RemoveDuplicateQuests();
+                DebugLog($"Follow-up duplicate check #{i + 1} removed {removedCount} duplicates");
+
+                // If no duplicates found, we can stop early
+                if (removedCount == 0)
+                    break;
+
+                // Refresh the display after each check
+                RefreshQuestDisplay();
+            }
+        }
+
+        // Final refresh to ensure everything is clean
+        RefreshQuestDisplay();
+        DebugLog("Completed all duplicate removal checks");
     }
 
     void OnEnable()
@@ -142,6 +183,13 @@ public class QuestDisplayManager : MonoBehaviour
         {
             StopCoroutine(periodicRefreshCoroutine);
             periodicRefreshCoroutine = null;
+        }
+
+        // Stop the duplicate check coroutine
+        if (duplicateCheckCoroutine != null)
+        {
+            StopCoroutine(duplicateCheckCoroutine);
+            duplicateCheckCoroutine = null;
         }
     }
 
@@ -471,7 +519,11 @@ public class QuestDisplayManager : MonoBehaviour
         Dictionary<string, Quest> uniqueQuests = new Dictionary<string, Quest>();
         List<Quest> duplicatesToRemove = new List<Quest>();
 
-        foreach (Quest quest in QuestManager.Instance.GetActiveQuests())
+        // Get a fresh list of active quests directly from QuestManager
+        List<Quest> activeQuests = QuestManager.Instance.GetActiveQuests();
+        DebugLog($"Checking for duplicates among {activeQuests.Count} active quests");
+
+        foreach (Quest quest in activeQuests)
         {
             if (quest == null) continue;
 
@@ -504,6 +556,14 @@ public class QuestDisplayManager : MonoBehaviour
         }
 
         return duplicatesToRemove.Count;
+    }
+
+    // Public method to manually force duplicate removal
+    public void ForceDuplicateRemoval()
+    {
+        int removed = RemoveDuplicateQuests();
+        DebugLog($"Force duplicate removal: removed {removed} quests");
+        RefreshQuestDisplay();
     }
 
     // Rebuilds the entire quest display
