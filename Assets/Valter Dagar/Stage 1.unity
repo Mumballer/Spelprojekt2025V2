@@ -1775,7 +1775,7 @@ GameObject:
   - component: {fileID: 120900576}
   - component: {fileID: 120900577}
   - component: {fileID: 120900578}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1792,7 +1792,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 11.5, z: 1.86}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2.3258, y: 2.3258, z: 2.3258}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1680139362}
@@ -1813,12 +1813,12 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 19.666489, y: 17.28144, z: 0.9999999}
-  m_Center: {x: 1.5607417, y: 5.436266, z: 0}
+  m_Size: {x: 23.499012, y: 17.28144, z: 1.2799187}
+  m_Center: {x: 1.4456047, y: 5.4362645, z: -0.13995948}
 --- !u!114 &120900578
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1832,7 +1832,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   assignedNametag: calvinnametag
-  nametagUIText: {fileID: 2039724808}
+  nametagUIText: {fileID: 127244274}
+  tableNametagScript: {fileID: 0}
+  kitchenNametagScript: {fileID: 0}
 --- !u!1 &127244272
 GameObject:
   m_ObjectHideFlags: 0
@@ -12359,6 +12361,7 @@ GameObject:
   - component: {fileID: 976968563}
   - component: {fileID: 976968562}
   - component: {fileID: 976968561}
+  - component: {fileID: 976968565}
   m_Layer: 0
   m_Name: Cube (3)
   m_TagString: Untagged
@@ -12455,6 +12458,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 778701646}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &976968565
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 976968560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72aa011d12b056f4aa7b4e4e3b3ac091, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Blah: {fileID: 976968560}
 --- !u!1 &977048336
 GameObject:
   m_ObjectHideFlags: 0
@@ -23280,27 +23296,14 @@ GameObject:
   - component: {fileID: 1680139362}
   - component: {fileID: 1680139361}
   - component: {fileID: 1680139360}
-  - component: {fileID: 1680139359}
   - component: {fileID: 1680139363}
-  m_Layer: 9
+  m_Layer: 7
   m_Name: calvinnametag (1)
-  m_TagString: Calvin
+  m_TagString: Nametag
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &1680139359
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1680139357}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a8c8fa8055ed2a4dbb066497d68ab50, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_IsActive: 1
 --- !u!65 &1680139360
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -23367,7 +23370,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: e9a3161e8b97418409d205283f67cb15, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -23386,7 +23389,7 @@ Transform:
   m_GameObject: {fileID: 1680139357}
   serializedVersion: 2
   m_LocalRotation: {x: 0.17363642, y: 0.0020199276, z: -0.01145558, w: 0.98474115}
-  m_LocalPosition: {x: 4.692083, y: -4.1803503, z: -0.13331437}
+  m_LocalPosition: {x: 4.692083, y: -0.31, z: -0.13331437}
   m_LocalScale: {x: 0.11252817, y: 0.056036428, z: 1.682541}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -23401,9 +23404,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1680139357}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b5ecc2b8b9428e1409446eaaa8807823, type: 3}
+  m_Script: {fileID: 11500000, guid: 3a81a7940cf255c4c9d236b3f6d3a537, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  name: calvinnametag
+  isKitchenNametag: 0
+  nametagUIText: {fileID: 127244274}
+  nametagSprite: {fileID: 1680139361}
 --- !u!1 &1683778687
 GameObject:
   m_ObjectHideFlags: 0
@@ -25671,7 +25678,6 @@ GameObject:
   - component: {fileID: 1838966323}
   - component: {fileID: 1838966324}
   - component: {fileID: 1838966326}
-  - component: {fileID: 1838966325}
   - component: {fileID: 1838966327}
   - component: {fileID: 1838966328}
   m_Layer: 7
@@ -25751,18 +25757,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &1838966325
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1838966322}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a8c8fa8055ed2a4dbb066497d68ab50, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!65 &1838966326
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -25778,12 +25772,12 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 77.50832, y: 87.83571, z: 0.25439757}
-  m_Center: {x: -2.9609948e-14, y: 10.894666, z: -0.027198762}
+  m_Size: {x: 77.50832, y: 87.83571, z: 0.41538826}
+  m_Center: {x: 2.6778557e-14, y: 10.894679, z: -0.10769412}
 --- !u!54 &1838966327
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -25824,8 +25818,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   name: calvinnametag
-  nametagUIText: {fileID: 2039724808}
-  assignedTableSpot: {fileID: 120900578}
+  isKitchenNametag: 1
+  nametagUIText: {fileID: 127244274}
+  nametagSprite: {fileID: 1838966324}
 --- !u!1 &1841730156
 GameObject:
   m_ObjectHideFlags: 0
