@@ -13737,11 +13737,6 @@ MonoBehaviour:
   mouseSensitivity: 2
   lookUpLimit: 80
   lookDownLimit: 80
-  itemHoldPoint: {fileID: 0}
-  interactionDistance: 3
-  interactableLayers:
-    serializedVersion: 2
-    m_Bits: 0
 --- !u!136 &1251371574
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -17219,6 +17214,8 @@ GameObject:
   - component: {fileID: 1548107258}
   - component: {fileID: 1548107257}
   - component: {fileID: 1548107259}
+  - component: {fileID: 1548107261}
+  - component: {fileID: 1548107260}
   m_Layer: 0
   m_Name: Dotter
   m_TagString: Untagged
@@ -17308,6 +17305,73 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc7117d6437f6d64a99df07f3f1990e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!65 &1548107260
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1548107256}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 65.278366, y: 109.62499, z: 1.2534904}
+  m_Center: {x: 6.1149726, y: 0, z: 0.0072803497}
+--- !u!114 &1548107261
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1548107256}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e91d67447a7b50f43a1e5720964d0c9c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dialog:
+    lines:
+    - text: "DAD?? You\u2019re back!! I can't believe you\u2019re awake again!"
+      choices:
+      - text: I feel better than ever
+        nextDialog:
+          lines:
+          - text: Theres so much I've wanted to tell you, lets chat on the way home.
+            choices:
+            - text: "I can\u2019t wait to hear about it my dear Emma, I love you."
+              nextDialog:
+                lines: []
+              quest: {fileID: 0}
+            character: {fileID: 11400000, guid: c2405cd586ae9254c862d66121dfc807, type: 2}
+        quest: {fileID: 0}
+      - text: I'm so glad to see your face.
+        nextDialog:
+          lines:
+          - text: "You\u2019re shining dad, I'm so happy this is all over!"
+            choices:
+            - text: Im glad i got to see the real you again my dear Emma, I love
+                you
+              nextDialog:
+                lines: []
+              quest: {fileID: 0}
+            character: {fileID: 11400000, guid: c2405cd586ae9254c862d66121dfc807, type: 2}
+        quest: {fileID: 0}
+      character: {fileID: 0}
+  autoTrigger: 0
+  triggerDistance: 3
+  interactionPrompt: {fileID: 0}
+  questToComplete: {fileID: 0}
+  objectiveIndex: 0
+  completeQuestAfterDialog: 0
 --- !u!1 &1551296808
 GameObject:
   m_ObjectHideFlags: 0

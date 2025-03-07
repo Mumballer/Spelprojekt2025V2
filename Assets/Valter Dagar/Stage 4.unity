@@ -8930,6 +8930,77 @@ Transform:
   - {fileID: 135378624}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &797427202
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 797427204}
+  - component: {fileID: 797427203}
+  - component: {fileID: 797427205}
+  m_Layer: 0
+  m_Name: Questtrigger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!65 &797427203
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 797427202}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1.1787983, z: 8.872805}
+  m_Center: {x: 0, y: -0.08939764, z: -1.4925385}
+--- !u!4 &797427204
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 797427202}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: 1, w: 0}
+  m_LocalPosition: {x: 4.6583023, y: 0.3549993, z: 5.0700755}
+  m_LocalScale: {x: 10.002719, y: 7, z: 0.1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &797427205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 797427202}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea0e4236e36135d4681acd679d8240ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  questToAdd: {fileID: 0}
+  playerTag: Player
+  showDebugMessage: 1
+  triggerMessage: Player entered quest area. Adding quest.
+  destroyDelay: 0.1
 --- !u!1 &840802435
 GameObject:
   m_ObjectHideFlags: 0
@@ -14198,7 +14269,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41c18efa9fe2a9c41ab1f21601614a0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Cameraobject: {fileID: 0}
+  Cameraobject: {fileID: 1122226044}
 --- !u!1 &1258411282
 GameObject:
   m_ObjectHideFlags: 0
@@ -24303,7 +24374,9 @@ GameObject:
   - component: {fileID: 1965089421}
   - component: {fileID: 1965089420}
   - component: {fileID: 1965089422}
-  m_Layer: 0
+  - component: {fileID: 1965089423}
+  - component: {fileID: 1965089424}
+  m_Layer: 7
   m_Name: Gramafon_JUNI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24392,6 +24465,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc7117d6437f6d64a99df07f3f1990e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!65 &1965089423
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1965089419}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 100.58595, y: 174.45842, z: 1.8793538}
+  m_Center: {x: 5.198908, y: -32.416496, z: 0.09050902}
+--- !u!114 &1965089424
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1965089419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2a5832d5567322408fd009d20b7636c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  musicClip: {fileID: 8300000, guid: bd8f20747bf7ea644a729e5a721295d5, type: 3}
+  volumeLevel: 0.5
+  fadeTime: 1
 --- !u!1 &1968817977
 GameObject:
   m_ObjectHideFlags: 0
@@ -26648,6 +26757,7 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 797427204}
   - {fileID: 1460743900}
   - {fileID: 1939444336}
   - {fileID: 778701646}
