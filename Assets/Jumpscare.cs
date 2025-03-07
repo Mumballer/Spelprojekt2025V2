@@ -1,40 +1,45 @@
 using UnityEngine;
 using UnityEngine.UI;
-
 public class Jumpscare : MonoBehaviour
 {
-
-    public Image JumpscareImage;
+    public RawImage JumpscareImage; // Changed to RawImage if that's what you're using
     public AudioSource Scare;
     bool isJumpscaring = false;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Start()
     {
-        GameObject go = GameObject.Find("Jumpscare"); // Make sure this is the correct name in your hierarchy!
-        if (go != null)
+        // Make sure the image is disabled at start
+        if (JumpscareImage != null)
         {
-            JumpscareImage = go.GetComponent<Image>();
             JumpscareImage.enabled = false;
         }
         else
         {
-            Debug.LogError("JumpscareImage not found! Check your UI hierarchy.");
+            Debug.LogError("JumpscareImage not assigned in inspector!");
         }
     }
-
 
     public void StartJumpscare()
     {
         isJumpscaring = true;
-        JumpscareImage.enabled = true;
-        Scare.Play();
 
-        //Chasemusic.Stop();
-        //BackgroundMusic.Stop();
+        // Check if JumpscareImage is assigned
+        if (JumpscareImage != null)
+        {
+            JumpscareImage.enabled = true;
+        }
+        else
+        {
+            Debug.LogError("JumpscareImage is null in StartJumpscare!");
+        }
+
+        if (Scare != null)
+        {
+            Scare.Play();
+        }
 
         // Reload the scene after a short delay
-        Invoke("ReloadScene", 1f); // 2 second delay for effect (adjust as needed)
-        //Scare.Stop();
+        Invoke("ReloadScene", 1f); // 1 second delay
     }
 
     private void OnTriggerEnter(Collider other)
@@ -45,9 +50,11 @@ public class Jumpscare : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    // Make sure to add this method since you're invoking it
+    /*private void ReloadScene()
     {
-        
-    }
+        // Add code to reload your scene here
+        UnityEngine.SceneManagement.SceneManager.LoadScene(
+            UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
+    }*/
 }
