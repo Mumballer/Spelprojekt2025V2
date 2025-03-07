@@ -1559,7 +1559,7 @@ MonoBehaviour:
   assignedNametag: Emma
   isInteractable: 1
   feedbackDuration: 1
-  interactionDistance: 2
+  interactionDistance: 5
   countTowardsTotal: 1
   autoCompleteQuest: 1
   showDebug: 0
@@ -1854,7 +1854,7 @@ MonoBehaviour:
   assignedNametag: Nico
   isInteractable: 1
   feedbackDuration: 1
-  interactionDistance: 2
+  interactionDistance: 5
   countTowardsTotal: 1
   autoCompleteQuest: 1
   showDebug: 0
@@ -2419,7 +2419,7 @@ MonoBehaviour:
   assignedNametag: Calvin
   isInteractable: 1
   feedbackDuration: 1
-  interactionDistance: 2
+  interactionDistance: 5
   countTowardsTotal: 1
   autoCompleteQuest: 1
   showDebug: 0
@@ -3083,7 +3083,7 @@ MonoBehaviour:
   assignedNametag: Lisa
   isInteractable: 1
   feedbackDuration: 1
-  interactionDistance: 2
+  interactionDistance: 5
   countTowardsTotal: 1
   autoCompleteQuest: 1
   showDebug: 0
@@ -4245,12 +4245,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nametagID: 
   interactable: 1
-  pickupDistance: 2
+  pickupDistance: 5
+  pickupKey: 101
   renderers: []
-  visualsContainer: {fileID: 0}
+  visualsContainer: {fileID: 190613754}
   highlightObject: {fileID: 0}
   nameText: {fileID: 0}
   fadeSpeed: 5
+  pickupPrompt: {fileID: 0}
   pickupSound: {fileID: 0}
   placeSound: {fileID: 0}
   showDebug: 0
@@ -5119,11 +5121,13 @@ MonoBehaviour:
   nametagID: 
   interactable: 1
   pickupDistance: 2
+  pickupKey: 101
   renderers: []
   visualsContainer: {fileID: 0}
   highlightObject: {fileID: 0}
   nameText: {fileID: 0}
   fadeSpeed: 5
+  pickupPrompt: {fileID: 0}
   pickupSound: {fileID: 0}
   placeSound: {fileID: 0}
   showDebug: 0
@@ -16421,11 +16425,13 @@ MonoBehaviour:
   nametagID: 
   interactable: 1
   pickupDistance: 2
+  pickupKey: 101
   renderers: []
   visualsContainer: {fileID: 0}
   highlightObject: {fileID: 0}
   nameText: {fileID: 0}
   fadeSpeed: 5
+  pickupPrompt: {fileID: 0}
   pickupSound: {fileID: 0}
   placeSound: {fileID: 0}
   showDebug: 0
@@ -18042,11 +18048,13 @@ MonoBehaviour:
   nametagID: 
   interactable: 1
   pickupDistance: 2
+  pickupKey: 101
   renderers: []
   visualsContainer: {fileID: 0}
   highlightObject: {fileID: 0}
   nameText: {fileID: 0}
   fadeSpeed: 5
+  pickupPrompt: {fileID: 0}
   pickupSound: {fileID: 0}
   placeSound: {fileID: 0}
   showDebug: 0
@@ -18202,12 +18210,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nametagID: 
   interactable: 1
-  pickupDistance: 2
+  pickupDistance: 5
+  pickupKey: 101
   renderers: []
-  visualsContainer: {fileID: 0}
+  visualsContainer: {fileID: 1890525662}
   highlightObject: {fileID: 0}
   nameText: {fileID: 0}
   fadeSpeed: 5
+  pickupPrompt: {fileID: 0}
   pickupSound: {fileID: 0}
   placeSound: {fileID: 0}
   showDebug: 0
@@ -18481,7 +18491,7 @@ MonoBehaviour:
   assignedNametag: Susan
   isInteractable: 1
   feedbackDuration: 1
-  interactionDistance: 2
+  interactionDistance: 5
   countTowardsTotal: 1
   autoCompleteQuest: 1
   showDebug: 0
@@ -22265,11 +22275,13 @@ MonoBehaviour:
   nametagID: 
   interactable: 1
   pickupDistance: 2
+  pickupKey: 101
   renderers: []
   visualsContainer: {fileID: 0}
   highlightObject: {fileID: 0}
   nameText: {fileID: 0}
   fadeSpeed: 5
+  pickupPrompt: {fileID: 0}
   pickupSound: {fileID: 0}
   placeSound: {fileID: 0}
   showDebug: 0
@@ -24091,12 +24103,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nametagID: 
   interactable: 1
-  pickupDistance: 2
+  pickupDistance: 5
+  pickupKey: 101
   renderers: []
-  visualsContainer: {fileID: 0}
+  visualsContainer: {fileID: 120900575}
   highlightObject: {fileID: 0}
   nameText: {fileID: 0}
   fadeSpeed: 5
+  pickupPrompt: {fileID: 0}
   pickupSound: {fileID: 0}
   placeSound: {fileID: 0}
   showDebug: 0
@@ -24600,12 +24614,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nametagID: 
   interactable: 1
-  pickupDistance: 2
+  pickupDistance: 5
+  pickupKey: 101
   renderers: []
-  visualsContainer: {fileID: 0}
+  visualsContainer: {fileID: 110469412}
   highlightObject: {fileID: 0}
   nameText: {fileID: 0}
   fadeSpeed: 5
+  pickupPrompt: {fileID: 0}
   pickupSound: {fileID: 0}
   placeSound: {fileID: 0}
   showDebug: 0
@@ -26506,12 +26522,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nametagID: 
   interactable: 1
-  pickupDistance: 2
+  pickupDistance: 3
+  pickupKey: 101
   renderers: []
   visualsContainer: {fileID: 0}
   highlightObject: {fileID: 0}
   nameText: {fileID: 0}
   fadeSpeed: 5
+  pickupPrompt: {fileID: 0}
   pickupSound: {fileID: 0}
   placeSound: {fileID: 0}
   showDebug: 0
@@ -27857,7 +27875,7 @@ MonoBehaviour:
   assignedNametag: Luca
   isInteractable: 1
   feedbackDuration: 1
-  interactionDistance: 2
+  interactionDistance: 5
   countTowardsTotal: 1
   autoCompleteQuest: 1
   showDebug: 0
@@ -29697,12 +29715,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nametagID: 
   interactable: 1
-  pickupDistance: 2
+  pickupDistance: 5
+  pickupKey: 101
   renderers: []
-  visualsContainer: {fileID: 0}
+  visualsContainer: {fileID: 1293020805}
   highlightObject: {fileID: 0}
   nameText: {fileID: 0}
   fadeSpeed: 5
+  pickupPrompt: {fileID: 0}
   pickupSound: {fileID: 0}
   placeSound: {fileID: 0}
   showDebug: 0
@@ -30481,11 +30501,13 @@ MonoBehaviour:
   nametagID: 
   interactable: 1
   pickupDistance: 2
+  pickupKey: 101
   renderers: []
   visualsContainer: {fileID: 0}
   highlightObject: {fileID: 0}
   nameText: {fileID: 0}
   fadeSpeed: 5
+  pickupPrompt: {fileID: 0}
   pickupSound: {fileID: 0}
   placeSound: {fileID: 0}
   showDebug: 0
@@ -31504,12 +31526,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nametagID: 
   interactable: 1
-  pickupDistance: 2
+  pickupDistance: 5
+  pickupKey: 101
   renderers: []
-  visualsContainer: {fileID: 0}
+  visualsContainer: {fileID: 140621837}
   highlightObject: {fileID: 0}
   nameText: {fileID: 0}
   fadeSpeed: 5
+  pickupPrompt: {fileID: 0}
   pickupSound: {fileID: 0}
   placeSound: {fileID: 0}
   showDebug: 0
@@ -31653,6 +31677,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a41731600352504f88261ab30b657d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Scene: 
 --- !u!65 &2084429589
 BoxCollider:
   m_ObjectHideFlags: 0

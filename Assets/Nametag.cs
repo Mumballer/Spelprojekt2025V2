@@ -8,6 +8,7 @@ public class Nametag : MonoBehaviour
     [SerializeField] private string nametagID;
     [SerializeField] private bool interactable = true;
     [SerializeField] private float pickupDistance = 2.0f;
+    [SerializeField] private KeyCode pickupKey = KeyCode.E; // nyckel för att plocka upp namnskylten
 
     [Header("Visual Effects")]
     [SerializeField] private Renderer[] renderers;
@@ -15,6 +16,7 @@ public class Nametag : MonoBehaviour
     [SerializeField] private GameObject highlightObject;
     [SerializeField] private TextMeshPro nameText;
     [SerializeField] private float fadeSpeed = 5f;
+    [SerializeField] private GameObject pickupPrompt; // valfri "Press E" prompt
 
     [Header("Sound Effects")]
     [SerializeField] private AudioClip pickupSound;
@@ -38,6 +40,7 @@ public class Nametag : MonoBehaviour
     private Transform playerTransform;
     private bool playerInRange = false;
     private AudioSource audioSource;
+    private GameObject playerObject; // referens till hela spelarobjektet
 
     void Awake()
     {
@@ -64,16 +67,21 @@ public class Nametag : MonoBehaviour
     void Start()
     {
         // hitta spelaren, kan vara bra att ha
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player != null)
+        playerObject = GameObject.FindGameObjectWithTag("Player");
+        if (playerObject != null)
         {
-            playerTransform = player.transform;
+            playerTransform = playerObject.transform;
         }
 
-        // dölj highlight vid start
+        // dölj highlight och prompts vid start
         if (highlightObject != null)
         {
             highlightObject.SetActive(false);
+        }
+
+        if (pickupPrompt != null)
+        {
+            pickupPrompt.SetActive(false);
         }
 
         // sätt namn om textkomponent finns
@@ -93,6 +101,12 @@ public class Nametag : MonoBehaviour
         // kolla om spelaren är nära (för highlight etc)
         CheckPlayerDistance();
 
+        // hantera pickup-input när spelaren är inom räckvidd
+        if (playerInRange && interactable && !pickedUp && !placed && Input.GetKeyDown(pickupKey))
+        {
+            HandlePickup();
+        }
+
         // hantera alpha-fade
         UpdateVisibility();
     }
@@ -110,10 +124,16 @@ public class Nametag : MonoBehaviour
         {
             playerInRange = inRange;
 
-            // visa highlight om spelaren är i närheten
+            // visa highlight om spelaren är i närheten och namnskylten kan plockas upp
             if (highlightObject != null)
             {
                 highlightObject.SetActive(playerInRange && !pickedUp && !placed);
+            }
+
+            // visa E-prompt om spelaren är i närheten
+            if (pickupPrompt != null)
+            {
+                pickupPrompt.SetActive(playerInRange && !pickedUp && !placed);
             }
 
             // anropa event-metoder för att andra skript ska kunna reagera
@@ -126,6 +146,56 @@ public class Nametag : MonoBehaviour
                 OnPlayerExitRange();
             }
         }
+    }
+
+    // hanterar upplockande av namnskylten
+    private void HandlePickup()
+    {
+        if (showDebug)
+        {
+            Debug.Log($"Player pressed {pickupKey} to pick up {nametagID}");
+        }
+
+        // plocka upp namnskylten
+        PickUp();
+
+        // parenta till spelaren (så den följer med)
+        Transform playerHand = FindPlayerHand();
+        if (playerHand != null)
+        {
+            transform.SetParent(playerHand);
+            transform.localPosition = Vector3.zero;
+            transform.localRotation = Quaternion.identity;
+        }
+        else
+        {
+            // placera i spelarens närhet om ingen hand hittas
+            transform.position = playerTransform.position + playerTransform.forward * 0.5f + Vector3.up * 0.5f;
+        }
+    }
+
+    // hitta spelarens hand eller annan plats att sätta namnskylten
+    private Transform FindPlayerHand()
+    {
+        if (playerObject == null) return null;
+
+        // leta efter specifikt hand-objekt
+        Transform hand = playerObject.transform.Find("Hand");
+        if (hand != null) return hand;
+
+        // leta efter namngivet hand-objekt
+        Transform[] allChildren = playerObject.GetComponentsInChildren<Transform>();
+        foreach (Transform child in allChildren)
+        {
+            if (child.name.Contains("Hand") || child.name.Contains("hand") ||
+                child.name.Contains("Hold") || child.name.Contains("NametagHolder"))
+            {
+                return child;
+            }
+        }
+
+        // om inget hittas, använd spelaren själv
+        return playerTransform;
     }
 
     // när spelaren kommer inom räckhåll
@@ -227,6 +297,9 @@ public class Nametag : MonoBehaviour
         placed = true;
         pickedUp = false;
 
+        // sätt tillbaka parent
+        transform.SetParent(null);
+
         // visa namnbrickan
         SetAlpha(1.0f);
 
@@ -256,6 +329,9 @@ public class Nametag : MonoBehaviour
 
         // spara referensen till platsen
         currentSpot = spot;
+
+        // sätt tillbaka parent
+        transform.SetParent(null);
 
         // flytta till platsens position/rotation
         transform.position = spot.transform.position;
@@ -311,6 +387,9 @@ public class Nametag : MonoBehaviour
         placed = false;
         currentSpot = null;
 
+        // sätt tillbaka parent
+        transform.SetParent(null);
+
         if (showDebug)
         {
             Debug.Log($"Nametag '{nametagID}' put down");
@@ -328,6 +407,9 @@ public class Nametag : MonoBehaviour
     {
         transform.position = originalPosition;
         transform.rotation = originalRotation;
+
+        // sätt tillbaka parent
+        transform.SetParent(null);
 
         pickedUp = false;
         placed = false;
