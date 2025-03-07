@@ -29405,7 +29405,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   musicClip: {fileID: 8300000, guid: 3c68e08a4670fc24ca19a92d2cde98f6, type: 3}
-  volumeLevel: 0.5
+  volumeLevel: 1
   fadeTime: 0.5
 --- !u!114 &1965089425
 MonoBehaviour:
