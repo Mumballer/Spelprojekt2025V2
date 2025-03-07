@@ -462,6 +462,7 @@ MonoBehaviour:
   completionDisplayTime: 2
   directlyTrackNametagQuest: 1
   refreshInterval: 0.5
+  isNametagQuestAuthority: 1
   removeDuplicateQuests: 1
   logDuplicateRemovals: 1
   enableDebugLogging: 1
@@ -1555,6 +1556,8 @@ MonoBehaviour:
   isInteractable: 1
   feedbackDuration: 1
   interactionDistance: 2
+  countTowardsTotal: 1
+  autoCompleteQuest: 1
   showDebug: 0
 --- !u!65 &110469416
 BoxCollider:
@@ -1848,6 +1851,8 @@ MonoBehaviour:
   isInteractable: 1
   feedbackDuration: 1
   interactionDistance: 2
+  countTowardsTotal: 1
+  autoCompleteQuest: 1
   showDebug: 0
 --- !u!1 &127244272
 GameObject:
@@ -2411,6 +2416,8 @@ MonoBehaviour:
   isInteractable: 1
   feedbackDuration: 1
   interactionDistance: 2
+  countTowardsTotal: 1
+  autoCompleteQuest: 1
   showDebug: 0
 --- !u!1 &153929473
 GameObject:
@@ -3073,6 +3080,8 @@ MonoBehaviour:
   isInteractable: 1
   feedbackDuration: 1
   interactionDistance: 2
+  countTowardsTotal: 1
+  autoCompleteQuest: 1
   showDebug: 0
 --- !u!65 &190613758
 BoxCollider:
@@ -18456,6 +18465,8 @@ MonoBehaviour:
   isInteractable: 1
   feedbackDuration: 1
   interactionDistance: 2
+  countTowardsTotal: 1
+  autoCompleteQuest: 1
   showDebug: 0
 --- !u!1 &1337573859
 GameObject:
@@ -21513,7 +21524,29 @@ MonoBehaviour:
     lines:
     - text: Good morning darling! ... How did you sleep?
       choices:
-      - text: I slept great! Dreamt about our ballad.
+      - text: I slept okay, a few nightmares
+        nextDialog:
+          lines:
+          - text: Oh dear, did you dream about spiders again?
+            choices:
+            - text: Yes, this time they crawled in my head
+              nextDialog:
+                lines:
+                - text: Oh god thats sounds awful. Im sorry you dreamt that dear.
+                    By the way, Can you turn on the music and set the table for the
+                    guests? Your daughter is also here now.
+                  choices:
+                  - text: "Alight then I\u2019ll go say hi and prepare for the party,
+                      Luca is coming all the way here to America anyways. It would
+                      be rude not to prepare something grand!"
+                    nextDialog:
+                      lines: []
+                    quest: {fileID: 11400000, guid: 894f28788adc80e469ab0cffe987f423, type: 2}
+                  character: {fileID: 11400000, guid: e21005152e6683e42989884abc2c2927, type: 2}
+              quest: {fileID: 0}
+            character: {fileID: 11400000, guid: e21005152e6683e42989884abc2c2927, type: 2}
+        quest: {fileID: 0}
+      - text: I slept great! Dreamt about our ballad...
         nextDialog:
           lines:
           - text: Ahhh, summer 1924. I still remember your costume you hunk.
@@ -21525,30 +21558,9 @@ MonoBehaviour:
                     music and set the table for the guests? Your daughter is also
                     here now.
                   choices:
-                  - text: Sure.
-                    nextDialog:
-                      lines: []
-                    quest: {fileID: 11400000, guid: 894f28788adc80e469ab0cffe987f423, type: 2}
-                  character: {fileID: 11400000, guid: e21005152e6683e42989884abc2c2927, type: 2}
-              quest: {fileID: 0}
-            character: {fileID: 11400000, guid: e21005152e6683e42989884abc2c2927, type: 2}
-        quest: {fileID: 0}
-      character: {fileID: 11400000, guid: e21005152e6683e42989884abc2c2927, type: 2}
-    - text: Good morning darling! ... How did you sleep?
-      choices:
-      - text: I slept okay, a few nightmares
-        nextDialog:
-          lines:
-          - text: Oh dear, did you dream about spiders again?
-            choices:
-            - text: Yes, this time they  crawled in my head
-              nextDialog:
-                lines:
-                - text: Oh god thats sounds awful. Im sorry you dreamt that dear.
-                    By the way, Can you turn on the music and set the table for the
-                    guests? Your daughter is also here now.
-                  choices:
-                  - text: Will do.
+                  - text: "Alight then I\u2019ll go say hi and prepare for the party,
+                      Luca is coming all the way here to America anyways. It would
+                      be rude not to prepare something grand"
                     nextDialog:
                       lines: []
                     quest: {fileID: 11400000, guid: 894f28788adc80e469ab0cffe987f423, type: 2}
@@ -22013,11 +22025,47 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialog:
     lines:
-    - text: Hey dad! could you help set up the table for the guests?
+    - text: Good morning Dad! Excited for your anniversary?
       choices:
-      - text: I suppose..
+      - text: Good morning, glad to see you.
         nextDialog:
-          lines: []
+          lines:
+          - text: Glad to see you too. How did the golfing go?
+            choices:
+            - text: Good, I won of course, Calvin stands no chance against me
+              nextDialog:
+                lines:
+                - text: "Hahahahahah, of course you did. Don\u2019t forget to set
+                    the table by the way!"
+                  choices:
+                  - text: "yea, yea I\u2019ll get to it right now"
+                    nextDialog:
+                      lines: []
+                    quest: {fileID: 11400000, guid: 9d38e23e7210fe241931a6f9b6c407f4, type: 2}
+                  character: {fileID: 0}
+              quest: {fileID: 0}
+            character: {fileID: 11400000, guid: c2405cd586ae9254c862d66121dfc807, type: 2}
+        quest: {fileID: 11400000, guid: 02d4bf8fd11c2f946bf923b81cc6b3d6, type: 2}
+      - text: Good morning, Are you staying the night?
+        nextDialog:
+          lines:
+          - text: "Yea! I\u2019ll be staying in my old room."
+            choices:
+            - text: Alright then, we sold your plushies too Lisa however.
+              nextDialog:
+                lines:
+                - text: That's fine Dad I'm not exactly 13 anymore
+                  choices:
+                  - text: Oh God, dont remind me please. I remember when you were
+                      just my little bean
+                    nextDialog:
+                      lines:
+                      - text: Hahhahahaha, yea Dad I'm a fully grown woman now. By
+                          the way don't forget to set the tables!
+                    quest: {fileID: 11400000, guid: 9d38e23e7210fe241931a6f9b6c407f4, type: 2}
+                  character: {fileID: 11400000, guid: c2405cd586ae9254c862d66121dfc807, type: 2}
+              quest: {fileID: 0}
+            character: {fileID: 11400000, guid: c2405cd586ae9254c862d66121dfc807, type: 2}
         quest: {fileID: 11400000, guid: 02d4bf8fd11c2f946bf923b81cc6b3d6, type: 2}
       character: {fileID: 11400000, guid: c2405cd586ae9254c862d66121dfc807, type: 2}
   autoTrigger: 0
@@ -27642,6 +27690,7 @@ MonoBehaviour:
   completionDisplayTime: 2
   directlyTrackNametagQuest: 1
   refreshInterval: 0.5
+  isNametagQuestAuthority: 1
   removeDuplicateQuests: 1
   logDuplicateRemovals: 1
   enableDebugLogging: 1
@@ -27780,6 +27829,8 @@ MonoBehaviour:
   isInteractable: 1
   feedbackDuration: 1
   interactionDistance: 2
+  countTowardsTotal: 1
+  autoCompleteQuest: 1
   showDebug: 0
 --- !u!1 &1892400854
 GameObject:
