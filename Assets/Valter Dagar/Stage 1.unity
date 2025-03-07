@@ -465,6 +465,10 @@ MonoBehaviour:
   isNametagQuestAuthority: 1
   removeDuplicateQuests: 1
   logDuplicateRemovals: 1
+  duplicateCheckDelay: 1
+  performMultipleChecks: 1
+  numberOfChecks: 3
+  checkInterval: 0.5
   enableDebugLogging: 1
 --- !u!1 &66578333
 GameObject:
@@ -4239,15 +4243,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a81a7940cf255c4c9d236b3f6d3a537, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: Lisa
-  isKitchenNametag: 0
-  nametagUIText: {fileID: 127244274}
-  nametagSprite: {fileID: 305947906}
-  interactionRadius: 1.5
-  playerTag: Player
-  currentTableSpot: {fileID: 190613757}
-  showDebugGizmos: 1
-  gizmoColor: {r: 0.9, g: 0.2, b: 0.3, a: 0.3}
+  nametagID: 
+  interactable: 1
+  pickupDistance: 2
+  renderers: []
+  visualsContainer: {fileID: 0}
+  highlightObject: {fileID: 0}
+  nameText: {fileID: 0}
+  fadeSpeed: 5
+  pickupSound: {fileID: 0}
+  placeSound: {fileID: 0}
+  showDebug: 0
 --- !u!1 &309161708
 GameObject:
   m_ObjectHideFlags: 0
@@ -5110,15 +5116,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a81a7940cf255c4c9d236b3f6d3a537, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: Emma
-  isKitchenNametag: 1
-  nametagUIText: {fileID: 127244274}
-  nametagSprite: {fileID: 356791481}
-  interactionRadius: 1
-  playerTag: Player
-  currentTableSpot: {fileID: 0}
-  showDebugGizmos: 1
-  gizmoColor: {r: 0.9, g: 0.2, b: 0.3, a: 0.3}
+  nametagID: 
+  interactable: 1
+  pickupDistance: 2
+  renderers: []
+  visualsContainer: {fileID: 0}
+  highlightObject: {fileID: 0}
+  nameText: {fileID: 0}
+  fadeSpeed: 5
+  pickupSound: {fileID: 0}
+  placeSound: {fileID: 0}
+  showDebug: 0
 --- !u!1 &360069965
 GameObject:
   m_ObjectHideFlags: 0
@@ -6645,7 +6653,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nametagQuest: {fileID: 11400000, guid: 02d4bf8fd11c2f946bf923b81cc6b3d6, type: 2}
-  autoAddQuest: 0
   tableSpots:
   - {fileID: 190613757}
   - {fileID: 110469415}
@@ -6656,6 +6663,10 @@ MonoBehaviour:
   updateDelay: 1
   checkInterval: 0.5
   startTrackingDelay: 1
+  activateOnStart: 0
+  requireQuestActive: 1
+  toggleKey: 0
+  debugLogs: 1
 --- !u!1 &503446209
 GameObject:
   m_ObjectHideFlags: 0
@@ -16407,15 +16418,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a81a7940cf255c4c9d236b3f6d3a537, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: Luca
-  isKitchenNametag: 1
-  nametagUIText: {fileID: 127244274}
-  nametagSprite: {fileID: 1155828549}
-  interactionRadius: 1
-  playerTag: Player
-  currentTableSpot: {fileID: 0}
-  showDebugGizmos: 1
-  gizmoColor: {r: 0.9, g: 0.2, b: 0.3, a: 0.3}
+  nametagID: 
+  interactable: 1
+  pickupDistance: 2
+  renderers: []
+  visualsContainer: {fileID: 0}
+  highlightObject: {fileID: 0}
+  nameText: {fileID: 0}
+  fadeSpeed: 5
+  pickupSound: {fileID: 0}
+  placeSound: {fileID: 0}
+  showDebug: 0
 --- !u!1 &1156178387
 GameObject:
   m_ObjectHideFlags: 0
@@ -18026,15 +18039,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a81a7940cf255c4c9d236b3f6d3a537, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: Lisa
-  isKitchenNametag: 1
-  nametagUIText: {fileID: 127244274}
-  nametagSprite: {fileID: 1273443581}
-  interactionRadius: 1
-  playerTag: Player
-  currentTableSpot: {fileID: 0}
-  showDebugGizmos: 1
-  gizmoColor: {r: 0.9, g: 0.2, b: 0.3, a: 0.3}
+  nametagID: 
+  interactable: 1
+  pickupDistance: 2
+  renderers: []
+  visualsContainer: {fileID: 0}
+  highlightObject: {fileID: 0}
+  nameText: {fileID: 0}
+  fadeSpeed: 5
+  pickupSound: {fileID: 0}
+  placeSound: {fileID: 0}
+  showDebug: 0
 --- !u!1 &1278748566
 GameObject:
   m_ObjectHideFlags: 0
@@ -18185,15 +18200,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a81a7940cf255c4c9d236b3f6d3a537, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: Luca
-  isKitchenNametag: 0
-  nametagUIText: {fileID: 543619086}
-  nametagSprite: {fileID: 1278748570}
-  interactionRadius: 1.5
-  playerTag: Player
-  currentTableSpot: {fileID: 1890525665}
-  showDebugGizmos: 1
-  gizmoColor: {r: 0.9, g: 0.2, b: 0.3, a: 0.3}
+  nametagID: 
+  interactable: 1
+  pickupDistance: 2
+  renderers: []
+  visualsContainer: {fileID: 0}
+  highlightObject: {fileID: 0}
+  nameText: {fileID: 0}
+  fadeSpeed: 5
+  pickupSound: {fileID: 0}
+  placeSound: {fileID: 0}
+  showDebug: 0
 --- !u!1 &1279752162
 GameObject:
   m_ObjectHideFlags: 0
@@ -22245,15 +22262,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a81a7940cf255c4c9d236b3f6d3a537, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: Nico
-  isKitchenNametag: 1
-  nametagUIText: {fileID: 127244274}
-  nametagSprite: {fileID: 1550558856}
-  interactionRadius: 1
-  playerTag: Player
-  currentTableSpot: {fileID: 0}
-  showDebugGizmos: 1
-  gizmoColor: {r: 0.9, g: 0.2, b: 0.3, a: 0.3}
+  nametagID: 
+  interactable: 1
+  pickupDistance: 2
+  renderers: []
+  visualsContainer: {fileID: 0}
+  highlightObject: {fileID: 0}
+  nameText: {fileID: 0}
+  fadeSpeed: 5
+  pickupSound: {fileID: 0}
+  placeSound: {fileID: 0}
+  showDebug: 0
 --- !u!1 &1551296808
 GameObject:
   m_ObjectHideFlags: 0
@@ -24070,15 +24089,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a81a7940cf255c4c9d236b3f6d3a537, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: Nico
-  isKitchenNametag: 0
-  nametagUIText: {fileID: 127244274}
-  nametagSprite: {fileID: 1680139361}
-  interactionRadius: 1.5
-  playerTag: Player
-  currentTableSpot: {fileID: 120900578}
-  showDebugGizmos: 1
-  gizmoColor: {r: 0.9, g: 0.2, b: 0.3, a: 0.3}
+  nametagID: 
+  interactable: 1
+  pickupDistance: 2
+  renderers: []
+  visualsContainer: {fileID: 0}
+  highlightObject: {fileID: 0}
+  nameText: {fileID: 0}
+  fadeSpeed: 5
+  pickupSound: {fileID: 0}
+  placeSound: {fileID: 0}
+  showDebug: 0
 --- !u!1 &1683778687
 GameObject:
   m_ObjectHideFlags: 0
@@ -24577,15 +24598,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a81a7940cf255c4c9d236b3f6d3a537, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: Emma
-  isKitchenNametag: 0
-  nametagUIText: {fileID: 127244274}
-  nametagSprite: {fileID: 1734412483}
-  interactionRadius: 1.5
-  playerTag: Player
-  currentTableSpot: {fileID: 110469415}
-  showDebugGizmos: 1
-  gizmoColor: {r: 0.9, g: 0.2, b: 0.3, a: 0.3}
+  nametagID: 
+  interactable: 1
+  pickupDistance: 2
+  renderers: []
+  visualsContainer: {fileID: 0}
+  highlightObject: {fileID: 0}
+  nameText: {fileID: 0}
+  fadeSpeed: 5
+  pickupSound: {fileID: 0}
+  placeSound: {fileID: 0}
+  showDebug: 0
 --- !u!1 &1735884468
 GameObject:
   m_ObjectHideFlags: 0
@@ -26481,15 +26504,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a81a7940cf255c4c9d236b3f6d3a537, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: Calvin
-  isKitchenNametag: 1
-  nametagUIText: {fileID: 127244274}
-  nametagSprite: {fileID: 1838966324}
-  interactionRadius: 1
-  playerTag: Player
-  currentTableSpot: {fileID: 0}
-  showDebugGizmos: 1
-  gizmoColor: {r: 0.9, g: 0.2, b: 0.3, a: 0.3}
+  nametagID: 
+  interactable: 1
+  pickupDistance: 2
+  renderers: []
+  visualsContainer: {fileID: 0}
+  highlightObject: {fileID: 0}
+  nameText: {fileID: 0}
+  fadeSpeed: 5
+  pickupSound: {fileID: 0}
+  placeSound: {fileID: 0}
+  showDebug: 0
 --- !u!1 &1841730156
 GameObject:
   m_ObjectHideFlags: 0
@@ -27693,6 +27718,10 @@ MonoBehaviour:
   isNametagQuestAuthority: 1
   removeDuplicateQuests: 1
   logDuplicateRemovals: 1
+  duplicateCheckDelay: 1
+  performMultipleChecks: 1
+  numberOfChecks: 3
+  checkInterval: 0.5
   enableDebugLogging: 1
 --- !u!4 &1888225720
 Transform:
@@ -29666,15 +29695,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a81a7940cf255c4c9d236b3f6d3a537, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: Susan
-  isKitchenNametag: 0
-  nametagUIText: {fileID: 127244274}
-  nametagSprite: {fileID: 1977498799}
-  interactionRadius: 1.5
-  playerTag: Player
-  currentTableSpot: {fileID: 1293020808}
-  showDebugGizmos: 1
-  gizmoColor: {r: 0.9, g: 0.2, b: 0.3, a: 0.3}
+  nametagID: 
+  interactable: 1
+  pickupDistance: 2
+  renderers: []
+  visualsContainer: {fileID: 0}
+  highlightObject: {fileID: 0}
+  nameText: {fileID: 0}
+  fadeSpeed: 5
+  pickupSound: {fileID: 0}
+  placeSound: {fileID: 0}
+  showDebug: 0
 --- !u!1 &1978412638
 GameObject:
   m_ObjectHideFlags: 0
@@ -30447,15 +30478,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a81a7940cf255c4c9d236b3f6d3a537, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: Susan
-  isKitchenNametag: 1
-  nametagUIText: {fileID: 127244274}
-  nametagSprite: {fileID: 1996437910}
-  interactionRadius: 1
-  playerTag: Player
-  currentTableSpot: {fileID: 0}
-  showDebugGizmos: 1
-  gizmoColor: {r: 0.9, g: 0.2, b: 0.3, a: 0.3}
+  nametagID: 
+  interactable: 1
+  pickupDistance: 2
+  renderers: []
+  visualsContainer: {fileID: 0}
+  highlightObject: {fileID: 0}
+  nameText: {fileID: 0}
+  fadeSpeed: 5
+  pickupSound: {fileID: 0}
+  placeSound: {fileID: 0}
+  showDebug: 0
 --- !u!1 &1996785350
 GameObject:
   m_ObjectHideFlags: 0
@@ -31469,15 +31502,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a81a7940cf255c4c9d236b3f6d3a537, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: Calvin
-  isKitchenNametag: 0
-  nametagUIText: {fileID: 543619086}
-  nametagSprite: {fileID: 2080282968}
-  interactionRadius: 1.5
-  playerTag: Player
-  currentTableSpot: {fileID: 140621840}
-  showDebugGizmos: 1
-  gizmoColor: {r: 0.9, g: 0.2, b: 0.3, a: 0.3}
+  nametagID: 
+  interactable: 1
+  pickupDistance: 2
+  renderers: []
+  visualsContainer: {fileID: 0}
+  highlightObject: {fileID: 0}
+  nameText: {fileID: 0}
+  fadeSpeed: 5
+  pickupSound: {fileID: 0}
+  placeSound: {fileID: 0}
+  showDebug: 0
 --- !u!1 &2082032283
 GameObject:
   m_ObjectHideFlags: 0
@@ -31586,6 +31621,127 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2082032283}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &2084429587
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2084429592}
+  - component: {fileID: 2084429591}
+  - component: {fileID: 2084429590}
+  - component: {fileID: 2084429589}
+  - component: {fileID: 2084429588}
+  m_Layer: 0
+  m_Name: Cube
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2084429588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2084429587}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a41731600352504f88261ab30b657d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!65 &2084429589
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2084429587}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &2084429590
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2084429587}
+  m_Enabled: 0
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 73c176f402d2c2f4d929aa5da7585d17, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &2084429591
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2084429587}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &2084429592
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2084429587}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 29.9, y: 1.68, z: 21.35}
+  m_LocalScale: {x: 1, y: 3.3077, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2086728704
 GameObject:
   m_ObjectHideFlags: 0
@@ -33080,3 +33236,4 @@ SceneRoots:
   - {fileID: 1888225720}
   - {fileID: 989406154}
   - {fileID: 497788303}
+  - {fileID: 2084429592}
