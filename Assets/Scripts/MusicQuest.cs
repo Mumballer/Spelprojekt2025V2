@@ -55,4 +55,16 @@ public class MusicQuest : Quest
     {
         SetupMusicQuest();
     }
+
+    // Helper for quest system to force completion signal
+    public void ForceCompletionCheck()
+    {
+        CheckQuestCompletion();
+
+        // Double check that QuestManager is notified if quest is completed
+        if (IsCompleted && QuestManager.Instance != null)
+        {
+            QuestManager.Instance.NotifyQuestCompleted(this);
+        }
+    }
 }

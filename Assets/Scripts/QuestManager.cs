@@ -93,6 +93,8 @@ public class QuestManager : MonoBehaviour
         }
     }
 
+
+
     public void RemoveQuest(Quest quest)
     {
         if (quest == null) return;
@@ -106,6 +108,14 @@ public class QuestManager : MonoBehaviour
         }
     }
 
+    // Add this new method to the QuestManager class
+    public void NotifyObjectiveUpdated(Quest quest, int objectiveIndex)
+    {
+        DebugLog($"Objective {objectiveIndex} text updated for quest '{quest.questName}'");
+
+        // Use the existing event to notify listeners about the text change
+        OnObjectiveCompleted?.Invoke(quest, objectiveIndex);
+    }
     // Query Methods
 
     public bool IsQuestActive(Quest quest)
