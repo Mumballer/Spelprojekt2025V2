@@ -424,6 +424,8 @@ public class DialogManager : MonoBehaviour
         }
     }
 
+
+
     private void EndDialog()
     {
         // Store reference to the current dialog before clearing it
