@@ -12,6 +12,17 @@ public class FinalScipt : MonoBehaviour
         anim.Play();
     }
 
+    public void Quit()
+    {
+        Debug.Log("Game is quitting..."); // Useful for testing in the editor
+        Application.Quit();
+
+        // If running in the editor, stop play mode
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#endif
+    }
+
     // Update is called once per frame
     void Update()
     {
