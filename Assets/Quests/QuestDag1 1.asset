@@ -9,12 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97523d3a70222714b830f06faf1aac96, type: 3}
-  m_Name: Questdag1
-  m_EditorClassIdentifier: 
-  questName: Set up the nametags.
-  description: Put the nametags in the right place
-  questId: 8711f95f-f729-490a-930f-2ffc63c01ae1
+  m_Script: {fileID: 0}
+  m_Name: QuestDag1 1
+  m_EditorClassIdentifier: Assembly-CSharp::NameTagQuest
+  questName: New Quest
+  description: Quest description goes here.
+  questId: 
   objectives:
   - description: Place all the nametags in the correct spots
     isCompleted: 0
@@ -22,13 +22,7 @@ MonoBehaviour:
   placeNametagsObjective: Place all the nametags in the correct spots
   totalNameTags: 6
   createIndividualObjectives: 0
-  guestNames:
-  - Emma
-  - Susan
-  - Nico
-  - Luca
-  - Lisa
-  - Calvin
+  guestNames: []
   completeWhenAllPlaced: 1
-  nextSceneToLoad: Stage 2
+  nextSceneToLoad: 
   sceneLoadDelay: 2

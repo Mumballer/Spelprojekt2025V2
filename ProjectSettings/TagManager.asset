@@ -12,6 +12,7 @@ TagManager:
   - Nico
   - SceneChanger
   - Enemy
+  - Nametag
   layers:
   - Default
   - TransparentFX
@@ -23,7 +24,7 @@ TagManager:
   - Interactable
   - Table
   - NameTagSpot
-  - 
+  - Nametag
   - 
   - 
   - 
