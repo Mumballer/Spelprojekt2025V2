@@ -1559,7 +1559,7 @@ MonoBehaviour:
   assignedNametag: Emma
   isInteractable: 1
   feedbackDuration: 1
-  interactionDistance: 5
+  interactionDistance: 2
   countTowardsTotal: 1
   autoCompleteQuest: 1
   showDebug: 0
@@ -1854,7 +1854,7 @@ MonoBehaviour:
   assignedNametag: Nico
   isInteractable: 1
   feedbackDuration: 1
-  interactionDistance: 5
+  interactionDistance: 2
   countTowardsTotal: 1
   autoCompleteQuest: 1
   showDebug: 0
@@ -2419,7 +2419,7 @@ MonoBehaviour:
   assignedNametag: Calvin
   isInteractable: 1
   feedbackDuration: 1
-  interactionDistance: 5
+  interactionDistance: 2
   countTowardsTotal: 1
   autoCompleteQuest: 1
   showDebug: 0
@@ -3083,7 +3083,7 @@ MonoBehaviour:
   assignedNametag: Lisa
   isInteractable: 1
   feedbackDuration: 1
-  interactionDistance: 5
+  interactionDistance: 2
   countTowardsTotal: 1
   autoCompleteQuest: 1
   showDebug: 0
@@ -5126,7 +5126,7 @@ MonoBehaviour:
   visualsContainer: {fileID: 0}
   highlightObject: {fileID: 0}
   nameText: {fileID: 0}
-  fadeSpeed: 5
+  fadeSpeed: 1.5
   pickupPrompt: {fileID: 0}
   pickupSound: {fileID: 0}
   placeSound: {fileID: 0}
@@ -16430,7 +16430,7 @@ MonoBehaviour:
   visualsContainer: {fileID: 0}
   highlightObject: {fileID: 0}
   nameText: {fileID: 0}
-  fadeSpeed: 5
+  fadeSpeed: 1.5
   pickupPrompt: {fileID: 0}
   pickupSound: {fileID: 0}
   placeSound: {fileID: 0}
@@ -18053,7 +18053,7 @@ MonoBehaviour:
   visualsContainer: {fileID: 0}
   highlightObject: {fileID: 0}
   nameText: {fileID: 0}
-  fadeSpeed: 5
+  fadeSpeed: 1.5
   pickupPrompt: {fileID: 0}
   pickupSound: {fileID: 0}
   placeSound: {fileID: 0}
@@ -18491,7 +18491,7 @@ MonoBehaviour:
   assignedNametag: Susan
   isInteractable: 1
   feedbackDuration: 1
-  interactionDistance: 5
+  interactionDistance: 2
   countTowardsTotal: 1
   autoCompleteQuest: 1
   showDebug: 0
@@ -22280,7 +22280,7 @@ MonoBehaviour:
   visualsContainer: {fileID: 0}
   highlightObject: {fileID: 0}
   nameText: {fileID: 0}
-  fadeSpeed: 5
+  fadeSpeed: 1.5
   pickupPrompt: {fileID: 0}
   pickupSound: {fileID: 0}
   placeSound: {fileID: 0}
@@ -26522,7 +26522,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nametagID: 
   interactable: 1
-  pickupDistance: 3
+  pickupDistance: 1.5
   pickupKey: 101
   renderers: []
   visualsContainer: {fileID: 0}
@@ -27875,7 +27875,7 @@ MonoBehaviour:
   assignedNametag: Luca
   isInteractable: 1
   feedbackDuration: 1
-  interactionDistance: 5
+  interactionDistance: 2
   countTowardsTotal: 1
   autoCompleteQuest: 1
   showDebug: 0
@@ -30506,7 +30506,7 @@ MonoBehaviour:
   visualsContainer: {fileID: 0}
   highlightObject: {fileID: 0}
   nameText: {fileID: 0}
-  fadeSpeed: 5
+  fadeSpeed: 1.5
   pickupPrompt: {fileID: 0}
   pickupSound: {fileID: 0}
   placeSound: {fileID: 0}
