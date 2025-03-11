@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class Jumpscare : MonoBehaviour
 {
@@ -29,13 +31,20 @@ public class Jumpscare : MonoBehaviour
         JumpscareImage.enabled = true;
         Scare.Play();
 
-        //Chasemusic.Stop();
-        //BackgroundMusic.Stop();
-
-        // Reload the scene after a short delay
-        Invoke("ReloadScene", 1f); // 2 second delay for effect (adjust as needed)
-        //Scare.Stop();
+        // Starta coroutines för att byta scen efter 2 sekunder
+        StartCoroutine(SwitchSceneAfterDelay(2f));
     }
+
+    private IEnumerator SwitchSceneAfterDelay(float delay)
+    {
+        // Vänta i 'delay' sekunder
+        yield return new WaitForSeconds(delay);
+
+        // Byt scen här, exempelvis till en scen som heter "JumpscareScene"
+        SceneManager.LoadScene("Stage 5");
+    }
+
+
 
     private void OnTriggerEnter(Collider other)
     {
