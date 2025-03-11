@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a40bc76f94580a1448e1863f4dcb27a1, type: 3}
+  m_Name: find shit
+  m_EditorClassIdentifier: 
+  questName: Set down the nametags
+  description: Put the nametags in the right place
+  objectives:
+  - {fileID: 11400000, guid: 2a1b3d403d0d84741a4715246e324c29, type: 2}
+  - {fileID: 11400000, guid: c7afc906c32f3c44e9cc20a5f8f29df6, type: 2}
+  - {fileID: 11400000, guid: 7a1f716a129d5734cb96bcca3f7f356a, type: 2}
+  - {fileID: 11400000, guid: 5db54525ee8134c44b62fa8b19914719, type: 2}
+  - {fileID: 11400000, guid: 6ad3091f616620d488c1bc20199f70a3, type: 2}
+  - {fileID: 11400000, guid: 22694d36e10f6c346b756f9ba5530f89, type: 2}
+  isActive: 1
+  isCompleted: 1

@@ -1,24 +1,41 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections.Generic;
 
 public class QuestUI : MonoBehaviour
 {
-    public GameObject questPanel;
-    public TextMeshProUGUI questTitle;
-    public TextMeshProUGUI questDescription;
-    public Transform objectivesContainer;
-    public GameObject objectivePrefab;
+    [Header("UI References")]
+    [SerializeField] private GameObject questPanel;
+    [SerializeField] private TextMeshProUGUI questTitleText;
+    [SerializeField] private TextMeshProUGUI questDescriptionText;
+    [SerializeField] private TextMeshProUGUI questStatusText;
+    [SerializeField] private Button closeButton;
     
-    private Dictionary<QuestObjective, GameObject> objectiveUIElements = new Dictionary<QuestObjective, GameObject>();
+    [Header("Text Settings")]
+    [SerializeField] private Color inProgressColor = new Color(1f, 0.92f, 0.016f); // Yellow
+    [SerializeField] private Color completedColor = new Color(0f, 0.75f, 0.22f);   // Green
+    
+    private Quest currentQuest;
     
     private void Start()
     {
-        QuestManager.Instance.OnQuestStarted += HandleQuestStarted;
-        QuestManager.Instance.OnQuestCompleted += HandleQuestCompleted;
-        QuestManager.Instance.OnObjectiveUpdated += HandleObjectiveUpdated;
+        if (closeButton != null)
+        {
+            closeButton.onClick.AddListener(HideQuestPanel);
+        }
+        
+        if (QuestManager.Instance != null)
+        {
+            QuestManager.Instance.OnQuestStarted += HandleQuestStarted;
+            QuestManager.Instance.OnQuestCompleted += HandleQuestCompleted;
+            QuestManager.Instance.OnObjectiveUpdated += HandleObjectiveUpdated;
+        }
+        
+        if (questPanel != null)
+        {
+            questPanel.SetActive(false); // Hide initially
+        }
     }
     
     private void OnDestroy()
@@ -29,63 +46,128 @@ public class QuestUI : MonoBehaviour
             QuestManager.Instance.OnQuestCompleted -= HandleQuestCompleted;
             QuestManager.Instance.OnObjectiveUpdated -= HandleObjectiveUpdated;
         }
+        
+        if (closeButton != null)
+        {
+            closeButton.onClick.RemoveListener(HideQuestPanel);
+        }
     }
     
     private void HandleQuestStarted(Quest quest)
     {
-        // Show quest panel
-        questPanel.SetActive(true);
-        
-        // Update quest info
-        questTitle.text = quest.title;
-        questDescription.text = quest.description;
-        
-        // Clear previous objectives
-        foreach (Transform child in objectivesContainer)
-        {
-            Destroy(child.gameObject);
-        }
-        objectiveUIElements.Clear();
-        
-        // Add new objectives
-        foreach (QuestObjective objective in quest.objectives)
-        {
-            GameObject objectiveUI = Instantiate(objectivePrefab, objectivesContainer);
-            TextMeshProUGUI objectiveText = objectiveUI.GetComponentInChildren<TextMeshProUGUI>();
-            
-            string progressText = objective.type == ObjectiveType.Collect ? 
-                $" ({objective.currentAmount}/{objective.requiredAmount})" : "";
-                
-            objectiveText.text = objective.description + progressText;
-            
-            objectiveUIElements.Add(objective, objectiveUI);
-        }
+        currentQuest = quest;
+        UpdateQuestDisplay();
+        ShowQuestPanel();
     }
     
     private void HandleQuestCompleted(Quest quest)
     {
-        // Could show a completion message or reward
-        Debug.Log($"Quest completed: {quest.title}");
+        // If the completed quest is our current quest, update display
+        if (currentQuest == quest)
+        {
+            UpdateQuestDisplay();
+        }
     }
     
     private void HandleObjectiveUpdated(QuestObjective objective)
     {
-        // Update the UI for this objective
-        if (objectiveUIElements.TryGetValue(objective, out GameObject objectiveUI))
+        // Check if the objective is part of the current quest
+        if (currentQuest != null && currentQuest.objectives.Contains(objective))
         {
-            TextMeshProUGUI objectiveText = objectiveUI.GetComponentInChildren<TextMeshProUGUI>();
-            
-            string progressText = objective.type == ObjectiveType.Collect ? 
-                $" ({objective.currentAmount}/{objective.requiredAmount})" : "";
-                
-            objectiveText.text = objective.description + progressText;
-            
-            // If completed, mark it visually (e.g., strikethrough or check mark)
-            if (objective.isCompleted)
+            UpdateQuestDisplay();
+        }
+    }
+    
+    private void UpdateQuestDisplay()
+    {
+        if (currentQuest == null) return;
+        
+        // Set the quest title
+        if (questTitleText != null)
+        {
+            questTitleText.text = currentQuest.questName;
+        }
+        
+        // Set the quest description
+        if (questDescriptionText != null)
+        {
+            questDescriptionText.text = currentQuest.description;
+        }
+        
+        // Update the status
+        if (questStatusText != null)
+        {
+            if (currentQuest.IsCompleted)
             {
-                objectiveText.text = "✓ " + objectiveText.text;
-                objectiveText.color = Color.green;
+                questStatusText.text = "[COMPLETED]";
+                questStatusText.color = completedColor;
             }
+            else
+            {
+                questStatusText.text = "[IN PROGRESS]";
+                questStatusText.color = inProgressColor;
+            }
+        }
+    }
+    
+    public void ShowQuestPanel()
+    {
+        if (questPanel != null)
+        {
+            questPanel.SetActive(true);
+        }
+    }
+    
+    public void HideQuestPanel()
+    {
+        if (questPanel != null)
+        {
+            questPanel.SetActive(false);
+        }
+    }
+    
+    public void ForceShowTestQuest()
+    {
+        // Create a test quest
+        Quest testQuest = ScriptableObject.CreateInstance<Quest>();
+        testQuest.questName = "Set the table";
+        testQuest.description = "Arrange the table orderly";
+        
+        // Create an objective
+        QuestObjective objective = ScriptableObject.CreateInstance<QuestObjective>();
+        objective.description = "Arrange the table orderly";
+        objective.type = ObjectiveType.Collect;
+        objective.itemID = "table_item";
+        objective.requiredAmount = 1;
+        
+        // Add objective to quest
+        testQuest.objectives.Add(objective);
+        
+        // Set as current quest and update display
+        currentQuest = testQuest;
+        UpdateQuestDisplay();
+        ShowQuestPanel();
+        
+        Debug.Log("Force showing test quest");
+    }
+
+    public void ShowActiveQuests()
+    {
+        if (QuestManager.Instance == null)
+            return;
+
+        List<Quest> quests = QuestManager.Instance.activeQuests;
+        
+        if (quests.Count > 0)
+        {
+            // For now, just show the first active quest
+            currentQuest = quests[0];
+            UpdateQuestDisplay();
+            ShowQuestPanel();
+        }
+        else
+        {
+            Debug.Log("No active quests to display");
         }
     }
 }

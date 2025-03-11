@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Quest", menuName = "Quests/Quest")]
 public class Quest : ScriptableObject
 {
-    public string title;
+    public string questName;
     public string description;
     
     public List<QuestObjective> objectives = new List<QuestObjective>();
@@ -15,6 +15,18 @@ public class Quest : ScriptableObject
     
     [HideInInspector]
     public bool isCompleted;
+    
+    public bool IsActive
+    {
+        get { return isActive; }
+        set { isActive = value; }
+    }
+    
+    public bool IsCompleted
+    {
+        get { return isCompleted; }
+        set { isCompleted = value; }
+    }
     
     public void Initialize()
     {
@@ -31,13 +43,23 @@ public class Quest : ScriptableObject
     {
         if (isCompleted) return true;
         
+        bool allCompleted = true;
         foreach (QuestObjective objective in objectives)
         {
+            Debug.Log($"Checking objective: {objective.description}, Completed: {objective.isCompleted}");
             if (!objective.isCompleted)
-                return false;
+            {
+                allCompleted = false;
+                break;
+            }
         }
         
-        isCompleted = true;
-        return true;
+        if (allCompleted)
+        {
+            isCompleted = true;
+            Debug.Log($"Quest {questName} is now complete!");
+        }
+        
+        return isCompleted;
     }
 }

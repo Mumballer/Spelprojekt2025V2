@@ -59,7 +59,17 @@ public class CollectibleItem : MonoBehaviour
             }
             
             // Complete this specific objective
+            Debug.Log($"Completing objective {objectiveIndex} for quest {associatedQuest.questName}");
             QuestManager.Instance.CompleteObjective(associatedQuest, objectiveIndex);
+            
+            // Log the quest state after completing the objective
+            string objectivesStatus = "";
+            foreach (var objective in associatedQuest.objectives)
+            {
+                objectivesStatus += $"\n- {objective.description}: {(objective.isCompleted ? "Completed" : "Incomplete")}";
+            }
+            Debug.Log($"Quest objectives status after collection:{objectivesStatus}");
+            Debug.Log($"Quest completion status: {associatedQuest.IsCompleted}");
             
             Debug.Log($"Collected item for quest: {associatedQuest.questName}, objective: {objectiveIndex + 1}");
             
@@ -70,9 +80,14 @@ public class CollectibleItem : MonoBehaviour
             }
             else
             {
-                // Just hide it
-                GetComponent<Renderer>()?.enabled = false;
-                GetComponent<Collider>()?.enabled = false;
+                // Fix for the nullable reference operator error - use a normal if check
+                Renderer renderer = GetComponent<Renderer>();
+                if (renderer != null)
+                    renderer.enabled = false;
+                
+                Collider collider = GetComponent<Collider>();
+                if (collider != null)
+                    collider.enabled = false;
             }
         }
     }

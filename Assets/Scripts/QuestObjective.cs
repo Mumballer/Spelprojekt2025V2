@@ -36,6 +36,7 @@ public class QuestObjective : ScriptableObject
     public void UpdateProgress(int amount = 1)
     {
         currentAmount += amount;
+        Debug.Log($"Updated objective progress: {description}, Current: {currentAmount}, Required: {requiredAmount}");
         
         if (currentAmount >= requiredAmount && !isCompleted)
         {

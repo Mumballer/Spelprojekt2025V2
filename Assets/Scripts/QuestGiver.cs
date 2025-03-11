@@ -12,8 +12,9 @@ public class QuestGiver : MonoBehaviour
     [SerializeField] private KeyCode interactKey = KeyCode.E;
     [SerializeField] private string playerTag = "Player";
     
-    [Header("UI Elements (Optional)")]
+    [Header("UI Elements")]
     [SerializeField] private GameObject interactionPrompt;
+    [SerializeField] private string promptText = "Press E to talk";
     
     [Header("Events")]
     public UnityEvent OnQuestAccepted;
@@ -25,6 +26,9 @@ public class QuestGiver : MonoBehaviour
     {
         if (interactionPrompt != null)
             interactionPrompt.SetActive(false);
+            
+        startQuestOnTriggerEnter = false;
+        requireButtonPress = true;
     }
     
     private void OnTriggerEnter(Collider other)
@@ -34,10 +38,15 @@ public class QuestGiver : MonoBehaviour
             playerInRange = true;
             
             if (interactionPrompt != null && !questGiven)
+            {
                 interactionPrompt.SetActive(true);
-            
-            if (startQuestOnTriggerEnter && !questGiven)
-                GiveQuest();
+                
+                TMPro.TextMeshProUGUI promptTextComponent = interactionPrompt.GetComponentInChildren<TMPro.TextMeshProUGUI>();
+                if (promptTextComponent != null)
+                {
+                    promptTextComponent.text = promptText;
+                }
+            }
         }
     }
     
@@ -65,30 +74,36 @@ public class QuestGiver : MonoBehaviour
         if (questToGive == null || QuestManager.Instance == null || questGiven)
             return;
         
-        // Check if quest is already active or completed
         if (QuestManager.Instance.IsQuestActive(questToGive) || QuestManager.Instance.IsQuestCompleted(questToGive))
         {
             Debug.Log($"Quest '{questToGive.questName}' is already active or completed.");
             return;
         }
         
-        // Add the quest to the player's active quests
         QuestManager.Instance.AddQuest(questToGive);
         
-        // Mark as given so we don't give it again
         questGiven = true;
         
-        // Hide the interaction prompt if we have one
         if (interactionPrompt != null)
             interactionPrompt.SetActive(false);
         
-        // Trigger event
+        HandleQuestAccepted(questToGive);
+        
         OnQuestAccepted?.Invoke();
         
         Debug.Log($"Gave quest: {questToGive.questName}");
     }
 
-    // Call this to reset the quest giver (for example, if you want to allow the quest to be taken again)
+    public void HandleQuestAccepted(Quest quest)
+    {
+        if (GetComponent<Animator>())
+        {
+            GetComponent<Animator>().SetTrigger("QuestGiven");
+        }
+        
+        Debug.Log($"Quest accepted: {quest.questName}");
+    }
+
     public void ResetQuestGiver()
     {
         questGiven = false;
