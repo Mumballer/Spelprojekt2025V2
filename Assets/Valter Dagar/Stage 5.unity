@@ -913,12 +913,12 @@ MonoBehaviour:
   Breathe: {fileID: 726797624}
   minFocusDistance: 0.1
   maxFocusDistance: 1
-  minInterval: 0.4
-  maxInterval: 0.5
+  minInterval: 0.2
+  maxInterval: 0.3
   FademinInterval: 0.4
   FadeMaxInterval: 0.5
-  fadeDuration: 1
-  FadeMax: 0.5
+  fadeDuration: 2
+  FadeMax: 0.7
   FadeMin: 0.9
 --- !u!4 &87273622
 Transform:
@@ -12198,6 +12198,7 @@ GameObject:
   - component: {fileID: 1122226047}
   - component: {fileID: 1122226046}
   - component: {fileID: 1122226045}
+  - component: {fileID: 1122226048}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -12418,6 +12419,19 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!114 &1122226048
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1122226043}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca31880888f4ff347a1b406a1a61618f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shakeAmount: 0.2
 --- !u!1 &1142444619
 GameObject:
   m_ObjectHideFlags: 0
@@ -13595,14 +13609,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 620451de218aed5499af25129779e250, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 0
-  runSpeed: 0
-  gravity: 0
-  groundCheckDistance: 0.4
-  cameraTransform: {fileID: 1122226044}
-  mouseSensitivity: 2
-  lookUpLimit: 80
-  lookDownLimit: 60
 --- !u!136 &1251371574
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -15958,7 +15964,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 3e469dd15c46f0847a90baf62f2e67be, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 141caca81b2de7a49b4fbe75501e5e82, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

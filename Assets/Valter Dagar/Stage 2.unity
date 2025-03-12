@@ -4737,6 +4737,93 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &290925304
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 290925306}
+  - component: {fileID: 290925305}
+  m_Layer: 0
+  m_Name: tsjalvportrett_dag_2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!212 &290925305
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 290925304}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_Sprite: {fileID: 21300000, guid: 6b668073534c5b04d855f4693645e38b, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 77.5083, y: 109.625}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
+--- !u!4 &290925306
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 290925304}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: -3.94, y: 3.19, z: -5.68}
+  m_LocalScale: {x: 0.045406, y: 0.045406, z: 0.045406}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!1 &295786366
 GameObject:
   m_ObjectHideFlags: 0
@@ -4985,93 +5072,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 100.81845, y: 48.736916, z: 0.20000005}
   m_Center: {x: -31.032139, y: -3.037788, z: 6.857755e-15}
---- !u!1 &317209052
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 317209054}
-  - component: {fileID: 317209053}
-  m_Layer: 0
-  m_Name: sjalvportrett_2
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!212 &317209053
-SpriteRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 317209052}
-  m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 0
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: e76f64ce66fd4fb44a7f83463b740d40, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
-  m_FlipY: 0
-  m_DrawMode: 0
-  m_Size: {x: 77.5083, y: 109.625}
-  m_AdaptiveModeThreshold: 0.5
-  m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
---- !u!4 &317209054
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 317209052}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -3.94, y: 3.51, z: -4.16}
-  m_LocalScale: {x: 0.06, y: 0.06, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!1 &325166812
 GameObject:
   m_ObjectHideFlags: 0
@@ -10395,41 +10395,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e91d67447a7b50f43a1e5720964d0c9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialog:
-    lines:
-    - text: Good morning Nico, Slept a bit longer then usual today huh?
-      choices:
-      - text: Ah, yes i had a weird dream
-        nextDialog:
-          lines:
-          - text: What kinda dream was it?
-            choices:
-            - text: I don't remember...
-              nextDialog:
-                lines: []
-              quest: {fileID: 11400000, guid: 894f28788adc80e469ab0cffe987f423, type: 2}
-            character: {fileID: 11400000, guid: 314a9546f111aa64a890056f6cad0283, type: 2}
-        quest: {fileID: 0}
-      - text: '*Yawn* Yea i slept like a log'
-        nextDialog:
-          lines:
-          - text: Hahahaha reminds me of Emma during her exam week
-            choices:
-            - text: What happened then?
-              nextDialog:
-                lines:
-                - text: Seriously Nico? You know when she stayed up multiple days
-                    in a row then slept off the whole friday and saturday?
-                  choices:
-                  - text: Oh, yes ofcourse. I remember now
-                    nextDialog:
-                      lines: []
-                    quest: {fileID: 11400000, guid: 2bcda742fb31b0b4aaa942d69b1f0600, type: 2}
-                  character: {fileID: 11400000, guid: 314a9546f111aa64a890056f6cad0283, type: 2}
-              quest: {fileID: 0}
-            character: {fileID: 11400000, guid: 314a9546f111aa64a890056f6cad0283, type: 2}
-        quest: {fileID: 0}
-      character: {fileID: 11400000, guid: 314a9546f111aa64a890056f6cad0283, type: 2}
+  dialog: {fileID: 0}
   autoTrigger: 0
   triggerDistance: 3
   interactionPrompt: {fileID: 1279667655}
@@ -18381,9 +18347,9 @@ GameObject:
   - component: {fileID: 1251371576}
   - component: {fileID: 1251371575}
   - component: {fileID: 1251371574}
-  - component: {fileID: 1251371573}
   - component: {fileID: 1251371572}
   - component: {fileID: 1251371571}
+  - component: {fileID: 1251371578}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -18443,26 +18409,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!114 &1251371573
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1251371570}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 620451de218aed5499af25129779e250, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  walkSpeed: 5
-  runSpeed: 8
-  gravity: -9.81
-  groundCheckDistance: 0.4
-  cameraTransform: {fileID: 1122226044}
-  mouseSensitivity: 2
-  lookUpLimit: 80
-  lookDownLimit: 80
 --- !u!136 &1251371574
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -18555,6 +18501,27 @@ Transform:
   - {fileID: 1122226044}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1251371578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1251371570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edf8159d524ae46479add98fbbeefbfd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  walkSpeed: 5
+  runSpeed: 8
+  gravity: -9.81
+  groundCheckDistance: 0.4
+  rotationSpeed: 10
+  cameraTransform: {fileID: 1122226044}
+  mouseSensitivity: 2
+  lookUpLimit: 80
+  lookDownLimit: 80
 --- !u!1 &1258411282
 GameObject:
   m_ObjectHideFlags: 0
@@ -32547,51 +32514,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e91d67447a7b50f43a1e5720964d0c9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialog:
-    lines:
-    - text: Goodmorning dad! How are you?
-      choices:
-      - text: Im alright, bit dizzy thats all
-        nextDialog:
-          lines:
-          - text: Oh no, its because you always keep painting for hours straight,
-              I told you to take breaks dad
-            choices:
-            - text: Yea yea, I will be fine its just dizziness
-              nextDialog:
-                lines:
-                - text: "Im serious Dad you\u2019re 68 now, you need to slow down"
-                  choices:
-                  - text: Fine Emma I will slow down a bit, for you
-                    nextDialog:
-                      lines: []
-                    quest: {fileID: 11400000, guid: 3c3d656c6bd169147a3cec5e9ba66445, type: 2}
-                  character: {fileID: 11400000, guid: 902c9ecf90c47fc46b61b74de8e0e880, type: 2}
-              quest: {fileID: 0}
-            character: {fileID: 11400000, guid: 902c9ecf90c47fc46b61b74de8e0e880, type: 2}
-        quest: {fileID: 0}
-      - text: Im feeling a bit stiff thats all, how are you sweetie?
-        nextDialog:
-          lines:
-          - text: Thats because your old now dad. Im good though! Was a bit cramped
-              in my old bed but thats all!
-            choices:
-            - text: Oh god dont remind me. You have growned so big already. I still
-                remember how you used to boss me around when you were just a little
-                bean.
-              nextDialog:
-                lines:
-                - text: Hahhahaha, yea im a grown woman now dad!
-                  choices:
-                  - text: Indeed you are
-                    nextDialog:
-                      lines: []
-                    quest: {fileID: 11400000, guid: a069e25193c8e0641b434ac4f97fb1f5, type: 2}
-                  character: {fileID: 11400000, guid: 902c9ecf90c47fc46b61b74de8e0e880, type: 2}
-              quest: {fileID: 0}
-            character: {fileID: 11400000, guid: 902c9ecf90c47fc46b61b74de8e0e880, type: 2}
-        quest: {fileID: 0}
-      character: {fileID: 11400000, guid: 902c9ecf90c47fc46b61b74de8e0e880, type: 2}
+  dialog: {fileID: 0}
   autoTrigger: 0
   triggerDistance: 3
   interactionPrompt: {fileID: 1509917618}
@@ -33663,7 +33586,6 @@ SceneRoots:
   - {fileID: 1378108566}
   - {fileID: 1519228116}
   - {fileID: 7915038253985503975}
-  - {fileID: 317209054}
   - {fileID: 1280825290}
   - {fileID: 2114157717}
   - {fileID: 921755739}
@@ -33683,3 +33605,4 @@ SceneRoots:
   - {fileID: 2110373035}
   - {fileID: 729056479}
   - {fileID: 1097904687}
+  - {fileID: 290925306}
