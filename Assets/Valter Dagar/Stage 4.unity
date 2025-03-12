@@ -14158,6 +14158,7 @@ GameObject:
   - component: {fileID: 1251371572}
   - component: {fileID: 1251371571}
   - component: {fileID: 1251371578}
+  - component: {fileID: 1251371579}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -14229,14 +14230,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 620451de218aed5499af25129779e250, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 5
-  runSpeed: 8
-  gravity: -9.81
-  groundCheckDistance: 0.4
-  cameraTransform: {fileID: 1122226044}
-  mouseSensitivity: 2
-  lookUpLimit: 80
-  lookDownLimit: 80
 --- !u!136 &1251371574
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -14345,6 +14338,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   JumpscareImage: {fileID: 1681368679}
   Scare: {fileID: 1304522187}
+--- !u!114 &1251371579
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1251371570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edf8159d524ae46479add98fbbeefbfd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  walkSpeed: 5
+  runSpeed: 8
+  gravity: -9.81
+  groundCheckDistance: 0.4
+  rotationSpeed: 10
+  cameraTransform: {fileID: 1122226044}
+  mouseSensitivity: 2
+  lookUpLimit: 80
+  lookDownLimit: 80
 --- !u!1 &1258411282
 GameObject:
   m_ObjectHideFlags: 0
@@ -19983,7 +19997,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1681368678
 RectTransform:
   m_ObjectHideFlags: 0
