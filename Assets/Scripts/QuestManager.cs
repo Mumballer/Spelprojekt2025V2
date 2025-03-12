@@ -59,17 +59,17 @@ public class QuestManager : MonoBehaviour
         }
     }
 
-    public void CompleteObjective(Quest quest)
+    /*public void CompleteObjective(Quest quest)
     {
         // Compatibility method for older scripts
         CompleteQuest(quest.id);
-    }
+    }*/
 
-    public void CompleteObjective(QuestID questID)
+    /*public void CompleteObjective(QuestID questID)
     {
         // Compatibility method for older scripts
         CompleteQuest(questID);
-    }
+    }*/
 
     private void Awake()
     {
@@ -84,6 +84,8 @@ public class QuestManager : MonoBehaviour
         }
     }
 
+    // Automatically spawn if missing
+
     public void ActivateQuest(QuestID id)
     {
         Quest quest = availableQuests.Find(q => q.id == id);
@@ -91,11 +93,12 @@ public class QuestManager : MonoBehaviour
         {
             activeQuests.Add(quest);
             quest.OnActivate();
-
-            // Update UI with quest information
             UIManager.Instance.UpdateQuestText(quest.questDescription);
+
+            Debug.Log($"Activated Quest: {quest.questTitle}"); // ADD THIS LINE
         }
     }
+
 
     public void CompleteQuest(QuestID id)
     {
@@ -106,14 +109,24 @@ public class QuestManager : MonoBehaviour
             completedQuests.Add(quest);
             quest.OnComplete();
 
-            // If we have an active sequence, move to the next quest
+            Debug.Log($"Completed Quest: {quest.questTitle} with ID: {id}");
+
+            // Move to the next quest in the sequence
             if (activeSequence != null)
             {
+                Debug.Log($"Current index: {currentQuestIndex}, advancing to next quest");
                 currentQuestIndex++;
+                Debug.Log($"Now activating next quest in sequence at new index: {currentQuestIndex}");
                 ActivateNextQuestInSequence();
             }
         }
+        else
+        {
+            Debug.LogWarning($"Tried to complete quest with ID {id} but it's not active!");
+        }
     }
+
+
 
     public bool IsQuestActive(QuestID id)
     {
@@ -137,10 +150,15 @@ public class QuestManager : MonoBehaviour
             // Set the new active sequence
             activeSequence = questSequences[sequenceIndex];
 
+            // Log the entire sequence for debugging
+            Debug.Log($"=== STARTING QUEST SEQUENCE: {activeSequence.sequenceName} ===");
+            for (int i = 0; i < activeSequence.questOrder.Count; i++)
+            {
+                Debug.Log($"  Quest {i}: {activeSequence.questOrder[i]}");
+            }
+
             // Start the first quest in the sequence
             ActivateNextQuestInSequence();
-
-            Debug.Log($"Started quest sequence: {activeSequence.sequenceName}");
         }
     }
 
@@ -150,6 +168,7 @@ public class QuestManager : MonoBehaviour
         if (activeSequence != null && currentQuestIndex < activeSequence.questOrder.Count)
         {
             QuestID nextQuestID = activeSequence.questOrder[currentQuestIndex];
+            Debug.Log($"Activating quest at index {currentQuestIndex}: {nextQuestID}");
             ActivateQuest(nextQuestID);
         }
         else if (activeSequence != null)

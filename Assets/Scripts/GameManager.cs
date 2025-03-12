@@ -1,41 +1,30 @@
 using UnityEngine;
-using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
     [SerializeField] private int defaultQuestSequence = 0;
-    [SerializeField] private bool startQuestsAutomatically = true;
 
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            DontDestroyOnLoad(gameObject); // Keep it alive across scenes
         }
         else
         {
-            Destroy(gameObject);
+            Destroy(gameObject); // Prevent duplicates
         }
     }
+
+    // Automatically spawn if missing
+
 
     private void Start()
     {
-        if (startQuestsAutomatically)
-        {
-            // Start the default quest sequence
-            QuestManager.Instance.StartQuestSequence(defaultQuestSequence);
-        }
+        // Start the first quest sequence when the game begins
+        QuestManager.Instance.StartQuestSequence(defaultQuestSequence);
     }
-
-    // Call this method to switch to a different quest sequence
-    public void SwitchQuestSequence(int sequenceIndex)
-    {
-        QuestManager.Instance.StartQuestSequence(sequenceIndex);
-    }
-
-    // You can add methods here to save/load game state
-    // Or handle scene transitions, etc.
 }

@@ -4,38 +4,51 @@ using System.Collections;
 public class Gramophone : MonoBehaviour
 {
     [Header("Audio Settings")]
-    [SerializeField] private AudioClip musicClip;
+    // Referens till ljudkällan istället för ljudklippet
+    [SerializeField] private GameObject soundSource;
+    // volym för musiken
     [SerializeField] private float volumeLevel = 0.5f;
+    // tid för volymändring
     [SerializeField] private float fadeTime = 1.0f;
 
-    private AudioSource audioSource;
+    private AudioSource targetAudioSource;
     private bool isPlaying = false;
     private Coroutine fadeCoroutine;
 
-    // Public property to check if music is playing
+    // kolla om spelas
     public bool IsPlaying => isPlaying;
 
     private void Start()
     {
-        // Set up audio source
-        audioSource = GetComponent<AudioSource>();
-        if (audioSource == null)
+        // Hämta ljudkällan från det refererade objektet
+        if (soundSource != null)
         {
-            audioSource = gameObject.AddComponent<AudioSource>();
+            targetAudioSource = soundSource.GetComponent<AudioSource>();
+            if (targetAudioSource == null)
+            {
+                Debug.LogError("Sound source object does not have an AudioSource component!");
+            }
+            else
+            {
+                // Konfigurera ljudkällan
+                targetAudioSource.volume = 0;
+                targetAudioSource.loop = true;
+                targetAudioSource.playOnAwake = false;
+                targetAudioSource.spatialBlend = 1f; // 3D sound
+            }
         }
-
-        audioSource.clip = musicClip;
-        audioSource.volume = 0;
-        audioSource.loop = true;
-        audioSource.playOnAwake = false;
-        audioSource.spatialBlend = 1f; // 3D sound
+        else
+        {
+            Debug.LogError("Sound source reference is missing!");
+        }
     }
 
-    // Public method for toggling music state
+    // växla musikstatus
     public void ToggleMusic()
     {
-        isPlaying = !isPlaying;
+        if (targetAudioSource == null) return;
 
+        isPlaying = !isPlaying;
         if (isPlaying)
         {
             StartMusic();
@@ -50,48 +63,57 @@ public class Gramophone : MonoBehaviour
 
     private void StartMusic()
     {
-        if (!audioSource.isPlaying)
+        if (targetAudioSource == null) return;
+
+        if (!targetAudioSource.isPlaying)
         {
-            audioSource.Play();
+            targetAudioSource.Play();
         }
 
         if (fadeCoroutine != null)
             StopCoroutine(fadeCoroutine);
 
+        // öka volymen gradvis
         fadeCoroutine = StartCoroutine(FadeAudio(0, volumeLevel, fadeTime));
     }
 
     private void StopMusic()
     {
+        if (targetAudioSource == null) return;
+
         if (fadeCoroutine != null)
             StopCoroutine(fadeCoroutine);
 
-        fadeCoroutine = StartCoroutine(FadeAudio(audioSource.volume, 0, fadeTime));
+        // sänk volymen gradvis
+        fadeCoroutine = StartCoroutine(FadeAudio(targetAudioSource.volume, 0, fadeTime));
     }
 
     private IEnumerator FadeAudio(float startVolume, float targetVolume, float duration)
     {
-        float timeElapsed = 0;
-        audioSource.volume = startVolume;
+        if (targetAudioSource == null) yield break;
 
+        float timeElapsed = 0;
+        targetAudioSource.volume = startVolume;
+
+        // mjuk volymförändring
         while (timeElapsed < duration)
         {
-            audioSource.volume = Mathf.Lerp(startVolume, targetVolume, timeElapsed / duration);
+            targetAudioSource.volume = Mathf.Lerp(startVolume, targetVolume, timeElapsed / duration);
             timeElapsed += Time.deltaTime;
             yield return null;
         }
 
-        audioSource.volume = targetVolume;
+        targetAudioSource.volume = targetVolume;
 
-        if (targetVolume <= 0.01f && audioSource.isPlaying)
+        if (targetVolume <= 0.01f && targetAudioSource.isPlaying)
         {
-            audioSource.Stop();
+            targetAudioSource.Stop();
         }
 
         fadeCoroutine = null;
     }
 
-    // For editor testing
+    // för testning
     public void ForcePlayMusic()
     {
         isPlaying = true;
