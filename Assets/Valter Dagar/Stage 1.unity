@@ -685,7 +685,6 @@ GameObject:
   m_Component:
   - component: {fileID: 74611215}
   - component: {fileID: 74611214}
-  - component: {fileID: 74611217}
   - component: {fileID: 74611218}
   m_Layer: 8
   m_Name: Dining Table
@@ -772,27 +771,6 @@ Transform:
   - {fileID: 233032592}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: -90}
---- !u!65 &74611217
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 74611213}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 56.42552, y: 70.251465, z: 3.9608307}
-  m_Center: {x: -0.80645055, y: -19.564302, z: 1.517861}
 --- !u!114 &74611218
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -823,6 +801,11 @@ MonoBehaviour:
   correctPlacementSound: {fileID: 0}
   allCorrectSound: {fileID: 0}
   audioSource: {fileID: 0}
+  filledSpots: 0
+  timeSinceLastCheck: 0
+  questCompleted: 0
+  placedNameTags: []
+  currentSelectedNameTag: {fileID: 0}
 --- !u!1 &77393604
 GameObject:
   m_ObjectHideFlags: 0
@@ -1522,9 +1505,9 @@ GameObject:
   m_Component:
   - component: {fileID: 110469413}
   - component: {fileID: 110469416}
-  - component: {fileID: 110469417}
-  m_Layer: 0
-  m_Name: GameObject
+  - component: {fileID: 110469418}
+  m_Layer: 7
+  m_Name: placepoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1561,13 +1544,13 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 56.491932, y: 19.949562, z: 1}
-  m_Center: {x: -2.5890253, y: 9.474781, z: -4.9558163e-11}
---- !u!114 &110469417
+  m_Size: {x: 20.771254, y: 19.949562, z: 2.0555143}
+  m_Center: {x: 6.661796, y: 9.474781, z: -0.52775824}
+--- !u!114 &110469418
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1576,21 +1559,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 110469412}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b5ecc2b8b9428e1409446eaaa8807823, type: 3}
+  m_Script: {fileID: 11500000, guid: 1060dc725b013744e9d6ab7c1f4dd130, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  expectedGuest: Emma
-  snapPoint: {fileID: 0}
-  snapDistance: 0.2
-  interactionDistance: 3
+  associatedQuest: {fileID: 11400000, guid: ecd10f3f38419c84995e456cb15313ab, type: 2}
+  objectiveIndex: 4
+  playerTag: Player
+  requireButtonPress: 1
   interactKey: 101
-  interactionPrompt: {fileID: 0}
-  showPromptWhenInRange: 1
-  guestInfoLabel: {fileID: 0}
-  showDebugVisuals: 1
-  availableColor: {r: 0, g: 1, b: 0, a: 1}
-  occupiedColor: {r: 1, g: 0, b: 0, a: 1}
-  gizmoSphereSize: 0.1
+  placedItemPrefab: {fileID: 1734412479}
+  interactionPrompt: {fileID: 1350469316}
+  promptText: Emma
 --- !u!1 &114044625
 GameObject:
   m_ObjectHideFlags: 0
@@ -1797,9 +1776,8 @@ GameObject:
   - component: {fileID: 120900576}
   - component: {fileID: 120900577}
   - component: {fileID: 120900578}
-  - component: {fileID: 120900579}
   m_Layer: 7
-  m_Name: GameObject
+  m_Name: placepoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1851,33 +1829,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 120900575}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: acaa95f4dca215c458a211e5f78236ed, type: 3}
+  m_Script: {fileID: 11500000, guid: 1060dc725b013744e9d6ab7c1f4dd130, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &120900579
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 120900575}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b5ecc2b8b9428e1409446eaaa8807823, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  expectedGuest: Nico
-  snapPoint: {fileID: 120900576}
-  snapDistance: 0.2
-  interactionDistance: 3
+  associatedQuest: {fileID: 11400000, guid: ecd10f3f38419c84995e456cb15313ab, type: 2}
+  objectiveIndex: 2
+  playerTag: Player
+  requireButtonPress: 1
   interactKey: 101
-  interactionPrompt: {fileID: 0}
-  showPromptWhenInRange: 1
-  guestInfoLabel: {fileID: 0}
-  showDebugVisuals: 1
-  availableColor: {r: 0, g: 1, b: 0, a: 1}
-  occupiedColor: {r: 1, g: 0, b: 0, a: 1}
-  gizmoSphereSize: 0.1
+  placedItemPrefab: {fileID: 1680139357}
+  interactionPrompt: {fileID: 1197321535}
+  promptText: Nico
 --- !u!1 &127244272
 GameObject:
   m_ObjectHideFlags: 0
@@ -2376,8 +2338,9 @@ GameObject:
   - component: {fileID: 140621839}
   - component: {fileID: 140621840}
   - component: {fileID: 140621841}
+  - component: {fileID: 140621842}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: placepoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2418,8 +2381,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 56.07697, y: 17.627747, z: 1.9625938}
-  m_Center: {x: 9.0739355, y: 4.2563066, z: -0.7848056}
+  m_Size: {x: 21.32453, y: 22.124348, z: 1.0926185}
+  m_Center: {x: 4.9034624, y: 2.0080237, z: -0.20257291}
 --- !u!114 &140621840
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2453,9 +2416,42 @@ MonoBehaviour:
   showPromptWhenInRange: 1
   guestInfoLabel: {fileID: 0}
   showDebugVisuals: 1
-  availableColor: {r: 0, g: 1, b: 0, a: 1}
-  occupiedColor: {r: 1, g: 0, b: 0, a: 1}
+  availableColor:
+    r: 0
+    g: 1
+    b: 0
+    a: 1
+  occupiedColor:
+    r: 1
+    g: 0
+    b: 0
+    a: 1
   gizmoSphereSize: 0.1
+  hasNameTag: 0
+  currentGuestName: 
+  tableController: {fileID: 0}
+  playerTransform: {fileID: 0}
+  playerInRange: 0
+--- !u!114 &140621842
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 140621837}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1060dc725b013744e9d6ab7c1f4dd130, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  associatedQuest: {fileID: 11400000, guid: ecd10f3f38419c84995e456cb15313ab, type: 2}
+  objectiveIndex: 1
+  playerTag: Player
+  requireButtonPress: 1
+  interactKey: 101
+  placedItemPrefab: {fileID: 2080282964}
+  interactionPrompt: {fileID: 2051296497}
+  promptText: Calvin
 --- !u!1 &153929473
 GameObject:
   m_ObjectHideFlags: 0
@@ -3072,9 +3068,9 @@ GameObject:
   m_Component:
   - component: {fileID: 190613755}
   - component: {fileID: 190613758}
-  - component: {fileID: 190613759}
-  m_Layer: 0
-  m_Name: GameObject
+  - component: {fileID: 190613760}
+  m_Layer: 7
+  m_Name: placepoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3088,8 +3084,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 190613754}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: 14.2, z: 1.41}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.0027794472, y: 14.200001, z: 1.0210931}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3111,13 +3107,13 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 35.898323, y: 26.491272, z: 1.5550613}
-  m_Center: {x: 4.2806973, y: 2.7599266, z: -0.27753153}
---- !u!114 &190613759
+  m_Size: {x: 21.898811, y: 26.491272, z: 1.5034775}
+  m_Center: {x: 7.9690547, y: 2.7599266, z: -0.25174126}
+--- !u!114 &190613760
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3126,21 +3122,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 190613754}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b5ecc2b8b9428e1409446eaaa8807823, type: 3}
+  m_Script: {fileID: 11500000, guid: 1060dc725b013744e9d6ab7c1f4dd130, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  expectedGuest: Lisa
-  snapPoint: {fileID: 190613755}
-  snapDistance: 0.2
-  interactionDistance: 3
+  associatedQuest: {fileID: 11400000, guid: ecd10f3f38419c84995e456cb15313ab, type: 2}
+  objectiveIndex: 5
+  playerTag: Player
+  requireButtonPress: 1
   interactKey: 101
-  interactionPrompt: {fileID: 0}
-  showPromptWhenInRange: 1
-  guestInfoLabel: {fileID: 0}
-  showDebugVisuals: 1
-  availableColor: {r: 0, g: 1, b: 0, a: 1}
-  occupiedColor: {r: 1, g: 0, b: 0, a: 1}
-  gizmoSphereSize: 0.1
+  placedItemPrefab: {fileID: 305947902}
+  interactionPrompt: {fileID: 508331210}
+  promptText: Lisa
 --- !u!1 &198849936
 GameObject:
   m_ObjectHideFlags: 0
@@ -4137,7 +4129,6 @@ GameObject:
   - component: {fileID: 305947907}
   - component: {fileID: 305947906}
   - component: {fileID: 305947904}
-  - component: {fileID: 305947903}
   - component: {fileID: 305947908}
   m_Layer: 10
   m_Name: Lisa
@@ -4146,33 +4137,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!54 &305947903
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 305947902}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!65 &305947904
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4192,8 +4156,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 170.08014, y: 80.48423, z: 0.93796754}
-  m_Center: {x: 13.558184, y: 32.767864, z: -0.33635005}
+  m_Size: {x: 99.40456, y: 164.93958, z: 0.7415131}
+  m_Center: {x: 1.7331185, y: 75.764854, z: -0.37159193}
 --- !u!212 &305947906
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -4239,7 +4203,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 8427e041e2938ea47b11175590d824c6, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -4264,30 +4228,33 @@ Transform:
   m_Children: []
   m_Father: {fileID: 190613755}
   m_LocalEulerAnglesHint: {x: 5.088, y: 0.277, z: 0.093}
---- !u!114 &305947908
-MonoBehaviour:
+--- !u!54 &305947908
+Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 305947902}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a8c8fa8055ed2a4dbb066497d68ab50, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isKitchenNametag: 1
-  guestName: Lisa
-  guestDescription: 
-  nametagRenderer: {fileID: 305947906}
-  nameText: {fileID: 0}
-  tmpText: {fileID: 0}
-  nametagCollider: {fileID: 305947904}
-  pickupDistance: 2
-  isPickedUp: 0
-  interactKey: 101
-  disablePhysicsWhenPlaced: 1
-  isPlaced: 0
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &309161708
 GameObject:
   m_ObjectHideFlags: 0
@@ -4558,6 +4525,8 @@ GameObject:
   - component: {fileID: 334988399}
   - component: {fileID: 334988398}
   - component: {fileID: 334988397}
+  - component: {fileID: 334988401}
+  - component: {fileID: 334988400}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -4582,7 +4551,6 @@ RectTransform:
   - {fileID: 1668158285}
   - {fileID: 1029177603}
   - {fileID: 918904906}
-  - {fileID: 1053052194}
   - {fileID: 53683190}
   - {fileID: 2051296498}
   - {fileID: 672155526}
@@ -4662,6 +4630,44 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &334988400
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 334988395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15abc92c451ac594eae76238803bb545, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  questUI: {fileID: 334988401}
+  mainCanvas: {fileID: 334988399}
+  questPanel: {fileID: 1724483588}
+  titleText: {fileID: 1359931523}
+  descriptionText: {fileID: 1714436064}
+  statusText: {fileID: 1069253719}
+  questTester: {fileID: 0}
+--- !u!114 &334988401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 334988395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 149eac7ff6ec2c3489d052630b0e7fd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  questPanel: {fileID: 1724483588}
+  questTitleText: {fileID: 1359931523}
+  questDescriptionText: {fileID: 1714436064}
+  questStatusText: {fileID: 1069253719}
+  closeButton: {fileID: 0}
+  inProgressColor: {r: 1, g: 0.92, b: 0.016, a: 1}
+  completedColor: {r: 0, g: 0.75, b: 0.22, a: 1}
 --- !u!1 &335790520
 GameObject:
   m_ObjectHideFlags: 0
@@ -5013,7 +5019,6 @@ GameObject:
   - component: {fileID: 356791484}
   - component: {fileID: 356791485}
   - component: {fileID: 356791486}
-  - component: {fileID: 356791487}
   m_Layer: 10
   m_Name: emmanametag
   m_TagString: Emma
@@ -5148,33 +5153,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 356791480}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a81a7940cf255c4c9d236b3f6d3a537, type: 3}
+  m_Script: {fileID: 11500000, guid: 83dc7b34223b2fd4b8b59010316efdfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &356791487
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 356791480}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a8c8fa8055ed2a4dbb066497d68ab50, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isKitchenNametag: 1
-  guestName: Emma
-  guestDescription: 
-  nametagRenderer: {fileID: 0}
-  nameText: {fileID: 0}
-  tmpText: {fileID: 0}
-  nametagCollider: {fileID: 356791484}
-  pickupDistance: 2
-  isPickedUp: 0
+  associatedQuest: {fileID: 11400000, guid: 079958ddc4b28084face6cc392bc0a3c, type: 2}
+  objectiveIndex: 1
+  destroyOnCollect: 1
+  playerTag: Player
+  requireButtonPress: 0
   interactKey: 101
-  disablePhysicsWhenPlaced: 1
-  isPlaced: 0
 --- !u!1 &360069965
 GameObject:
   m_ObjectHideFlags: 0
@@ -6503,7 +6490,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 483447156}
-  - component: {fileID: 483447158}
   m_Layer: 0
   m_Name: lisaChair
   m_TagString: Lisa
@@ -6520,7 +6506,7 @@ Transform:
   m_GameObject: {fileID: 483447155}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.71139127, z: -0, w: -0.7027962}
-  m_LocalPosition: {x: 37.148, y: 1.35, z: 10.189}
+  m_LocalPosition: {x: 36.889, y: 1.35, z: 10.186}
   m_LocalScale: {x: 0.05328124, y: 0.053281233, z: 0.66601545}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -6532,27 +6518,6 @@ Transform:
   - {fileID: 190613755}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 269.30402, z: 0}
---- !u!65 &483447158
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 483447155}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 23.295225, y: 36.846622, z: 1}
-  m_Center: {x: 2.2590244, y: 11.10659, z: 1.8323443e-10}
 --- !u!1 &492205916
 GameObject:
   m_ObjectHideFlags: 0
@@ -6707,18 +6672,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerHoldPoint: {fileID: 0}
   nametagLayer:
-    serializedVersion: 2
     m_Bits: 1024
   tableLayer:
-    serializedVersion: 2
     m_Bits: 256
   nametagSpotLayer:
-    serializedVersion: 2
     m_Bits: 512
   interactionDistance: 3
   interactKey: 101
   relatedQuest: {fileID: 11400000, guid: f45e4f7577217e8429226626dd29f0e8, type: 2}
   objectiveIndex: 0
+  currentNameTag: {fileID: 0}
+  canInteract: 1
+  mainCamera: {fileID: 0}
+  allNameTags: []
+  currentTable: {fileID: 0}
+  nametagCounter: {fileID: 0}
+  currentLookedAtSpot: {fileID: 0}
 --- !u!1 &503446209
 GameObject:
   m_ObjectHideFlags: 0
@@ -6840,7 +6809,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 137}
+  m_AnchoredPosition: {x: 0, y: -155}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &508331212
@@ -8884,7 +8853,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 137}
+  m_AnchoredPosition: {x: 0, y: -155}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &672155527
@@ -12769,7 +12738,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 947302020}
-  - component: {fileID: 947302019}
+  - component: {fileID: 947302021}
   m_Layer: 0
   m_Name: QuestSystem
   m_TagString: Untagged
@@ -12777,19 +12746,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &947302019
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 947302018}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec61654d22910314a8f2318984071cb6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enableDebugLogs: 1
 --- !u!4 &947302020
 Transform:
   m_ObjectHideFlags: 0
@@ -12805,6 +12761,25 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &947302021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 947302018}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a8012bbe41417440a966c704c03c231, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  availableQuests:
+  - {fileID: 11400000, guid: 079958ddc4b28084face6cc392bc0a3c, type: 2}
+  activeQuests: []
+  completedQuests: []
+  followUpQuests:
+  - initialQuest: {fileID: 11400000, guid: 079958ddc4b28084face6cc392bc0a3c, type: 2}
+    followUpQuest: {fileID: 11400000, guid: ecd10f3f38419c84995e456cb15313ab, type: 2}
 --- !u!1 &949431676
 GameObject:
   m_ObjectHideFlags: 0
@@ -12815,7 +12790,6 @@ GameObject:
   m_Component:
   - component: {fileID: 949431677}
   - component: {fileID: 949431679}
-  - component: {fileID: 949431678}
   m_Layer: 0
   m_Name: CalvinChair
   m_TagString: Calvin
@@ -12844,27 +12818,6 @@ Transform:
   - {fileID: 140621838}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 451.224, z: 0}
---- !u!65 &949431678
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 949431676}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 30.105673, y: 56.54127, z: 2.3929462}
-  m_Center: {x: 2.3417547, y: 6.6148205, z: 0.69647735}
 --- !u!114 &949431679
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13331,35 +13284,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 989406154}
-  - component: {fileID: 989406153}
+  - component: {fileID: 989406155}
   m_Layer: 0
-  m_Name: QuestSceneLoader
+  m_Name: QuestSequencer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &989406153
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 989406152}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d2e5732049dff2743b249700b3f06da2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  questToCheck: {fileID: 11400000, guid: f45e4f7577217e8429226626dd29f0e8, type: 2}
-  sceneToLoad: Stage 2
-  loadDelay: 0
-  checkOnStart: 0
-  checkContinuously: 1
-  checkInterval: 1
-  debugMode: 1
-  debugText: {fileID: 0}
-  forceLoadScene: 0
 --- !u!4 &989406154
 Transform:
   m_ObjectHideFlags: 0
@@ -13375,6 +13307,31 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &989406155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 989406152}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e50f8d1ca00754544b0b395ccaec02ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  collectionQuestName: Pickup the nametags from the counter
+  collectionQuestDescription: 
+  itemNames:
+  - calvinnametag
+  - emmanametag
+  - lisanametag
+  - susannametag
+  - lucanametag
+  - niconametag
+  itemIDs: []
+  placementQuestName: Place down the nametags in the right spots.
+  placementQuestDescription: 
+  questGiver: {fileID: 1531552670}
 --- !u!1 &995342637
 GameObject:
   m_ObjectHideFlags: 0
@@ -13385,7 +13342,6 @@ GameObject:
   m_Component:
   - component: {fileID: 995342639}
   - component: {fileID: 995342638}
-  - component: {fileID: 995342640}
   m_Layer: 0
   m_Name: Chair_1
   m_TagString: Untagged
@@ -13463,27 +13419,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 483447156}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
---- !u!65 &995342640
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 995342637}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 23.974657, y: 45.852375, z: 0.20000003}
-  m_Center: {x: 3.4584029, y: -4.480094, z: -1.14111276e-10}
 --- !u!1 &999888110
 GameObject:
   m_ObjectHideFlags: 0
@@ -14180,113 +14115,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1001 &1053052193
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 334988396}
-    m_Modifications:
-    - target: {fileID: 2490116536005928989, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
-      propertyPath: m_Pivot.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2490116536005928989, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
-      propertyPath: m_Pivot.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2490116536005928989, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2490116536005928989, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2490116536005928989, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
-      propertyPath: m_AnchorMin.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2490116536005928989, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2490116536005928989, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 2490116536005928989, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 2490116536005928989, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2490116536005928989, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2490116536005928989, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2490116536005928989, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2490116536005928989, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2490116536005928989, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2490116536005928989, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2490116536005928989, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2490116536005928989, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -164
-      objectReference: {fileID: 0}
-    - target: {fileID: 2490116536005928989, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2490116536005928989, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2490116536005928989, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3820932244574906744, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
-      propertyPath: m_Name
-      value: InteractPromptGramo
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
---- !u!224 &1053052194 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 2490116536005928989, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
-  m_PrefabInstance: {fileID: 1053052193}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1053052195 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3820932244574906744, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
-  m_PrefabInstance: {fileID: 1053052193}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1064555969
 GameObject:
   m_ObjectHideFlags: 0
@@ -14461,6 +14289,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 430116337}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!114 &1069253719 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1727159047800525700, guid: 469807fb216c995499973e4d066d3db2, type: 3}
+  m_PrefabInstance: {fileID: 2556871004087800573}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1069329310
 GameObject:
   m_ObjectHideFlags: 0
@@ -14749,7 +14588,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1078432702}
   - component: {fileID: 1078432703}
-  - component: {fileID: 1078432704}
   m_Layer: 0
   m_Name: Chair_1
   m_TagString: Untagged
@@ -14827,27 +14665,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!65 &1078432704
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1078432701}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 22.59622, y: 46.265156, z: 0.20000002}
-  m_Center: {x: 4.060301, y: -4.273689, z: 4.8479964e-10}
 --- !u!1 &1087866659
 GameObject:
   m_ObjectHideFlags: 0
@@ -16332,7 +16149,6 @@ GameObject:
   - component: {fileID: 1155828552}
   - component: {fileID: 1155828553}
   - component: {fileID: 1155828554}
-  - component: {fileID: 1155828555}
   m_Layer: 10
   m_Name: lucanametag
   m_TagString: Luca
@@ -16467,33 +16283,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1155828548}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a81a7940cf255c4c9d236b3f6d3a537, type: 3}
+  m_Script: {fileID: 11500000, guid: 83dc7b34223b2fd4b8b59010316efdfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1155828555
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1155828548}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a8c8fa8055ed2a4dbb066497d68ab50, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isKitchenNametag: 1
-  guestName: Luca
-  guestDescription: 
-  nametagRenderer: {fileID: 0}
-  nameText: {fileID: 0}
-  tmpText: {fileID: 0}
-  nametagCollider: {fileID: 1155828552}
-  pickupDistance: 2
-  isPickedUp: 0
+  associatedQuest: {fileID: 11400000, guid: 079958ddc4b28084face6cc392bc0a3c, type: 2}
+  objectiveIndex: 4
+  destroyOnCollect: 1
+  playerTag: Player
+  requireButtonPress: 0
   interactKey: 101
-  disablePhysicsWhenPlaced: 1
-  isPlaced: 0
 --- !u!1 &1156178387
 GameObject:
   m_ObjectHideFlags: 0
@@ -17028,7 +16826,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 137}
+  m_AnchoredPosition: {x: 0, y: -155}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1197321537
@@ -17449,6 +17247,7 @@ GameObject:
   - component: {fileID: 1251371573}
   - component: {fileID: 1251371572}
   - component: {fileID: 1251371571}
+  - component: {fileID: 1251371578}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -17528,6 +17327,14 @@ MonoBehaviour:
   mouseSensitivity: 2
   lookUpLimit: 80
   lookDownLimit: 80
+  controller: {fileID: 0}
+  velocity: {x: 0, y: 0, z: 0}
+  isGrounded: 0
+  groundCheck: {fileID: 0}
+  groundMask:
+    m_Bits: 0
+  cameraPitch: 0
+  canMove: 1
 --- !u!136 &1251371574
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -17613,14 +17420,34 @@ Transform:
   m_GameObject: {fileID: 1251371570}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.044353954, y: 1.45, z: 0.07404432}
+  m_LocalPosition: {x: 0.044353954, y: 2.24, z: 0.07404432}
   m_LocalScale: {x: 1, y: 1.6612626, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1122226044}
-  - {fileID: 2009526355}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1251371578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1251371570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edf8159d524ae46479add98fbbeefbfd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  walkSpeed: 5
+  runSpeed: 8
+  gravity: -9.81
+  groundCheckDistance: 0.4
+  rotationSpeed: 10
+  cameraTransform: {fileID: 1122226044}
+  mouseSensitivity: 2
+  lookUpLimit: 80
+  lookDownLimit: 80
 --- !u!1 &1258411282
 GameObject:
   m_ObjectHideFlags: 0
@@ -17961,7 +17788,6 @@ GameObject:
   - component: {fileID: 1273443583}
   - component: {fileID: 1273443585}
   - component: {fileID: 1273443586}
-  - component: {fileID: 1273443587}
   m_Layer: 10
   m_Name: lisanametag
   m_TagString: Lisa
@@ -18096,33 +17922,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1273443580}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a81a7940cf255c4c9d236b3f6d3a537, type: 3}
+  m_Script: {fileID: 11500000, guid: 83dc7b34223b2fd4b8b59010316efdfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1273443587
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1273443580}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a8c8fa8055ed2a4dbb066497d68ab50, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isKitchenNametag: 1
-  guestName: Lisa
-  guestDescription: 
-  nametagRenderer: {fileID: 0}
-  nameText: {fileID: 0}
-  tmpText: {fileID: 0}
-  nametagCollider: {fileID: 1273443583}
-  pickupDistance: 2
-  isPickedUp: 0
+  associatedQuest: {fileID: 11400000, guid: 079958ddc4b28084face6cc392bc0a3c, type: 2}
+  objectiveIndex: 2
+  destroyOnCollect: 1
+  playerTag: Player
+  requireButtonPress: 0
   interactKey: 101
-  disablePhysicsWhenPlaced: 1
-  isPlaced: 0
 --- !u!1 &1278748566
 GameObject:
   m_ObjectHideFlags: 0
@@ -18135,8 +17943,6 @@ GameObject:
   - component: {fileID: 1278748570}
   - component: {fileID: 1278748568}
   - component: {fileID: 1278748567}
-  - component: {fileID: 1278748572}
-  - component: {fileID: 1278748573}
   m_Layer: 10
   m_Name: Luca
   m_TagString: Luca
@@ -18190,8 +17996,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 209.24783, y: 109.625015, z: 0.44045064}
-  m_Center: {x: -14.169689, y: 0.84193045, z: -0.124054}
+  m_Size: {x: 119.449524, y: 109.625015, z: 0.47417927}
+  m_Center: {x: -9.047169, y: 0.9610131, z: -0.13984339}
 --- !u!212 &1278748570
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -18237,7 +18043,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 2c750cd2f9a4a3947866764596d66431, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -18262,42 +18068,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1890525663}
   m_LocalEulerAnglesHint: {x: 1.262, y: -179.821, z: -0.013}
---- !u!114 &1278748572
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1278748566}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a81a7940cf255c4c9d236b3f6d3a537, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1278748573
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1278748566}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a8c8fa8055ed2a4dbb066497d68ab50, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isKitchenNametag: 1
-  guestName: Luca
-  guestDescription: 
-  nametagRenderer: {fileID: 1278748570}
-  nameText: {fileID: 0}
-  tmpText: {fileID: 0}
-  nametagCollider: {fileID: 1890525664}
-  pickupDistance: 2
-  isPickedUp: 0
-  interactKey: 101
-  disablePhysicsWhenPlaced: 1
-  isPlaced: 0
 --- !u!1 &1279752162
 GameObject:
   m_ObjectHideFlags: 0
@@ -18504,8 +18274,9 @@ GameObject:
   - component: {fileID: 1293020806}
   - component: {fileID: 1293020807}
   - component: {fileID: 1293020808}
+  - component: {fileID: 1293020809}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: placepoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -18546,8 +18317,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 63.328747, y: 14.36895, z: 1.9369079}
-  m_Center: {x: 9.362634, y: 2.4140496, z: -0.3598086}
+  m_Size: {x: 40.42261, y: 14.36895, z: 1.9369079}
+  m_Center: {x: -2.0904427, y: 2.4140496, z: -0.3598086}
 --- !u!114 &1293020808
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18569,9 +18340,42 @@ MonoBehaviour:
   showPromptWhenInRange: 1
   guestInfoLabel: {fileID: 0}
   showDebugVisuals: 1
-  availableColor: {r: 0, g: 1, b: 0, a: 1}
-  occupiedColor: {r: 1, g: 0, b: 0, a: 1}
+  availableColor:
+    r: 0
+    g: 1
+    b: 0
+    a: 1
+  occupiedColor:
+    r: 1
+    g: 0
+    b: 0
+    a: 1
   gizmoSphereSize: 0.1
+  hasNameTag: 0
+  currentGuestName: 
+  tableController: {fileID: 0}
+  playerTransform: {fileID: 0}
+  playerInRange: 0
+--- !u!114 &1293020809
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1293020805}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1060dc725b013744e9d6ab7c1f4dd130, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  associatedQuest: {fileID: 11400000, guid: ecd10f3f38419c84995e456cb15313ab, type: 2}
+  objectiveIndex: 3
+  playerTag: Player
+  requireButtonPress: 1
+  interactKey: 101
+  placedItemPrefab: {fileID: 1977498796}
+  interactionPrompt: {fileID: 672155525}
+  promptText: Susan
 --- !u!1 &1337573859
 GameObject:
   m_ObjectHideFlags: 0
@@ -18829,7 +18633,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 137}
+  m_AnchoredPosition: {x: 0, y: -155}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1350469318
@@ -19040,6 +18844,17 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 11.789744, y: 38.754154, z: 0.2}
   m_Center: {x: -10.350869, y: -0.000004064271, z: 0.0000040368027}
+--- !u!114 &1359931523 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3729787904745768201, guid: 469807fb216c995499973e4d066d3db2, type: 3}
+  m_PrefabInstance: {fileID: 2556871004087800573}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1365585331
 GameObject:
   m_ObjectHideFlags: 0
@@ -21624,58 +21439,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e91d67447a7b50f43a1e5720964d0c9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialog:
-    lines:
-    - text: Good morning darling! ... How did you sleep?
-      choices:
-      - text: I slept great! Dreamt about our ballad.
-        nextDialog:
-          lines:
-          - text: Ahhh, summer 1924. I still remember your costume you hunk.
-            choices:
-            - text: Hahahaha, you were not too bad yourself
-              nextDialog:
-                lines:
-                - text: Flirtatious as ever Nico. By the way, Can you turn on the
-                    music and set the table for the guests? Your daughter is also
-                    here now.
-                  choices:
-                  - text: Sure.
-                    nextDialog:
-                      lines: []
-                    quest: {fileID: 11400000, guid: 894f28788adc80e469ab0cffe987f423, type: 2}
-                  character: {fileID: 11400000, guid: e21005152e6683e42989884abc2c2927, type: 2}
-              quest: {fileID: 0}
-            character: {fileID: 11400000, guid: e21005152e6683e42989884abc2c2927, type: 2}
-        quest: {fileID: 0}
-      character: {fileID: 11400000, guid: e21005152e6683e42989884abc2c2927, type: 2}
-    - text: Good morning darling! ... How did you sleep?
-      choices:
-      - text: I slept okay, a few nightmares
-        nextDialog:
-          lines:
-          - text: Oh dear, did you dream about spiders again?
-            choices:
-            - text: Yes, this time they  crawled in my head
-              nextDialog:
-                lines:
-                - text: Oh god thats sounds awful. Im sorry you dreamt that dear.
-                    By the way, Can you turn on the music and set the table for the
-                    guests? Your daughter is also here now.
-                  choices:
-                  - text: Will do.
-                    nextDialog:
-                      lines: []
-                    quest: {fileID: 11400000, guid: 894f28788adc80e469ab0cffe987f423, type: 2}
-                  character: {fileID: 11400000, guid: e21005152e6683e42989884abc2c2927, type: 2}
-              quest: {fileID: 0}
-            character: {fileID: 11400000, guid: e21005152e6683e42989884abc2c2927, type: 2}
-        quest: {fileID: 0}
-      character: {fileID: 11400000, guid: e21005152e6683e42989884abc2c2927, type: 2}
+  dialog: {fileID: 11400000, guid: b7d00b9f2a2d4a1468be47edce61ee0e, type: 2}
   autoTrigger: 0
   triggerDistance: 3
   interactionPrompt: {fileID: 918904907}
-  questToComplete: {fileID: 11400000, guid: 894f28788adc80e469ab0cffe987f423, type: 2}
+  questToComplete: {fileID: 11400000, guid: 079958ddc4b28084face6cc392bc0a3c, type: 2}
   objectiveIndex: 0
   completeQuestAfterDialog: 0
 --- !u!65 &1531552669
@@ -21708,19 +21476,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 1531552665}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 357fe0bbd4a916f43b4575f34d1ff706, type: 3}
+  m_Script: {fileID: 11500000, guid: 5d38cff2b1027ab44b903f1efa0c34e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gramophone: {fileID: 0}
-  interactionPoint: {fileID: 0}
-  interactionPrompt: {fileID: 0}
-  interactionDistance: 2
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 8
+  questToGive: {fileID: 11400000, guid: 079958ddc4b28084face6cc392bc0a3c, type: 2}
+  startQuestOnTriggerEnter: 0
+  initialDialog: {fileID: 0}
+  questOfferDialog: {fileID: 0}
+  acceptedDialog: {fileID: 0}
+  activeQuestDialog: {fileID: 0}
+  completedQuestDialog: {fileID: 0}
+  useDialogForQuest: 1
+  requireButtonPress: 1
   interactKey: 101
-  musicQuest: {fileID: 0}
-  musicObjectiveIndex: 0
+  playerTag: Player
+  interactionDistance: 3
+  interactionPrompt: {fileID: 0}
 --- !u!1 &1538071652
 GameObject:
   m_ObjectHideFlags: 0
@@ -22126,15 +21897,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e91d67447a7b50f43a1e5720964d0c9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialog:
-    lines:
-    - text: Hey dad! could you help set up the table for the guests?
-      choices:
-      - text: I suppose..
-        nextDialog:
-          lines: []
-        quest: {fileID: 11400000, guid: f45e4f7577217e8429226626dd29f0e8, type: 2}
-      character: {fileID: 11400000, guid: c2405cd586ae9254c862d66121dfc807, type: 2}
+  dialog: {fileID: 0}
   autoTrigger: 0
   triggerDistance: 3
   interactionPrompt: {fileID: 1029177602}
@@ -22175,7 +21938,6 @@ GameObject:
   - component: {fileID: 1550558859}
   - component: {fileID: 1550558860}
   - component: {fileID: 1550558861}
-  - component: {fileID: 1550558862}
   m_Layer: 10
   m_Name: niconametag
   m_TagString: Nico
@@ -22310,33 +22072,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1550558855}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a81a7940cf255c4c9d236b3f6d3a537, type: 3}
+  m_Script: {fileID: 11500000, guid: 83dc7b34223b2fd4b8b59010316efdfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1550558862
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1550558855}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a8c8fa8055ed2a4dbb066497d68ab50, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isKitchenNametag: 1
-  guestName: Nico
-  guestDescription: 
-  nametagRenderer: {fileID: 0}
-  nameText: {fileID: 0}
-  tmpText: {fileID: 0}
-  nametagCollider: {fileID: 1550558859}
-  pickupDistance: 2
-  isPickedUp: 0
+  associatedQuest: {fileID: 11400000, guid: 079958ddc4b28084face6cc392bc0a3c, type: 2}
+  objectiveIndex: 5
+  destroyOnCollect: 1
+  playerTag: Player
+  requireButtonPress: 0
   interactKey: 101
-  disablePhysicsWhenPlaced: 1
-  isPlaced: 0
 --- !u!1 &1551296808
 GameObject:
   m_ObjectHideFlags: 0
@@ -24033,7 +23777,6 @@ GameObject:
   - component: {fileID: 1680139361}
   - component: {fileID: 1680139360}
   - component: {fileID: 1680139363}
-  - component: {fileID: 1680139364}
   m_Layer: 10
   m_Name: Nico
   m_TagString: Nametag
@@ -24060,8 +23803,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 225.8126, y: 87.83571, z: 0.25439757}
-  m_Center: {x: -17.195187, y: 10.874472, z: -0.04547711}
+  m_Size: {x: 204.7056, y: 87.83571, z: 0.25439757}
+  m_Center: {x: -6.6246743, y: 10.886886, z: -0.034240734}
 --- !u!212 &1680139361
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -24107,7 +23850,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: cbeaa6515c40965479ff391470945388, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -24132,42 +23875,33 @@ Transform:
   m_Children: []
   m_Father: {fileID: 120900576}
   m_LocalEulerAnglesHint: {x: 3.578, y: 0.849, z: 2.257}
---- !u!114 &1680139363
-MonoBehaviour:
+--- !u!54 &1680139363
+Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1680139357}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a81a7940cf255c4c9d236b3f6d3a537, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1680139364
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1680139357}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a8c8fa8055ed2a4dbb066497d68ab50, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isKitchenNametag: 1
-  guestName: Nico
-  guestDescription: 
-  nametagRenderer: {fileID: 1680139361}
-  nameText: {fileID: 0}
-  tmpText: {fileID: 0}
-  nametagCollider: {fileID: 120900577}
-  pickupDistance: 2
-  isPickedUp: 0
-  interactKey: 101
-  disablePhysicsWhenPlaced: 1
-  isPlaced: 0
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1683778687
 GameObject:
   m_ObjectHideFlags: 0
@@ -24506,6 +24240,17 @@ Transform:
   - {fileID: 480722464}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1714436064 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2201689823606790252, guid: 469807fb216c995499973e4d066d3db2, type: 3}
+  m_PrefabInstance: {fileID: 2556871004087800573}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1724483588 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1102354114715227682, guid: 469807fb216c995499973e4d066d3db2, type: 3}
@@ -24527,7 +24272,6 @@ GameObject:
   - component: {fileID: 1734412484}
   - component: {fileID: 1734412483}
   - component: {fileID: 1734412481}
-  - component: {fileID: 1734412480}
   - component: {fileID: 1734412485}
   m_Layer: 10
   m_Name: Emma
@@ -24536,33 +24280,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!54 &1734412480
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1734412479}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!65 &1734412481
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -24582,8 +24299,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 206.05145, y: 109.625, z: 0.99645936}
-  m_Center: {x: 4.503827, y: 5.12757, z: -0.40762526}
+  m_Size: {x: 85.806175, y: 199.24884, z: 0.43852386}
+  m_Center: {x: 0.7123484, y: 48.170326, z: -0.23516178}
 --- !u!212 &1734412483
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -24629,7 +24346,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 51bbe510b686ab445b0c82aa42565737, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -24654,30 +24371,33 @@ Transform:
   m_Children: []
   m_Father: {fileID: 110469413}
   m_LocalEulerAnglesHint: {x: 2.887, y: -0.25, z: 0.225}
---- !u!114 &1734412485
-MonoBehaviour:
+--- !u!54 &1734412485
+Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1734412479}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a8c8fa8055ed2a4dbb066497d68ab50, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isKitchenNametag: 1
-  guestName: Emma
-  guestDescription: 
-  nametagRenderer: {fileID: 1734412483}
-  nameText: {fileID: 0}
-  tmpText: {fileID: 0}
-  nametagCollider: {fileID: 1734412481}
-  pickupDistance: 2
-  isPickedUp: 0
-  interactKey: 101
-  disablePhysicsWhenPlaced: 1
-  isPlaced: 0
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1735884468
 GameObject:
   m_ObjectHideFlags: 0
@@ -26436,7 +26156,6 @@ GameObject:
   - component: {fileID: 1838966326}
   - component: {fileID: 1838966327}
   - component: {fileID: 1838966328}
-  - component: {fileID: 1838966329}
   m_Layer: 10
   m_Name: calvinnametag
   m_TagString: Calvin
@@ -26571,33 +26290,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1838966322}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a81a7940cf255c4c9d236b3f6d3a537, type: 3}
+  m_Script: {fileID: 11500000, guid: 83dc7b34223b2fd4b8b59010316efdfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1838966329
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1838966322}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a8c8fa8055ed2a4dbb066497d68ab50, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isKitchenNametag: 1
-  guestName: Calvin
-  guestDescription: 
-  nametagRenderer: {fileID: 0}
-  nameText: {fileID: 0}
-  tmpText: {fileID: 0}
-  nametagCollider: {fileID: 1838966326}
-  pickupDistance: 2
-  isPickedUp: 0
+  associatedQuest: {fileID: 11400000, guid: 079958ddc4b28084face6cc392bc0a3c, type: 2}
+  objectiveIndex: 0
+  destroyOnCollect: 1
+  playerTag: Player
+  requireButtonPress: 0
   interactKey: 101
-  disablePhysicsWhenPlaced: 1
-  isPlaced: 0
 --- !u!1 &1841730156
 GameObject:
   m_ObjectHideFlags: 0
@@ -27866,6 +27567,7 @@ GameObject:
   - component: {fileID: 1890525664}
   - component: {fileID: 1890525665}
   - component: {fileID: 1890525666}
+  - component: {fileID: 1890525667}
   m_Layer: 7
   m_Name: placepoint
   m_TagString: Untagged
@@ -27908,8 +27610,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 62.015945, y: 12.375977, z: 2.0452352}
-  m_Center: {x: 3.7169118, y: 4.1298633, z: -0.52261966}
+  m_Size: {x: 28.84918, y: 12.375977, z: 2.0452352}
+  m_Center: {x: 0.689364, y: 4.1298633, z: -0.52261966}
 --- !u!114 &1890525665
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27943,9 +27645,42 @@ MonoBehaviour:
   showPromptWhenInRange: 1
   guestInfoLabel: {fileID: 0}
   showDebugVisuals: 1
-  availableColor: {r: 0, g: 1, b: 0, a: 1}
-  occupiedColor: {r: 1, g: 0, b: 0, a: 1}
+  availableColor:
+    r: 0
+    g: 1
+    b: 0
+    a: 1
+  occupiedColor:
+    r: 1
+    g: 0
+    b: 0
+    a: 1
   gizmoSphereSize: 0.1
+  hasNameTag: 0
+  currentGuestName: 
+  tableController: {fileID: 0}
+  playerTransform: {fileID: 0}
+  playerInRange: 0
+--- !u!114 &1890525667
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1890525662}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1060dc725b013744e9d6ab7c1f4dd130, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  associatedQuest: {fileID: 11400000, guid: ecd10f3f38419c84995e456cb15313ab, type: 2}
+  objectiveIndex: 0
+  playerTag: Player
+  requireButtonPress: 1
+  interactKey: 101
+  placedItemPrefab: {fileID: 1278748566}
+  interactionPrompt: {fileID: 2117619540}
+  promptText: Luca
 --- !u!1 &1892400854
 GameObject:
   m_ObjectHideFlags: 0
@@ -27956,7 +27691,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1892400855}
   - component: {fileID: 1892400856}
-  - component: {fileID: 1892400857}
   m_Layer: 0
   m_Name: Chair_1
   m_TagString: Untagged
@@ -28034,27 +27768,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!65 &1892400857
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1892400854}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 23.172071, y: 46.449577, z: 0.20000003}
-  m_Center: {x: 3.6737912, y: -4.1815004, z: 1.5232407e-10}
 --- !u!1 &1898579621
 GameObject:
   m_ObjectHideFlags: 0
@@ -29407,7 +29120,6 @@ GameObject:
   - component: {fileID: 1965089420}
   - component: {fileID: 1965089422}
   - component: {fileID: 1965089424}
-  - component: {fileID: 1965089425}
   m_Layer: 7
   m_Name: Gramafon_JUNI
   m_TagString: Untagged
@@ -29521,28 +29233,6 @@ MonoBehaviour:
   musicClip: {fileID: 8300000, guid: 3c68e08a4670fc24ca19a92d2cde98f6, type: 3}
   volumeLevel: 0.5
   fadeTime: 0.5
---- !u!114 &1965089425
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1965089419}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 357fe0bbd4a916f43b4575f34d1ff706, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gramophone: {fileID: 1965089424}
-  interactionPoint: {fileID: 1965089421}
-  interactionPrompt: {fileID: 1053052195}
-  interactionDistance: 3
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  interactKey: 101
-  musicQuest: {fileID: 11400000, guid: 894f28788adc80e469ab0cffe987f423, type: 2}
-  musicObjectiveIndex: 0
 --- !u!1 &1968817977
 GameObject:
   m_ObjectHideFlags: 0
@@ -29642,8 +29332,6 @@ GameObject:
   - component: {fileID: 1977498799}
   - component: {fileID: 1977498798}
   - component: {fileID: 1977498797}
-  - component: {fileID: 1977498801}
-  - component: {fileID: 1977498802}
   m_Layer: 10
   m_Name: Susan
   m_TagString: Nico
@@ -29744,7 +29432,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: cde4a4a91ed2f8b4597914daaaa28696, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -29769,42 +29457,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1293020806}
   m_LocalEulerAnglesHint: {x: 3.013, y: -0.314, z: -0.283}
---- !u!114 &1977498801
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1977498796}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a81a7940cf255c4c9d236b3f6d3a537, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1977498802
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1977498796}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a8c8fa8055ed2a4dbb066497d68ab50, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isKitchenNametag: 1
-  guestName: Susan
-  guestDescription: 
-  nametagRenderer: {fileID: 1977498799}
-  nameText: {fileID: 0}
-  tmpText: {fileID: 0}
-  nametagCollider: {fileID: 1293020807}
-  pickupDistance: 2
-  isPickedUp: 0
-  interactKey: 101
-  disablePhysicsWhenPlaced: 1
-  isPlaced: 0
 --- !u!1 &1978412638
 GameObject:
   m_ObjectHideFlags: 0
@@ -30440,7 +30092,6 @@ GameObject:
   - component: {fileID: 1996437912}
   - component: {fileID: 1996437914}
   - component: {fileID: 1996437915}
-  - component: {fileID: 1996437916}
   m_Layer: 10
   m_Name: susannametag
   m_TagString: Susan
@@ -30575,33 +30226,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1996437909}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a81a7940cf255c4c9d236b3f6d3a537, type: 3}
+  m_Script: {fileID: 11500000, guid: 83dc7b34223b2fd4b8b59010316efdfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1996437916
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1996437909}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a8c8fa8055ed2a4dbb066497d68ab50, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isKitchenNametag: 1
-  guestName: Susan
-  guestDescription: 
-  nametagRenderer: {fileID: 0}
-  nameText: {fileID: 0}
-  tmpText: {fileID: 0}
-  nametagCollider: {fileID: 1996437912}
-  pickupDistance: 2
-  isPickedUp: 0
+  associatedQuest: {fileID: 11400000, guid: 079958ddc4b28084face6cc392bc0a3c, type: 2}
+  objectiveIndex: 3
+  destroyOnCollect: 1
+  playerTag: Player
+  requireButtonPress: 0
   interactKey: 101
-  disablePhysicsWhenPlaced: 1
-  isPlaced: 0
 --- !u!1 &1996785350
 GameObject:
   m_ObjectHideFlags: 0
@@ -30993,37 +30626,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &2009526354
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2009526355}
-  m_Layer: 0
-  m_Name: PlayerHoldPoint
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2009526355
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2009526354}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.677, y: 0.429, z: 0.043}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1251371577}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2039228460
 GameObject:
   m_ObjectHideFlags: 0
@@ -31166,7 +30768,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 137}
+  m_AnchoredPosition: {x: 0, y: -155}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2051296499
@@ -31477,15 +31079,13 @@ GameObject:
   - component: {fileID: 2080282968}
   - component: {fileID: 2080282966}
   - component: {fileID: 2080282965}
-  - component: {fileID: 2080282970}
-  - component: {fileID: 2080282971}
   m_Layer: 10
   m_Name: Calvin
   m_TagString: Lisa
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!54 &2080282965
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -31532,8 +31132,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 77.50832, y: 109.625, z: 0.20000008}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 77.50832, y: 182.06393, z: 0.45422095}
+  m_Center: {x: 0.030443415, y: 40.056087, z: -0.19861278}
 --- !u!212 &2080282968
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -31579,7 +31179,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: bf0cbf313c494cf48ad89b551990f590, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -31604,42 +31204,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 140621838}
   m_LocalEulerAnglesHint: {x: 3.336, y: -0.108, z: -0.036}
---- !u!114 &2080282970
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2080282964}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a81a7940cf255c4c9d236b3f6d3a537, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &2080282971
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2080282964}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a8c8fa8055ed2a4dbb066497d68ab50, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isKitchenNametag: 1
-  guestName: Calvin
-  guestDescription: 
-  nametagRenderer: {fileID: 2080282968}
-  nameText: {fileID: 0}
-  tmpText: {fileID: 0}
-  nametagCollider: {fileID: 140621839}
-  pickupDistance: 2
-  isPickedUp: 0
-  interactKey: 101
-  disablePhysicsWhenPlaced: 1
-  isPlaced: 0
 --- !u!1 &2082032283
 GameObject:
   m_ObjectHideFlags: 0
@@ -32238,7 +31802,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 137}
+  m_AnchoredPosition: {x: 0, y: -155}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2117619542

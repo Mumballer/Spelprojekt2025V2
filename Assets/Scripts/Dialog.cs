@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class Dialog
+[CreateAssetMenu(fileName = "New Dialog", menuName = "Dialog/Conversation")]
+public class Dialog : ScriptableObject
 {
     [SerializeField] List<DialogLine> lines = new List<DialogLine>();
 

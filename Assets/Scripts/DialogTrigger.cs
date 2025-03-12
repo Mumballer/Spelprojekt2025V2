@@ -107,19 +107,33 @@ public class DialogTrigger : MonoBehaviour
 
     public void TriggerDialog()
     {
-        if (dialog != null && DialogManager.Instance != null && DialogManager.Instance.CanStartDialog())
+        if (dialog == null)
+        {
+            Debug.LogError("Dialog is null!");
+            return;
+        }
+        
+        if (dialog.Lines == null)
+        {
+            Debug.LogError("Dialog Lines collection is null!");
+            return;
+        }
+        
+        if (dialog.Lines.Count == 0)
+        {
+            Debug.LogError("Dialog has 0 lines!");
+            return;
+        }
+        
+        if (DialogManager.Instance != null && DialogManager.Instance.CanStartDialog())
         {
             Debug.Log($"Triggering dialog from {gameObject.name}");
             StartCoroutine(DialogManager.Instance.ShowDialog(dialog));
-
+            
             if (interactionPrompt != null)
             {
                 interactionPrompt.SetActive(false);
             }
-        }
-        else
-        {
-            Debug.LogWarning($"Failed to trigger dialog from {gameObject.name}. Dialog: {(dialog == null ? "null" : "valid")}, DialogManager: {(DialogManager.Instance == null ? "null" : "valid")}, CanStartDialog: {(DialogManager.Instance != null ? DialogManager.Instance.CanStartDialog().ToString() : "N/A")}");
         }
     }
 

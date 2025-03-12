@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c3ceb0f901fe7a4d991bfe619c2f728, type: 3}
+  m_Name: FollowUp
+  m_EditorClassIdentifier: 
+  questName: Place down the nametags in the right spots.
+  description: 
+  objectives:
+  - {fileID: 11400000, guid: f526bbe9a0a49f24ab62f8ff49f59f71, type: 2}
+  - {fileID: 11400000, guid: 351e2ea1bc26100499ea8f66e1d64ed0, type: 2}
+  - {fileID: 11400000, guid: 5146e59a4c9ed2941bee8fc473d05c62, type: 2}
+  - {fileID: 11400000, guid: cf6aa253318459c45b7128e25a132b4b, type: 2}
+  - {fileID: 11400000, guid: 479b55152260a2c45aae1d39b8e07724, type: 2}
+  - {fileID: 11400000, guid: fb6426842994fbf41850f66b90a7d2b4, type: 2}
+  isActive: 0
+  isCompleted: 0
