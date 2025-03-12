@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a40bc76f94580a1448e1863f4dcb27a1, type: 3}
+  m_Name: Followup1
+  m_EditorClassIdentifier: 
+  questName: Place the items under the globes
+  description: 
+  objectives:
+  - {fileID: 11400000, guid: 33eddd33e5d5d644582892cf4336c59b, type: 2}
+  - {fileID: 11400000, guid: f4ffae05044934a4c82597a5d6f738c2, type: 2}
+  - {fileID: 11400000, guid: 86092fb74c19069419208dd2b2a02c56, type: 2}
+  - {fileID: 11400000, guid: 880c92d851f9a584294e065faac4905e, type: 2}
+  - {fileID: 11400000, guid: 630bd5401b5ddb34fa4c68db189cff85, type: 2}
+  - {fileID: 11400000, guid: 017d22c5f1cfc1e41b2e835b1785676e, type: 2}
+  isActive: 0
+  isCompleted: 0

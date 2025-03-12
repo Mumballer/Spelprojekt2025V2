@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
+using System.Linq;
 
 public class QuestUI : MonoBehaviour
 {
@@ -82,16 +83,18 @@ public class QuestUI : MonoBehaviour
     {
         if (currentQuest == null) return;
         
-        // Set the quest title
+        // Set the quest title - ALWAYS use quest name
         if (questTitleText != null)
         {
             questTitleText.text = currentQuest.questName;
+            Debug.Log($"Setting title text to: {currentQuest.questName}");
         }
         
-        // Set the quest description
+        // Set the quest description - ALWAYS use quest description
         if (questDescriptionText != null)
         {
             questDescriptionText.text = currentQuest.description;
+            Debug.Log($"Setting description text to: {currentQuest.description}");
         }
         
         // Update the status
@@ -106,7 +109,12 @@ public class QuestUI : MonoBehaviour
             {
                 questStatusText.text = "[IN PROGRESS]";
                 questStatusText.color = inProgressColor;
+                
+                // Optional: Add progress info
+                int completedObjectives = currentQuest.objectives.Count(o => o.isCompleted);
+                questStatusText.text += $" ({completedObjectives}/{currentQuest.objectives.Count})";
             }
+            Debug.Log($"Setting status text to: {questStatusText.text}");
         }
     }
     
