@@ -156,7 +156,7 @@ public class QuestManager : MonoBehaviour
         {
             // All quests in the sequence are completed
             Debug.Log($"Completed all quests in sequence: {activeSequence.sequenceName}");
-            UIManager.Instance.ShowNotification("All tasks completed!");
+            UIManager.Instance.UpdateQuestText("All tasks completed!");
         }
     }
 }

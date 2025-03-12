@@ -9,10 +9,7 @@ public class DialogTrigger : MonoBehaviour
     [SerializeField] public float triggerDistance = 3f;
     [SerializeField] public GameObject interactionPrompt;
 
-    [Header("Quest Integration")]
-    [SerializeField] private Quest questToComplete;
-    [SerializeField] private int objectiveIndex;
-    [SerializeField] private bool completeQuestAfterDialog = false;
+
 
     private Transform playerTransform;
     private bool hasTriggered = false;
@@ -126,13 +123,15 @@ public class DialogTrigger : MonoBehaviour
     // Handle quest completion after dialog
     private void OnDialogCompleted(Dialog completedDialog)
     {
-        if (completedDialog == dialog && completeQuestAfterDialog &&
-            questToComplete != null && QuestManager.Instance != null)
+        if (completedDialog == dialog)
         {
-            if (QuestManager.Instance.IsQuestActive(questToComplete))
+            // Get the TalkQuest component on the same GameObject
+            TalkQuest talkQuest = GetComponent<TalkQuest>();
+
+            if (talkQuest != null && QuestManager.Instance.IsQuestActive(talkQuest.id))
             {
-                QuestManager.Instance.CompleteObjective(questToComplete, objectiveIndex);
-                Debug.Log($"Dialog completed quest {questToComplete.questName}, objective {objectiveIndex}");
+                QuestManager.Instance.CompleteQuest(talkQuest.id);
+                Debug.Log($"Talk quest completed: {talkQuest.questTitle}");
             }
         }
     }

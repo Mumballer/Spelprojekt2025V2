@@ -12,8 +12,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI questText;
     [SerializeField] private TextMeshProUGUI nameTagCounter;
     [SerializeField] private GameObject notificationPanel;
-    [SerializeField] private TextMeshProUGUI notificationText;
-    [SerializeField] private float notificationDuration = 3f;
+    
 
     private Coroutine notificationCoroutine;
 
@@ -65,29 +64,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void ShowNotification(string message)
-    {
-        if (notificationPanel != null && notificationText != null)
-        {
-            // Stop any existing notification
-            if (notificationCoroutine != null)
-            {
-                StopCoroutine(notificationCoroutine);
-            }
 
-            // Start new notification
-            notificationCoroutine = StartCoroutine(ShowNotificationForDuration(message, notificationDuration));
-        }
-    }
 
-    private IEnumerator ShowNotificationForDuration(string message, float duration)
-    {
-        notificationPanel.SetActive(true);
-        notificationText.text = message;
 
-        yield return new WaitForSeconds(duration);
-
-        notificationPanel.SetActive(false);
-        notificationCoroutine = null;
-    }
 }

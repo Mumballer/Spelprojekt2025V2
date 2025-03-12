@@ -1,32 +1,32 @@
 using UnityEngine;
 using UnityEngine.Events;
 
+[RequireComponent(typeof(Collider))]
 public class Interactable : MonoBehaviour
 {
-    public float interactionDistance = 2f;
     public UnityEvent onInteract;
-    public string promptText = "Press E to interact";
-    public string hoverHighlightColor = "#FFFF00"; // Yellow highlight color in hex
 
-    private bool isPlayerInRange = false;
-    private SpriteRenderer spriteRenderer;
-    private Color originalColor;
-    private bool isHighlighted = false;
+    private bool playerInZone = false;
 
-    private void Awake()
+    private void Start()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        if (spriteRenderer != null)
+        // Ensure this object has a collider and it's set to trigger
+        Collider col = GetComponent<Collider>();
+        if (col != null)
         {
-            originalColor = spriteRenderer.color;
+            col.isTrigger = true;
+        }
+        else
+        {
+            Debug.LogError($"Interactable object {gameObject.name} needs a Collider!");
         }
     }
 
     private void Update()
     {
-        if (isPlayerInRange && Input.GetKeyDown(KeyCode.E))
+        if (playerInZone && Input.GetKeyDown(KeyCode.E))
         {
-            onInteract?.Invoke();
+            onInteract.Invoke();
         }
     }
 
@@ -34,12 +34,8 @@ public class Interactable : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            isPlayerInRange = true;
-            // Show interaction prompt
-            UIManager.Instance.ShowInteractPrompt(promptText);
-
-            // Highlight object if it has a sprite renderer
-            HighlightObject(true);
+            playerInZone = true;
+            UIManager.Instance.UpdateQuestText("Press E to interact.");
         }
     }
 
@@ -47,49 +43,8 @@ public class Interactable : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            isPlayerInRange = false;
-            // Hide interaction prompt
-            UIManager.Instance.HideInteractPrompt();
-
-            // Remove highlight
-            HighlightObject(false);
-        }
-    }
-
-    // Method to highlight object when player is nearby
-    private void HighlightObject(bool highlight)
-    {
-        if (spriteRenderer != null && highlight != isHighlighted)
-        {
-            isHighlighted = highlight;
-
-            if (highlight)
-            {
-                // Color.TryParseHexString is available in newer Unity versions
-                if (ColorUtility.TryParseHtmlString(hoverHighlightColor, out Color highlightColor))
-                {
-                    // Keep the original alpha
-                    highlightColor.a = originalColor.a;
-                    spriteRenderer.color = highlightColor;
-                }
-            }
-            else
-            {
-                // Restore original color
-                spriteRenderer.color = originalColor;
-            }
-        }
-    }
-
-    // Call this to update the original color (useful for name tags whose alpha changes)
-    public void UpdateOriginalColor(Color newColor)
-    {
-        originalColor = newColor;
-
-        // If not highlighted, apply the new color immediately
-        if (!isHighlighted && spriteRenderer != null)
-        {
-            spriteRenderer.color = originalColor;
+            playerInZone = false;
+            UIManager.Instance.UpdateQuestText(""); // Clear message
         }
     }
 }

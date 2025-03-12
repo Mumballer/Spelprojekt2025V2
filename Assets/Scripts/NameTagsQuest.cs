@@ -66,7 +66,7 @@ public class NameTagsQuest : Quest
         sourceRenderer.color = sourceColor;
 
         // Update UI to show player is holding a name tag
-        UIManager.Instance.ShowNotification("You picked up a name tag. Place it on the table.");
+        UIManager.Instance.UpdateQuestText("You picked up a name tag. Place it on the table.");
     }
 
     private void PlaceNameTag(GameObject placeholder)
@@ -84,7 +84,7 @@ public class NameTagsQuest : Quest
             Collider playerCollider = GameObject.FindGameObjectWithTag("Player").GetComponent<Collider>();
             if (!tableArea.bounds.Intersects(playerCollider.bounds))
             {
-                UIManager.Instance.ShowNotification("You need to be closer to the table.");
+                UIManager.Instance.UpdateQuestText("You need to be closer to the table.");
                 return;
             }
         }
@@ -108,12 +108,12 @@ public class NameTagsQuest : Quest
 
         // Update UI to show progress
         UIManager.Instance.UpdateNameTagCounter(placedNameTags, requiredNameTags);
-        UIManager.Instance.ShowNotification($"Name tag placed! {placedNameTags}/{requiredNameTags}");
+        UIManager.Instance.UpdateQuestText($"Name tag placed! {placedNameTags}/{requiredNameTags}");
 
         // Check if all name tags are placed
         if (placedNameTags >= requiredNameTags)
         {
-            UIManager.Instance.ShowNotification("All name tags have been placed!");
+            UIManager.Instance.UpdateQuestText("All name tags have been placed!");
             QuestManager.Instance.CompleteQuest(id);
         }
     }

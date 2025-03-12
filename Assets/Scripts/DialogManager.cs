@@ -142,22 +142,15 @@ public class DialogManager : MonoBehaviour
 
     public IEnumerator ShowDialog(Dialog dialog)
     {
-        if (isOnCooldown || dialog == null || dialog.Lines == null || dialog.Lines.Count == 0)
-        {
-            Debug.Log(isOnCooldown ? "Dialog on cooldown" : "Invalid dialog data");
-            yield break;
-        }
+        Cursor.lockState = CursorLockMode.None; // Unlock the cursor
+        Cursor.visible = true; // Make sure it's visible
 
         yield return new WaitForEndOfFrame();
 
-        // Fire the event BEFORE setting IsDialogActive
         OnShowDialog?.Invoke();
         IsDialogActive = true;
 
         playerController?.SetCanMove(false);
-
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
 
         this.dialog = dialog;
         currentLine = 0;
@@ -166,6 +159,7 @@ public class DialogManager : MonoBehaviour
 
         typingCoroutine = StartCoroutine(TypeDialog(dialog.Lines[0]));
     }
+
 
     public void HandleUpdate()
     {
@@ -259,9 +253,11 @@ public class DialogManager : MonoBehaviour
             Debug.LogError("Missing required components for showing choices");
             return;
         }
+
+        // Clear old choices
         foreach (var btn in new List<GameObject>(currentChoiceButtons))
         {
-            if (btn != null && btn != choiceButtonPrefab)
+            if (btn != null)
             {
                 Destroy(btn);
             }
@@ -269,66 +265,26 @@ public class DialogManager : MonoBehaviour
         currentChoiceButtons.Clear();
 
         choicesContainer.SetActive(true);
-        choiceButtonPrefab.SetActive(false);
 
         for (int i = 0; i < choices.Count; i++)
         {
             DialogChoice choice = choices[i];
             if (choice == null) continue;
 
+            // Instantiate new button from prefab
             GameObject buttonObj = Instantiate(choiceButtonPrefab, choicesContainer.transform);
             buttonObj.name = $"ChoiceButton_{i}";
-            buttonObj.SetActive(true);
+            buttonObj.SetActive(true); // Ensure it's active
 
-
-            DialogChoiceButton choiceButton = buttonObj.GetComponent<DialogChoiceButton>();
-            if (choiceButton != null)
-            {
-                choiceButton.SetText(choice.Text);
-            }
-            else
-            {
-
-                TextMeshProUGUI buttonText = buttonObj.GetComponentInChildren<TextMeshProUGUI>();
-                if (buttonText != null)
-                {
-                    buttonText.text = choice.Text;
-
-                    buttonText.alignment = TextAlignmentOptions.Center;
-                    OptimizeButtonText(buttonText, maxButtonWidth);
-                    RectTransform textRectTransform = buttonText.GetComponent<RectTransform>();
-                    if (textRectTransform != null)
-                    {
-                        textRectTransform.anchorMin = new Vector2(0, 0);
-                        textRectTransform.anchorMax = new Vector2(1, 1);
-                        textRectTransform.pivot = new Vector2(0.5f, 0.5f);
-                        textRectTransform.offsetMin = new Vector2(10, 5);
-                        textRectTransform.offsetMax = new Vector2(-10, -5);
-                    }
-                }
-
-                LayoutElement layoutElement = buttonObj.GetComponent<LayoutElement>();
-                if (layoutElement == null)
-                {
-                    layoutElement = buttonObj.AddComponent<LayoutElement>();
-                    layoutElement.minWidth = 160f;
-                    layoutElement.minHeight = 50f;
-                }
-
-                ContentSizeFitter buttonFitter = buttonObj.GetComponent<ContentSizeFitter>();
-                if (buttonFitter == null)
-                {
-                    buttonFitter = buttonObj.AddComponent<ContentSizeFitter>();
-                    buttonFitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
-                    buttonFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
-                }
-            }
-
+            // Ensure button component exists and add event listener
             Button button = buttonObj.GetComponent<Button>();
             if (button != null)
             {
-                DialogChoice currentChoice = choice;
-                button.onClick.AddListener(() => {
+                button.onClick.RemoveAllListeners(); // Prevent duplicate listeners
+                DialogChoice currentChoice = choice; // Store in local variable to avoid closure issue
+                button.onClick.AddListener(() =>
+                {
+                    Debug.Log($"Button clicked: {currentChoice.Text}");
                     if (currentChoice.Quest != null)
                     {
                         QuestManager.Instance?.AddQuest(currentChoice.Quest);
@@ -336,12 +292,29 @@ public class DialogManager : MonoBehaviour
                     StartCoroutine(CleanupAndContinueDialog(currentChoice.NextDialog));
                 });
             }
+            else
+            {
+                Debug.LogError("DialogChoiceButton prefab is missing a Button component!");
+            }
+
+            // Set button text
+            DialogChoiceButton choiceButton = buttonObj.GetComponent<DialogChoiceButton>();
+            if (choiceButton != null)
+            {
+                choiceButton.SetText(choice.Text);
+            }
+            else
+            {
+                Debug.LogError("DialogChoiceButton prefab is missing the DialogChoiceButton script!");
+            }
 
             currentChoiceButtons.Add(buttonObj);
         }
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(choicesContainer.GetComponent<RectTransform>());
     }
+
+
 
     private void OptimizeButtonText(TextMeshProUGUI textComponent, float maxWidth)
     {
