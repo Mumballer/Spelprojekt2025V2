@@ -44,22 +44,32 @@ public class QuestManager : MonoBehaviour
         }
     }
 
+
     public void AddQuest(Quest quest)
     {
-        // This should only be called by QuestGiver, never automatically
-        if (activeQuests.Contains(quest) || completedQuests.Contains(quest))
-            return;
+        // Add detailed logging
+        Debug.Log($"<color=green>QUEST SYSTEM: Adding quest '{quest.questName}'</color>");
 
-        quest.isActive = true;
+        // Log objectives status
+        if (quest.objectives != null && quest.objectives.Count > 0)
+        {
+            Debug.Log($"<color=green>QUEST '{quest.questName}' has {quest.objectives.Count} objectives:</color>");
+            for (int i = 0; i < quest.objectives.Count; i++)
+            {
+                var obj = quest.objectives[i];
+                Debug.Log($"<color=green>  - Objective {i}: '{obj.description}' | Completed: {obj.isCompleted}</color>");
+            }
+        }
+        else
+        {
+            Debug.Log($"<color=green>QUEST '{quest.questName}' has no objectives!</color>");
+        }
+
+        // Existing code...
         activeQuests.Add(quest);
-
-        // Play sound or show effects when quest is added
-        // AudioManager.Instance?.PlaySound("quest_accept");
-
-        // Invoke the event for listeners (like QuestUI)
         OnQuestStarted?.Invoke(quest);
 
-        Debug.Log($"Quest started: {quest.questName}");
+        Debug.Log($"<color=green>QUEST SYSTEM: Active quests now: {activeQuests.Count}</color>");
     }
 
     public void StartQuest(Quest quest)

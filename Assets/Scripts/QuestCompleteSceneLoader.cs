@@ -16,8 +16,9 @@ public class QuestCompleteSceneLoader : MonoBehaviour
     
     [Header("Check Settings")]
     [SerializeField] private float initialDelay = 5f; // Delay before loader becomes active
-    [SerializeField] private bool checkOnStart = true; // Check when script starts
-    [SerializeField] private bool checkContinuously = false; // Check periodically
+    [SerializeField] private bool checkOnStart = false; // Set this to FALSE
+    [SerializeField] private bool checkContinuously = false; // Set this to FALSE
+    [SerializeField] private bool requireExplicitCompletion = true; // Add this field
     [SerializeField] private float checkInterval = 1f; // How often to check (seconds)
     
     private float timeSinceLastCheck = 0f;
@@ -100,6 +101,36 @@ public class QuestCompleteSceneLoader : MonoBehaviour
         if (!isActive) return;
         
         if (QuestManager.Instance == null || isLoading) return;
+        
+        // Add this diagnostic code
+        Debug.Log("=== QUEST CHECK DIAGNOSTICS ===");
+        if (QuestManager.Instance.completedQuests != null)
+        {
+            Debug.Log($"Total completed quests: {QuestManager.Instance.completedQuests.Count}");
+            foreach (var q in QuestManager.Instance.completedQuests)
+            {
+                Debug.Log($"Quest in completed list: {q.questName}");
+            }
+        }
+        
+        if (questReferenceToCheck != null)
+        {
+            Debug.Log($"Checking quest by reference: {questReferenceToCheck.questName}");
+            Debug.Log($"Has objectives: {questReferenceToCheck.objectives != null && questReferenceToCheck.objectives.Count > 0}");
+            if (questReferenceToCheck.objectives != null)
+            {
+                foreach (var obj in questReferenceToCheck.objectives)
+                {
+                    Debug.Log($"Objective: {obj.description}, Completed: {obj.isCompleted}");
+                }
+            }
+        }
+        
+        if (!string.IsNullOrEmpty(questNameToCheck))
+        {
+            Debug.Log($"Checking quest by name: {questNameToCheck}");
+        }
+        // End diagnostic code
         
         bool isComplete = false;
         

@@ -1,10 +1,12 @@
 using UnityEngine;
+using System.Collections;
 
 public class CollectibleItem : MonoBehaviour
 {
     [Header("Quest Settings")]
     [SerializeField] private Quest associatedQuest;
     [SerializeField] private int objectiveIndex;
+    [SerializeField] private bool findActiveQuestByName = true; // NEW - Find quest by name in active quests
 
     [Header("Collection Settings")]
     [SerializeField] private string playerTag = "Player";
@@ -24,6 +26,8 @@ public class CollectibleItem : MonoBehaviour
     private bool isPlayerInRange = false;
     private bool isCollected = false;
     private float hoverUITimer = 0f;
+    private float questCheckTimer = 0f;
+    private const float QUEST_CHECK_INTERVAL = 1.0f;
 
     private void Start()
     {
@@ -36,6 +40,35 @@ public class CollectibleItem : MonoBehaviour
         {
             hoverUIElement.SetActive(false);
         }
+        
+        // Try to connect to the active quest if it exists
+        if (associatedQuest != null && findActiveQuestByName)
+        {
+            StartCoroutine(TryReconnectToActiveQuest());
+        }
+    }
+
+    private IEnumerator TryReconnectToActiveQuest()
+    {
+        // Wait a moment for the quest system to initialize
+        yield return new WaitForSeconds(0.5f);
+        
+        if (QuestManager.Instance == null || associatedQuest == null)
+            yield break;
+            
+        string questName = associatedQuest.questName;
+        Debug.Log($"<color=cyan>Collectible trying to find active quest: {questName}</color>");
+        
+        // Look for an active quest with the same name
+        foreach (var quest in QuestManager.Instance.activeQuests)
+        {
+            if (quest.questName == questName)
+            {
+                associatedQuest = quest;  // Use the active quest instance
+                Debug.Log($"<color=cyan>Collectible connected to active quest: {questName}</color>");
+                yield break;
+            }
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -44,13 +77,24 @@ public class CollectibleItem : MonoBehaviour
         {
             isPlayerInRange = true;
 
+            // Update quest reference before checking status
+            if (findActiveQuestByName)
+                FindMatchingActiveQuest();
+
             bool shouldShowUI = true;
 
             // Check if we should only show UI for active quest items
             if (showOnlyForActiveQuest && associatedQuest != null)
             {
-                shouldShowUI = associatedQuest.IsActive &&
-                               !associatedQuest.objectives[objectiveIndex].isCompleted;
+                bool isQuestActive = CheckQuestIsActive();
+                bool isObjectiveCompleted = false;
+                
+                if (objectiveIndex >= 0 && objectiveIndex < associatedQuest.objectives.Count)
+                {
+                    isObjectiveCompleted = associatedQuest.objectives[objectiveIndex].isCompleted;
+                }
+                
+                shouldShowUI = isQuestActive && !isObjectiveCompleted;
             }
 
             if (shouldShowUI)
@@ -104,6 +148,17 @@ public class CollectibleItem : MonoBehaviour
 
     private void Update()
     {
+        // Periodically check for quest updates
+        questCheckTimer += Time.deltaTime;
+        if (questCheckTimer >= QUEST_CHECK_INTERVAL)
+        {
+            questCheckTimer = 0f;
+            if (findActiveQuestByName && associatedQuest != null)
+            {
+                FindMatchingActiveQuest();
+            }
+        }
+
         // Handle hover UI timer if it's set
         if (hoverUIDisplayTime > 0 && hoverUIElement != null && hoverUIElement.activeSelf)
         {
@@ -120,20 +175,70 @@ public class CollectibleItem : MonoBehaviour
         }
     }
 
+    // Find active quest with the same name
+    private bool FindMatchingActiveQuest()
+    {
+        if (associatedQuest == null || QuestManager.Instance == null)
+            return false;
+            
+        string questName = associatedQuest.questName;
+        
+        foreach (var quest in QuestManager.Instance.activeQuests)
+        {
+            if (quest.questName == questName)
+            {
+                associatedQuest = quest; // Update to the active instance
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+    // Check if quest is active, looking in the active quests list
+    private bool CheckQuestIsActive()
+    {
+        if (associatedQuest == null)
+            return false;
+            
+        // First check the property directly
+        if (associatedQuest.IsActive)
+            return true;
+            
+        // Then check if it's in the active quests list
+        if (QuestManager.Instance != null)
+        {
+            foreach (var quest in QuestManager.Instance.activeQuests)
+            {
+                if (quest.questName == associatedQuest.questName)
+                    return true;
+            }
+        }
+        
+        return false;
+    }
+
     public void CollectItem()
     {
         if (isCollected) return;
 
+        // Make sure we have the latest quest reference
+        if (findActiveQuestByName)
+            FindMatchingActiveQuest();
+
         if (associatedQuest != null && QuestManager.Instance != null)
         {
-            // Make sure the quest is active
-            if (!associatedQuest.IsActive)
+            // Make sure the quest is active - check in active quests list
+            bool isActive = CheckQuestIsActive();
+            Debug.Log($"<color=orange>CollectItem - Quest '{associatedQuest.questName}' active check: {isActive}</color>");
+            
+            if (!isActive)
             {
-                Debug.Log("Cannot collect item - quest is not active");
+                Debug.Log("<color=red>Cannot collect item - quest is not active</color>");
                 return;
             }
 
-            Debug.Log($"Completing objective {objectiveIndex} for quest {associatedQuest.questName}");
+            Debug.Log($"<color=green>Completing objective {objectiveIndex} for quest {associatedQuest.questName}</color>");
 
             // Complete this specific objective
             QuestManager.Instance.CompleteObjective(associatedQuest, objectiveIndex);

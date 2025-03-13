@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c3ceb0f901fe7a4d991bfe619c2f728, type: 3}
+  m_Name: PickupD2
+  m_EditorClassIdentifier: 
+  questName: Pickup the nametags from the counter
+  description: 
+  objectives:
+  - {fileID: 11400000, guid: 952d984fe7059374dbbbfa91424a6654, type: 2}
+  - {fileID: 11400000, guid: 60fb319366327334387a687da15bc641, type: 2}
+  - {fileID: 11400000, guid: a5c6979d02b230346bd651e930083e22, type: 2}
+  - {fileID: 11400000, guid: 8540a0edca362bc45bbf2f92d686221c, type: 2}
+  - {fileID: 11400000, guid: e35bfa123096efc49b1ec62c2233727f, type: 2}
+  - {fileID: 11400000, guid: 54160c8cf9649804887963fc43a92ab3, type: 2}
+  isActive: 0
+  isCompleted: 0
+  nextQuest: {fileID: 11400000, guid: f7e5dfb37c4650b4681e6dab4b79d991, type: 2}
