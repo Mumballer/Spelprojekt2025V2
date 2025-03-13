@@ -15,15 +15,33 @@ public class QuestCompleteSceneLoader : MonoBehaviour
     [SerializeField] private GameObject loadingScreenPrefab; // Optional loading screen
     
     [Header("Check Settings")]
+    [SerializeField] private float initialDelay = 5f; // Delay before loader becomes active
     [SerializeField] private bool checkOnStart = true; // Check when script starts
     [SerializeField] private bool checkContinuously = false; // Check periodically
     [SerializeField] private float checkInterval = 1f; // How often to check (seconds)
     
     private float timeSinceLastCheck = 0f;
     private bool isLoading = false;
+    private bool isActive = false; // Whether this loader is currently active
     
     private void Start()
     {
+        // Start with the loader inactive
+        isActive = false;
+        
+        // Start the activation delay
+        StartCoroutine(ActivateAfterDelay());
+    }
+    
+    private IEnumerator ActivateAfterDelay()
+    {
+        Debug.Log($"QuestCompleteSceneLoader will activate in {initialDelay} seconds");
+        yield return new WaitForSeconds(initialDelay);
+        
+        // Now activate the loader
+        isActive = true;
+        Debug.Log("QuestCompleteSceneLoader is now active");
+        
         // Subscribe to quest completion events
         if (QuestManager.Instance != null)
         {
@@ -48,6 +66,9 @@ public class QuestCompleteSceneLoader : MonoBehaviour
     
     private void Update()
     {
+        // Don't do anything until we're active
+        if (!isActive) return;
+        
         if (checkContinuously && !isLoading)
         {
             timeSinceLastCheck += Time.deltaTime;
@@ -62,6 +83,9 @@ public class QuestCompleteSceneLoader : MonoBehaviour
     // Event handler for quest completion
     private void HandleQuestCompleted(Quest quest)
     {
+        // Skip if not active yet
+        if (!isActive) return;
+        
         if (quest == questReferenceToCheck || 
             (!string.IsNullOrEmpty(questNameToCheck) && quest.questName == questNameToCheck))
         {
@@ -72,6 +96,9 @@ public class QuestCompleteSceneLoader : MonoBehaviour
     // Public method for manual checking (can be called by buttons, triggers, etc.)
     public void CheckQuestAndLoadScene()
     {
+        // Skip if not active yet
+        if (!isActive) return;
+        
         if (QuestManager.Instance == null || isLoading) return;
         
         bool isComplete = false;
@@ -115,7 +142,13 @@ public class QuestCompleteSceneLoader : MonoBehaviour
             return true;
         }
         
-        // Check if all objectives are complete
+        // Require at least one objective
+        if (quest.objectives == null || quest.objectives.Count == 0) 
+        {
+            return false; // Empty quests are not "complete"
+        }
+        
+        // Check all objectives
         bool allObjectivesComplete = true;
         foreach (var objective in quest.objectives)
         {

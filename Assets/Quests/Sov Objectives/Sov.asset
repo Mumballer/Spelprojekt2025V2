@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Sov
   m_EditorClassIdentifier: 
   description: Sleep
-  type: 1
+  type: 0
   itemID: 
   requiredAmount: 1
-  currentAmount: 0
-  isCompleted: 0
+  currentAmount: 1
+  isCompleted: 1

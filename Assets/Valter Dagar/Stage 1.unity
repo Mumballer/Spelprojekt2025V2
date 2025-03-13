@@ -12817,6 +12817,8 @@ MonoBehaviour:
   followUpQuests:
   - initialQuest: {fileID: 11400000, guid: 079958ddc4b28084face6cc392bc0a3c, type: 2}
     followUpQuest: {fileID: 11400000, guid: ecd10f3f38419c84995e456cb15313ab, type: 2}
+  - initialQuest: {fileID: 11400000, guid: ecd10f3f38419c84995e456cb15313ab, type: 2}
+    followUpQuest: {fileID: 11400000, guid: 95b00db5e85cff040a47da7a62ba9a36, type: 2}
 --- !u!114 &947302022
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12835,7 +12837,8 @@ MonoBehaviour:
   loadDelay: 1
   showLoadingScreen: 0
   loadingScreenPrefab: {fileID: 0}
-  checkOnStart: 1
+  initialDelay: 1
+  checkOnStart: 0
   checkContinuously: 0
   checkInterval: 3
 --- !u!1 &949431676
@@ -13880,7 +13883,7 @@ MonoBehaviour:
   playerTag: Player
   requireButtonPress: 1
   interactKey: 101
-  destroyOnCollect: 1
+  destroyOnCollect: 0
   interactionPrompt: {fileID: 49777793}
   promptText: Press E to collect
   hoverUIElement: {fileID: 0}
@@ -13901,7 +13904,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
