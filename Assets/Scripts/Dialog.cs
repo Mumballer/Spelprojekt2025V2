@@ -1,20 +1,34 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Dialog", menuName = "Dialog/Conversation")]
+[CreateAssetMenu(fileName = "New Dialog", menuName = "RPG/Dialog")]
 public class Dialog : ScriptableObject
 {
-    [SerializeField] List<DialogLine> lines = new List<DialogLine>();
-
+    // Use the standalone DialogLine class
+    [SerializeField] private List<DialogLine> lines = new List<DialogLine>();
+    
+    // Public accessor
     public List<DialogLine> Lines => lines;
+    
+    // Utility to quickly add lines
+    public void AddLine(string text, DialogCharacter character = null)
+    {
+        DialogLine newLine = new DialogLine();
+        // Set private fields through properties
+        newLine.SetText(text);
+        newLine.Character = character;
+        lines.Add(newLine);
+    }
 }
 
+// Keep only these standalone classes
 [System.Serializable]
 public class DialogLine
 {
-    [SerializeField] private string text = "";
+    [SerializeField] [TextArea(2, 5)] private string text = "";
     [SerializeField] private List<DialogChoice> choices = new List<DialogChoice>();
     [SerializeField] private DialogCharacter character;
+    [SerializeField] private Dialog nextDialog;
 
     public string Text => text;
     public List<DialogChoice> Choices => choices;
@@ -23,6 +37,13 @@ public class DialogLine
     {
         get => character;
         set => character = value;
+    }
+    public Dialog NextDialog => nextDialog;
+    
+    // Helper method to set text through reflection
+    public void SetText(string newText)
+    {
+        text = newText;
     }
 }
 

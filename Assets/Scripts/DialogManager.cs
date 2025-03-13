@@ -28,6 +28,10 @@ public class DialogManager : MonoBehaviour
     [SerializeField] private float interactionDistance = 3f;
     [SerializeField] private LayerMask interactableLayers;
 
+    [Header("Camera and Input Settings")]
+    [SerializeField] private bool lockCameraDuringDialog = true;
+    [SerializeField] private bool showCursorDuringDialog = true;
+
     public event Action OnShowDialog;
     public event Action OnHideDialog;
     public event Action<Dialog> OnDialogComplete; // New event for quest integration
@@ -43,6 +47,8 @@ public class DialogManager : MonoBehaviour
     private Camera mainCamera;
 
     public bool IsDialogActive { get; private set; }
+
+    private Queue<DialogLine> remainingLines = new Queue<DialogLine>();
 
     private void Awake()
     {
@@ -140,206 +146,234 @@ public class DialogManager : MonoBehaviour
         }
     }
 
-    public IEnumerator ShowDialog(Dialog dialog)
+    public void StartDialog(Dialog dialog)
     {
-        if (isOnCooldown || dialog == null || dialog.Lines == null || dialog.Lines.Count == 0)
-        {
-            Debug.Log(isOnCooldown ? "Dialog on cooldown" : "Invalid dialog data");
-            yield break;
-        }
-
-        yield return new WaitForEndOfFrame();
-
-        // Fire the event BEFORE setting IsDialogActive
-        OnShowDialog?.Invoke();
-        IsDialogActive = true;
-
-        playerController?.SetCanMove(false);
-
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-
+        if (dialog == null || dialog.Lines.Count == 0) return;
+        
         this.dialog = dialog;
         currentLine = 0;
+        remainingLines.Clear();
+        
+        // Queue up all lines in the dialog
+        foreach (var line in dialog.Lines)
+        {
+            remainingLines.Enqueue(line);
+        }
+        
+        // Lock camera and show cursor
+        if (lockCameraDuringDialog && mainCamera != null)
+        {
+            // Try to find components on the camera that handle look/rotation
+            var lookComponents = mainCamera.GetComponents<MonoBehaviour>();
+            foreach (var comp in lookComponents)
+            {
+                if (comp.GetType().Name.Contains("Look") || 
+                    comp.GetType().Name.Contains("Camera") ||
+                    comp.GetType().Name.Contains("Controller"))
+                {
+                    comp.enabled = false;
+                }
+            }
+        }
+        
+        if (showCursorDuringDialog)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+        
+        // Prevent player movement
+        playerController?.SetCanMove(false);
+        
+        // Show dialog panel
         dialogBox.SetActive(true);
-        Debug.Log($"Starting dialog with {dialog.Lines.Count} lines");
-
-        typingCoroutine = StartCoroutine(TypeDialog(dialog.Lines[0]));
+        IsDialogActive = true;
+        
+        // Start showing the first line
+        DisplayNextLine();
+        
+        OnShowDialog?.Invoke();
     }
 
-    public void HandleUpdate()
+    public void DisplayNextLine()
     {
-        if (Input.GetKeyDown(KeyCode.E) && !isTyping)
+        if (remainingLines.Count == 0)
         {
-            if (currentChoiceButtons.Count > 0)
-            {
-                return;
-            }
-
-            Debug.Log($"E pressed. Current line: {currentLine}, Total lines: {dialog.Lines.Count}");
-
-            if (currentLine >= dialog.Lines.Count - 1)
-            {
-                Debug.Log("On last line, ending dialog");
-                EndDialog();
-                return;
-            }
-
-            currentLine++;
-            Debug.Log($"Moving to line {currentLine}");
-            typingCoroutine = StartCoroutine(TypeDialog(dialog.Lines[currentLine]));
+            EndDialog();
+            return;
         }
-    }
-
-    private IEnumerator TypeDialog(DialogLine dialogLine)
-    {
-        if (dialogLine == null)
-        {
-            Debug.LogError("Dialog line is null");
-            yield break;
-        }
-
-        isTyping = true;
-        dialogText.text = "";
-
-        if (dialogLine.Character != null)
+        
+        // Get next line to display
+        DialogLine currentDialogLine = remainingLines.Dequeue();
+        
+        // Set the character information
+        if (currentDialogLine.Character != null)
         {
             portraitContainer.SetActive(true);
-            portraitImage.sprite = dialogLine.Character.portraitSprite;
-            characterNameText.text = dialogLine.Character.characterName;
+            portraitImage.sprite = currentDialogLine.Character.portraitSprite;
+            characterNameText.text = currentDialogLine.Character.characterName;
 
-            // Only adjust the portrait frame/image, not the container
-            if (portraitFrame != null)
-            {
-                float size = dialogLine.Character.portraitSize > 0 ? dialogLine.Character.portraitSize : defaultPortraitSize;
-                Vector2 offset = dialogLine.Character.portraitOffset != Vector2.zero ? dialogLine.Character.portraitOffset : defaultPortraitOffset;
+            // Set custom portrait size and position if specified
+            float portraitSize = currentDialogLine.Character.portraitSize > 0 
+                ? currentDialogLine.Character.portraitSize 
+                : defaultPortraitSize;
+                
+            Vector2 portraitOffset = currentDialogLine.Character.portraitOffset != Vector2.zero
+                ? currentDialogLine.Character.portraitOffset
+                : defaultPortraitOffset;
 
-                // Set the portrait image size
-                portraitFrame.sizeDelta = new Vector2(size, size);
-                portraitFrame.anchoredPosition = offset;
-
-                // Ensure the portrait image is centered within its frame
-                RectTransform imageRect = portraitImage.GetComponent<RectTransform>();
-                if (imageRect != null && imageRect != portraitFrame)
-                {
-                    imageRect.anchorMin = new Vector2(0.5f, 0.5f);
-                    imageRect.anchorMax = new Vector2(0.5f, 0.5f);
-                    imageRect.pivot = new Vector2(0.5f, 0.5f);
-                    imageRect.anchoredPosition = Vector2.zero;
-                    imageRect.sizeDelta = new Vector2(size, size);
-                }
-
-                // Log for debugging
-                Debug.Log($"Setting portrait for {dialogLine.Character.characterName}: Size={size}, Offset={offset}");
-            }
+            SetPortraitSizeAndPosition(portraitSize, portraitOffset);
+            
+            Debug.Log($"Setting portrait for {currentDialogLine.Character.characterName}: Size={portraitSize}, Offset={portraitOffset}");
         }
         else
         {
             portraitContainer.SetActive(false);
         }
+        
+        // Display the text
+        typingCoroutine = StartCoroutine(TypeText(currentDialogLine.Text));
+        
+        // Setup choices if any
+        if (currentDialogLine.HasChoices && currentDialogLine.Choices.Count > 0)
+        {
+            ShowChoices(currentDialogLine.Choices);
+        }
+        else if (currentDialogLine.NextDialog != null)
+        {
+            // Auto-proceed to next dialog functionality
+        }
+        
+        currentLine++; // This should be an integer already
+    }
 
-        foreach (var letter in dialogLine.Text.ToCharArray())
+    private IEnumerator TypeText(string text)
+    {
+        isTyping = true;
+        dialogText.text = "";
+        
+        foreach (var letter in text.ToCharArray())
         {
             dialogText.text += letter;
             yield return new WaitForSeconds(1f / lettersPerSecond);
         }
-
+        
         isTyping = false;
 
-        if (dialogLine.HasChoices)
+        if (currentLine < dialog.Lines.Count - 1)
         {
-            ShowChoices(dialogLine.Choices);
+            DisplayNextLine();
         }
     }
 
     private void ShowChoices(List<DialogChoice> choices)
     {
-        if (choices == null || choices.Count == 0 || choiceButtonPrefab == null)
+        if (choices == null || choices.Count == 0) return;
+        
+        // Clear previous choices
+        foreach (var btn in currentChoiceButtons)
         {
-            Debug.LogError("Missing required components for showing choices");
-            return;
-        }
-        foreach (var btn in new List<GameObject>(currentChoiceButtons))
-        {
-            if (btn != null && btn != choiceButtonPrefab)
-            {
-                Destroy(btn);
-            }
+            if (btn != null) Destroy(btn);
         }
         currentChoiceButtons.Clear();
-
+        
+        // Show the choices container
         choicesContainer.SetActive(true);
-        choiceButtonPrefab.SetActive(false);
-
-        for (int i = 0; i < choices.Count; i++)
+        
+        // Modify the layout group to prevent tiny buttons
+        VerticalLayoutGroup layoutGroup = choicesContainer.GetComponent<VerticalLayoutGroup>();
+        if (layoutGroup != null)
         {
-            DialogChoice choice = choices[i];
-            if (choice == null) continue;
-
+            layoutGroup.childControlWidth = false;  // Don't let layout control width
+            layoutGroup.childControlHeight = false; // Don't let layout control height
+            layoutGroup.childForceExpandWidth = false;
+            layoutGroup.childForceExpandHeight = false;
+            layoutGroup.spacing = 10f;
+        }
+        
+        // Create buttons for each choice
+        foreach (var choice in choices)
+        {
             GameObject buttonObj = Instantiate(choiceButtonPrefab, choicesContainer.transform);
-            buttonObj.name = $"ChoiceButton_{i}";
             buttonObj.SetActive(true);
-
-
-            DialogChoiceButton choiceButton = buttonObj.GetComponent<DialogChoiceButton>();
-            if (choiceButton != null)
+            
+            // Define textRect at this scope level so we can access it later
+            RectTransform buttonRect = null;
+            RectTransform textRect = null;
+            
+            // Ensure the button has a fixed size
+            buttonRect = buttonObj.GetComponent<RectTransform>();
+            if (buttonRect != null)
             {
-                choiceButton.SetText(choice.Text);
+                // Set a large explicit size for the button
+                buttonRect.sizeDelta = new Vector2(300f, 60f);
             }
-            else
+            
+            TextMeshProUGUI buttonText = buttonObj.GetComponentInChildren<TextMeshProUGUI>();
+            if (buttonText != null)
             {
-
-                TextMeshProUGUI buttonText = buttonObj.GetComponentInChildren<TextMeshProUGUI>();
-                if (buttonText != null)
+                buttonText.text = choice.Text;
+                buttonText.fontSize = 18;  // Explicit font size
+                
+                // Fix text component size
+                textRect = buttonText.GetComponent<RectTransform>();
+                if (textRect != null)
                 {
-                    buttonText.text = choice.Text;
-
-                    buttonText.alignment = TextAlignmentOptions.Center;
-                    OptimizeButtonText(buttonText, maxButtonWidth);
-                    RectTransform textRectTransform = buttonText.GetComponent<RectTransform>();
-                    if (textRectTransform != null)
-                    {
-                        textRectTransform.anchorMin = new Vector2(0, 0);
-                        textRectTransform.anchorMax = new Vector2(1, 1);
-                        textRectTransform.pivot = new Vector2(0.5f, 0.5f);
-                        textRectTransform.offsetMin = new Vector2(10, 5);
-                        textRectTransform.offsetMax = new Vector2(-10, -5);
-                    }
+                    // Make text fill most of the button
+                    textRect.sizeDelta = new Vector2(280f, 50f);
+                    textRect.anchorMin = new Vector2(0.5f, 0.5f);
+                    textRect.anchorMax = new Vector2(0.5f, 0.5f);
+                    textRect.pivot = new Vector2(0.5f, 0.5f);
+                    textRect.anchoredPosition = Vector2.zero;
                 }
-
-                LayoutElement layoutElement = buttonObj.GetComponent<LayoutElement>();
-                if (layoutElement == null)
-                {
-                    layoutElement = buttonObj.AddComponent<LayoutElement>();
-                    layoutElement.minWidth = 160f;
-                    layoutElement.minHeight = 50f;
-                }
-
-                ContentSizeFitter buttonFitter = buttonObj.GetComponent<ContentSizeFitter>();
-                if (buttonFitter == null)
-                {
-                    buttonFitter = buttonObj.AddComponent<ContentSizeFitter>();
-                    buttonFitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
-                    buttonFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
-                }
+                
+                // Set text display properties
+                buttonText.enableWordWrapping = true;
+                buttonText.horizontalAlignment = HorizontalAlignmentOptions.Center;
+                buttonText.verticalAlignment = VerticalAlignmentOptions.Middle;
+                buttonText.textWrappingMode = TextWrappingModes.Normal;
             }
-
+            
             Button button = buttonObj.GetComponent<Button>();
             if (button != null)
             {
-                DialogChoice currentChoice = choice;
+                // Make sure button has colors that are clearly visible
+                ColorBlock colors = button.colors;
+                colors.normalColor = new Color(0.9f, 0.9f, 0.9f, 1f);
+                colors.highlightedColor = new Color(1f, 1f, 0.8f, 1f);
+                button.colors = colors;
+                
+                // Store the choice for this button
+                DialogChoice choiceRef = choice;
+                
                 button.onClick.AddListener(() => {
-                    if (currentChoice.Quest != null)
+                    // Start any quest associated with this choice
+                    if (choiceRef.Quest != null && QuestManager.Instance != null)
                     {
-                        QuestManager.Instance?.AddQuest(currentChoice.Quest);
+                        QuestManager.Instance.AddQuest(choiceRef.Quest);
                     }
-                    StartCoroutine(CleanupAndContinueDialog(currentChoice.NextDialog));
+                    
+                    // Go to next dialog if specified
+                    if (choiceRef.NextDialog != null)
+                    {
+                        StartCoroutine(CleanupAndContinueDialog(choiceRef.NextDialog));
+                    }
+                    else
+                    {
+                        EndDialog();
+                    }
                 });
             }
-
+            
             currentChoiceButtons.Add(buttonObj);
-        }
 
+            // Log the sizes - now this will work properly
+            Debug.Log($"Button size: {(buttonRect != null ? buttonRect.sizeDelta.ToString() : "null")}");
+            Debug.Log($"Text size: {(textRect != null ? textRect.sizeDelta.ToString() : "null")}");
+        }
+        
+        // Force layout rebuild
+        Canvas.ForceUpdateCanvases();
         LayoutRebuilder.ForceRebuildLayoutImmediate(choicesContainer.GetComponent<RectTransform>());
     }
 
@@ -406,7 +440,7 @@ public class DialogManager : MonoBehaviour
         if (nextDialog != null)
         {
             Debug.Log("Starting next dialog sequence");
-            StartCoroutine(ShowDialog(nextDialog));
+            StartDialog(nextDialog);
         }
         else
         {
@@ -450,6 +484,22 @@ public class DialogManager : MonoBehaviour
         IsDialogActive = false;
         currentLine = 0;
 
+        // Make sure to re-enable camera if it was disabled
+        if (lockCameraDuringDialog && mainCamera != null)
+        {
+            // Try to find components on the camera that handle look/rotation
+            var lookComponents = mainCamera.GetComponents<MonoBehaviour>();
+            foreach (var comp in lookComponents)
+            {
+                if (comp.GetType().Name.Contains("Look") || 
+                    comp.GetType().Name.Contains("Camera") ||
+                    comp.GetType().Name.Contains("Controller"))
+                {
+                    comp.enabled = true;
+                }
+            }
+        }
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
@@ -476,5 +526,57 @@ public class DialogManager : MonoBehaviour
     public bool CanStartDialog()
     {
         return !isOnCooldown && !IsDialogActive;
+    }
+
+    public void HandleUpdate()
+    {
+        if (Input.GetKeyDown(KeyCode.E) && !isTyping)
+        {
+            if (currentChoiceButtons.Count > 0)
+            {
+                return;
+            }
+
+            Debug.Log($"E pressed. Current line: {currentLine}, Total lines: {dialog.Lines.Count}");
+
+            if (currentLine >= dialog.Lines.Count - 1)
+            {
+                Debug.Log("On last line, ending dialog");
+                EndDialog();
+                return;
+            }
+
+            currentLine++;
+            Debug.Log($"Moving to line {currentLine}");
+            typingCoroutine = StartCoroutine(TypeText(dialog.Lines[currentLine].Text));
+        }
+    }
+
+    public IEnumerator ShowDialog(Dialog dialog)
+    {
+        StartDialog(dialog);
+        yield break;
+    }
+
+    private void SetPortraitSizeAndPosition(float size, Vector2 offset)
+    {
+        // Only adjust the portrait frame/image, not the container
+        if (portraitFrame != null)
+        {
+            // Set the portrait image size
+            portraitFrame.sizeDelta = new Vector2(size, size);
+            portraitFrame.anchoredPosition = offset;
+
+            // Ensure the portrait image is centered within its frame
+            RectTransform imageRect = portraitImage.GetComponent<RectTransform>();
+            if (imageRect != null && imageRect != portraitFrame)
+            {
+                imageRect.anchorMin = new Vector2(0.5f, 0.5f);
+                imageRect.anchorMax = new Vector2(0.5f, 0.5f);
+                imageRect.pivot = new Vector2(0.5f, 0.5f);
+                imageRect.anchoredPosition = Vector2.zero;
+                imageRect.sizeDelta = new Vector2(size, size);
+            }
+        }
     }
 }

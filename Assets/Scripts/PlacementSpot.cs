@@ -132,6 +132,17 @@ public class PlacementSpot : MonoBehaviour
                 }
 
                 Debug.Log($"Item placed for objective {objectiveIndex} in quest {associatedQuest.questName}");
+
+                // Make sure the quest UI stays visible for this quest
+                if (QuestUI.Instance != null && QuestManager.Instance != null)
+                {
+                    // If this quest is still active, make sure the UI is showing
+                    if (QuestManager.Instance.activeQuests.Contains(associatedQuest))
+                    {
+                        QuestUI.Instance.ShowQuestPanel();
+                        Debug.Log("Making sure quest UI stays visible for active placement quest");
+                    }
+                }
             }
         }
     }
