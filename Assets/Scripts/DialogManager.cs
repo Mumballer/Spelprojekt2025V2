@@ -13,7 +13,7 @@ public class DialogManager : MonoBehaviour
     [SerializeField] int lettersPerSecond = 30;
     [SerializeField] GameObject choicesContainer;
     [SerializeField] GameObject choiceButtonPrefab;
-    [SerializeField] private float cooldownDuration = 5f;
+    [SerializeField] private float cooldownDuration = 3f;
     [SerializeField] private float maxButtonWidth = 350f;
 
     [Header("Portrait System")]
