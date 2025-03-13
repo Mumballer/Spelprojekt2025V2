@@ -21,5 +21,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5cb7e9f6aa8879a4aa1ef3eb38b8887d, type: 2}
   - {fileID: 11400000, guid: 5dd3a5a01a462ab4395739a44a2d8247, type: 2}
   - {fileID: 11400000, guid: 4cb385561651da743a8f9f99a7388624, type: 2}
-  isActive: 0
+  isActive: 1
   isCompleted: 0
+  nextQuest: {fileID: 11400000, guid: ecd10f3f38419c84995e456cb15313ab, type: 2}

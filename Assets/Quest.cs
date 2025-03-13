@@ -62,4 +62,17 @@ public class Quest : ScriptableObject
         
         return isCompleted;
     }
+    [Header("Quest Chaining")]
+    [Tooltip("The next quest to automatically start when this one completes")]
+    public Quest nextQuest;
+    public void ResetObjectives()
+    {
+        if (objectives == null)
+            return;
+
+        foreach (var objective in objectives)
+        {
+            objective.isCompleted = false;
+        }
+    }
 }

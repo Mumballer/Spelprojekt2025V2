@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float rotationSpeed = 10f;
 
     [Header("Camera Settings")]
-    [SerializeField] private Transform cameraTransform;
+    [SerializeField] public Transform cameraTransform;
     [SerializeField] private float mouseSensitivity = 2.0f;
     [SerializeField] private float lookUpLimit = 80f;
     [SerializeField] private float lookDownLimit = 80f;
