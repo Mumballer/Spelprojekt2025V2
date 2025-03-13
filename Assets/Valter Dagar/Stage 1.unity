@@ -12774,7 +12774,6 @@ GameObject:
   m_Component:
   - component: {fileID: 947302020}
   - component: {fileID: 947302021}
-  - component: {fileID: 947302022}
   m_Layer: 0
   m_Name: QuestSystem
   m_TagString: Untagged
@@ -12812,6 +12811,8 @@ MonoBehaviour:
   availableQuests:
   - {fileID: 11400000, guid: 079958ddc4b28084face6cc392bc0a3c, type: 2}
   - {fileID: 11400000, guid: 8c3fed29ac661dd47a428beb539f66cc, type: 2}
+  - {fileID: 11400000, guid: 1940d68440ce9de488f97ee5d6306262, type: 2}
+  - {fileID: 11400000, guid: c3c2f38368eddf246ba45427d1454355, type: 2}
   activeQuests: []
   completedQuests: []
   followUpQuests:
@@ -12819,29 +12820,12 @@ MonoBehaviour:
     followUpQuest: {fileID: 11400000, guid: ecd10f3f38419c84995e456cb15313ab, type: 2}
   - initialQuest: {fileID: 11400000, guid: ecd10f3f38419c84995e456cb15313ab, type: 2}
     followUpQuest: {fileID: 11400000, guid: 95b00db5e85cff040a47da7a62ba9a36, type: 2}
---- !u!114 &947302022
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 947302018}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e8e57b83d9a76b4bb9d4faebe82e4e5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  questNameToCheck: Sov
-  questReferenceToCheck: {fileID: 11400000, guid: 95b00db5e85cff040a47da7a62ba9a36, type: 2}
-  sceneToLoad: Stage 2
-  loadDelay: 1
-  showLoadingScreen: 0
-  loadingScreenPrefab: {fileID: 0}
-  initialDelay: 1
-  checkOnStart: 0
-  checkContinuously: 0
-  requireExplicitCompletion: 1
-  checkInterval: 3
+  - initialQuest: {fileID: 11400000, guid: 1940d68440ce9de488f97ee5d6306262, type: 2}
+    followUpQuest: {fileID: 11400000, guid: c3c2f38368eddf246ba45427d1454355, type: 2}
+  - initialQuest: {fileID: 11400000, guid: c3c2f38368eddf246ba45427d1454355, type: 2}
+    followUpQuest: {fileID: 11400000, guid: f7e5dfb37c4650b4681e6dab4b79d991, type: 2}
+  - initialQuest: {fileID: 11400000, guid: f7e5dfb37c4650b4681e6dab4b79d991, type: 2}
+    followUpQuest: {fileID: 11400000, guid: be359c05f3dfc30469f16e05ec09d2dd, type: 2}
 --- !u!1 &949431676
 GameObject:
   m_ObjectHideFlags: 0
@@ -20459,6 +20443,61 @@ Transform:
   - {fileID: 1151713930}
   - {fileID: 1646613311}
   - {fileID: 923869075}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1474029203
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1474029205}
+  - component: {fileID: 1474029204}
+  m_Layer: 0
+  m_Name: SceneLoader
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1474029204
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1474029203}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e8e57b83d9a76b4bb9d4faebe82e4e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  questNameToCheck: Sov
+  questReferenceToCheck: {fileID: 11400000, guid: 95b00db5e85cff040a47da7a62ba9a36, type: 2}
+  sceneToLoad: Stage 2
+  loadDelay: 1
+  showLoadingScreen: 0
+  loadingScreenPrefab: {fileID: 0}
+  initialDelay: 1
+  checkOnStart: 0
+  checkContinuously: 0
+  requireExplicitCompletion: 1
+  checkInterval: 3
+--- !u!4 &1474029205
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1474029203}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 1107.4523, y: 434.89267, z: -54.474915}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1483551987
@@ -32751,8 +32790,30 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7670693359826972081, guid: 320e5eda242116c47846818c3f0cd925, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6228211216986014198}
   m_SourcePrefab: {fileID: 100100000, guid: 320e5eda242116c47846818c3f0cd925, type: 3}
+--- !u!1 &6228211216986014197 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7670693359826972081, guid: 320e5eda242116c47846818c3f0cd925, type: 3}
+  m_PrefabInstance: {fileID: 6228211216986014196}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6228211216986014198
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6228211216986014197}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 103b392106ab4df4b9f790e77bcaa770, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  allowedScenes:
+  - Stage 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -32809,6 +32870,7 @@ SceneRoots:
   - {fileID: 2139343087}
   - {fileID: 334988396}
   - {fileID: 947302020}
+  - {fileID: 1474029205}
   - {fileID: 1007833950}
   - {fileID: 1531552667}
   - {fileID: 1548107258}

@@ -1,12 +1,10 @@
 using UnityEngine;
-using System.Collections;
 
 public class CollectibleItem : MonoBehaviour
 {
     [Header("Quest Settings")]
     [SerializeField] private Quest associatedQuest;
     [SerializeField] private int objectiveIndex;
-    [SerializeField] private bool findActiveQuestByName = true; // NEW - Find quest by name in active quests
 
     [Header("Collection Settings")]
     [SerializeField] private string playerTag = "Player";
@@ -26,8 +24,6 @@ public class CollectibleItem : MonoBehaviour
     private bool isPlayerInRange = false;
     private bool isCollected = false;
     private float hoverUITimer = 0f;
-    private float questCheckTimer = 0f;
-    private const float QUEST_CHECK_INTERVAL = 1.0f;
 
     private void Start()
     {
@@ -40,35 +36,6 @@ public class CollectibleItem : MonoBehaviour
         {
             hoverUIElement.SetActive(false);
         }
-        
-        // Try to connect to the active quest if it exists
-        if (associatedQuest != null && findActiveQuestByName)
-        {
-            StartCoroutine(TryReconnectToActiveQuest());
-        }
-    }
-
-    private IEnumerator TryReconnectToActiveQuest()
-    {
-        // Wait a moment for the quest system to initialize
-        yield return new WaitForSeconds(0.5f);
-        
-        if (QuestManager.Instance == null || associatedQuest == null)
-            yield break;
-            
-        string questName = associatedQuest.questName;
-        Debug.Log($"<color=cyan>Collectible trying to find active quest: {questName}</color>");
-        
-        // Look for an active quest with the same name
-        foreach (var quest in QuestManager.Instance.activeQuests)
-        {
-            if (quest.questName == questName)
-            {
-                associatedQuest = quest;  // Use the active quest instance
-                Debug.Log($"<color=cyan>Collectible connected to active quest: {questName}</color>");
-                yield break;
-            }
-        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -77,51 +44,50 @@ public class CollectibleItem : MonoBehaviour
         {
             isPlayerInRange = true;
 
-            // Update quest reference before checking status
-            if (findActiveQuestByName)
-                FindMatchingActiveQuest();
-
-            bool shouldShowUI = true;
-
-            // Check if we should only show UI for active quest items
-            if (showOnlyForActiveQuest && associatedQuest != null)
+            // Only show prompt if quest is active and objective not completed
+            if (associatedQuest != null)
             {
-                bool isQuestActive = CheckQuestIsActive();
-                bool isObjectiveCompleted = false;
+                // Use our improved CheckQuestIsActive method instead of direct check
+                bool isActive = CheckQuestIsActive();
                 
-                if (objectiveIndex >= 0 && objectiveIndex < associatedQuest.objectives.Count)
-                {
-                    isObjectiveCompleted = associatedQuest.objectives[objectiveIndex].isCompleted;
-                }
+                Debug.Log($"<color=magenta>CollectibleItem - OnTriggerEnter - Quest '{associatedQuest.questName}' active: {isActive}</color>");
                 
-                shouldShowUI = isQuestActive && !isObjectiveCompleted;
-            }
-
-            if (shouldShowUI)
-            {
-                // Show interaction prompt
-                if (interactionPrompt != null)
+                if (isActive && objectiveIndex < associatedQuest.objectives.Count &&
+                    !associatedQuest.objectives[objectiveIndex].isCompleted)
                 {
-                    interactionPrompt.SetActive(true);
-
-                    TMPro.TextMeshProUGUI promptTextComponent =
-                        interactionPrompt.GetComponentInChildren<TMPro.TextMeshProUGUI>();
-                    if (promptTextComponent != null)
+                    if (interactionPrompt != null)
                     {
-                        promptTextComponent.text = promptText;
+                        interactionPrompt.SetActive(true);
+                        Debug.Log($"<color=magenta>CollectibleItem - Showing interaction prompt</color>");
+
+                        TMPro.TextMeshProUGUI promptTextComponent =
+                            interactionPrompt.GetComponentInChildren<TMPro.TextMeshProUGUI>();
+                        if (promptTextComponent != null)
+                        {
+                            promptTextComponent.text = promptText;
+                            Debug.Log($"<color=magenta>CollectibleItem - Set prompt text to: {promptText}</color>");
+                        }
+                        else
+                        {
+                            Debug.LogWarning($"<color=red>CollectibleItem - No TextMeshProUGUI found in interaction prompt!</color>");
+                        }
                     }
-                }
-
-                // Show hover UI
-                if (hoverUIElement != null)
-                {
-                    hoverUIElement.SetActive(true);
-
-                    // If timer is set, start the countdown
-                    if (hoverUIDisplayTime > 0)
+                    else
                     {
+                        Debug.LogWarning($"<color=red>CollectibleItem - No interaction prompt assigned!</color>");
+                    }
+
+                    // Show hover UI if available
+                    if (hoverUIElement != null)
+                    {
+                        hoverUIElement.SetActive(true);
                         hoverUITimer = hoverUIDisplayTime;
+                        Debug.Log($"<color=magenta>CollectibleItem - Showing hover UI</color>");
                     }
+                }
+                else
+                {
+                    Debug.Log($"<color=orange>CollectibleItem - Cannot show UI - Quest active: {isActive}, Objective completed: {(objectiveIndex < associatedQuest.objectives.Count ? associatedQuest.objectives[objectiveIndex].isCompleted : false)}</color>");
                 }
             }
         }
@@ -148,15 +114,10 @@ public class CollectibleItem : MonoBehaviour
 
     private void Update()
     {
-        // Periodically check for quest updates
-        questCheckTimer += Time.deltaTime;
-        if (questCheckTimer >= QUEST_CHECK_INTERVAL)
+        // Try to find the active quest reference periodically
+        if (Time.frameCount % 30 == 0) // Check roughly every 30 frames
         {
-            questCheckTimer = 0f;
-            if (findActiveQuestByName && associatedQuest != null)
-            {
-                FindMatchingActiveQuest();
-            }
+            FindMatchingActiveQuest();
         }
 
         // Handle hover UI timer if it's set
@@ -175,12 +136,34 @@ public class CollectibleItem : MonoBehaviour
         }
     }
 
+    private bool CheckQuestIsActive()
+    {
+        if (associatedQuest == null)
+            return false;
+        
+        // First check the property directly
+        if (associatedQuest.IsActive)
+            return true;
+        
+        // Then check if it's in the active quests list
+        if (QuestManager.Instance != null)
+        {
+            foreach (var quest in QuestManager.Instance.activeQuests)
+            {
+                if (quest.questName == associatedQuest.questName)
+                    return true;
+            }
+        }
+        
+        return false;
+    }
+
     // Find active quest with the same name
     private bool FindMatchingActiveQuest()
     {
         if (associatedQuest == null || QuestManager.Instance == null)
             return false;
-            
+        
         string questName = associatedQuest.questName;
         
         foreach (var quest in QuestManager.Instance.activeQuests)
@@ -195,36 +178,12 @@ public class CollectibleItem : MonoBehaviour
         return false;
     }
 
-    // Check if quest is active, looking in the active quests list
-    private bool CheckQuestIsActive()
-    {
-        if (associatedQuest == null)
-            return false;
-            
-        // First check the property directly
-        if (associatedQuest.IsActive)
-            return true;
-            
-        // Then check if it's in the active quests list
-        if (QuestManager.Instance != null)
-        {
-            foreach (var quest in QuestManager.Instance.activeQuests)
-            {
-                if (quest.questName == associatedQuest.questName)
-                    return true;
-            }
-        }
-        
-        return false;
-    }
-
     public void CollectItem()
     {
         if (isCollected) return;
 
-        // Make sure we have the latest quest reference
-        if (findActiveQuestByName)
-            FindMatchingActiveQuest();
+        // Try to find the right quest reference first
+        FindMatchingActiveQuest();
 
         if (associatedQuest != null && QuestManager.Instance != null)
         {

@@ -82,6 +82,18 @@ public class Gramophone : MonoBehaviour
 
         // Call immediately on start
         CheckAndActivateIfNeeded();
+
+        // Only persist in certain scenes (e.g., Scene1)
+        string currentSceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+        if (currentSceneName == "Scene1" || currentSceneName == "YourFirstSceneName") 
+        {
+            Debug.Log($"<color=cyan>Gramophone '{gameObject.name}' is scene-specific</color>");
+        }
+        else
+        {
+            // Don't persist this gramophone if it's in other scenes
+            Debug.Log($"<color=cyan>Gramophone '{gameObject.name}' is scene-specific and won't persist</color>");
+        }
     }
     
     private void OnEnable()
@@ -396,16 +408,16 @@ public class Gramophone : MonoBehaviour
     // Optional - make the gramophone persistent between scenes
     private void Awake()
     {
-        // Store quest name before setting DontDestroyOnLoad
+        // Store quest name for quest tracking
         if (associatedQuest != null)
         {
             questName = associatedQuest.questName;
         }
         
-        DontDestroyOnLoad(this.gameObject);
-        
-        // Subscribe to scene loaded events
+        // Subscribe to scene loaded events for quest reconnection
         SceneManager.sceneLoaded += OnSceneLoaded;
+        
+        Debug.Log($"<color=cyan>Gramophone '{gameObject.name}' is scene-specific</color>");
     }
 
     private void OnDestroy()

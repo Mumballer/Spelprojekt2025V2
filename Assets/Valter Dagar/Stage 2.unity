@@ -479,13 +479,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 20472157}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.011011738, y: -0.0015609581, z: 0.00012758152, w: -0.9999382}
-  m_LocalPosition: {x: 4.785873, y: -2.5662718, z: -0.21287966}
-  m_LocalScale: {x: 0.23201892, y: 0.10605581, z: 2.9415598}
+  m_LocalRotation: {x: -0.00065389747, y: -0.99974716, z: 0.022478262, w: 0.000029098801}
+  m_LocalPosition: {x: 4.7999773, y: -2.2000008, z: -0.98600006}
+  m_LocalScale: {x: 0.23201892, y: 0.106055826, z: 2.9415593}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 470725359}
-  m_LocalEulerAnglesHint: {x: 1.262, y: -179.821, z: -0.013}
+  m_LocalEulerAnglesHint: {x: 2.576, y: -179.995, z: 0.075}
 --- !u!54 &20472159
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1437,7 +1437,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7670693359826972081, guid: 320e5eda242116c47846818c3f0cd925, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 467482502}
   m_SourcePrefab: {fileID: 100100000, guid: 320e5eda242116c47846818c3f0cd925, type: 3}
 --- !u!1 &88549218
 GameObject:
@@ -7128,6 +7131,25 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 4071027332493067210, guid: 58b6d411068885443a80a496dea22f74, type: 3}
   m_PrefabInstance: {fileID: 461772346}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &467482497 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7670693359826972081, guid: 320e5eda242116c47846818c3f0cd925, type: 3}
+  m_PrefabInstance: {fileID: 86708157}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &467482502
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 467482497}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 103b392106ab4df4b9f790e77bcaa770, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  allowedScenes:
+  - Stage 2
 --- !u!1 &470725358
 GameObject:
   m_ObjectHideFlags: 0
@@ -7157,7 +7179,7 @@ Transform:
   m_GameObject: {fileID: 470725358}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 11.5, z: 1.36}
+  m_LocalPosition: {x: 0, y: 11.5, z: 11.61}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -7227,8 +7249,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 28.84918, y: 12.375977, z: 2.0452352}
-  m_Center: {x: 0.689364, y: 4.1298633, z: -0.52261966}
+  m_Size: {x: 39.306194, y: 12.375977, z: 2.0452352}
+  m_Center: {x: 5.9178805, y: 4.1298633, z: -0.52261966}
 --- !u!1 &477263154
 GameObject:
   m_ObjectHideFlags: 0
@@ -8202,14 +8224,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 547082155}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: 12.5, z: 1.01}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalPosition: {x: 2.4, y: 12.5, z: 5.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 928019708}
   m_Father: {fileID: 867842931}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!114 &547082157
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8273,8 +8295,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 21.32453, y: 22.124348, z: 1.0926185}
-  m_Center: {x: 4.9034624, y: 2.0080237, z: -0.20257291}
+  m_Size: {x: 35.472904, y: 30.489895, z: 1.0926185}
+  m_Center: {x: 3.6419713, y: 6.190778, z: -0.20257294}
 --- !u!1 &561183419
 GameObject:
   m_ObjectHideFlags: 0
@@ -8823,14 +8845,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   associatedQuest: {fileID: 11400000, guid: c3c2f38368eddf246ba45427d1454355, type: 2}
   objectiveIndex: 2
-  findActiveQuestByName: 1
   playerTag: Player
   requireButtonPress: 1
   interactKey: 101
   destroyOnCollect: 1
   interactionPrompt: {fileID: 0}
   promptText: Press E to collect
-  hoverUIElement: {fileID: 0}
+  hoverUIElement: {fileID: 1447892625}
   hoverUIDisplayTime: 0
   showOnlyForActiveQuest: 1
 --- !u!54 &608037413
@@ -9260,14 +9281,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   associatedQuest: {fileID: 11400000, guid: c3c2f38368eddf246ba45427d1454355, type: 2}
   objectiveIndex: 5
-  findActiveQuestByName: 1
   playerTag: Player
   requireButtonPress: 1
   interactKey: 101
   destroyOnCollect: 1
   interactionPrompt: {fileID: 0}
   promptText: Press E to collect
-  hoverUIElement: {fileID: 0}
+  hoverUIElement: {fileID: 339584908}
   hoverUIDisplayTime: 0
   showOnlyForActiveQuest: 1
 --- !u!54 &621567143
@@ -14986,7 +15006,6 @@ Transform:
   - {fileID: 1055571898}
   - {fileID: 2012294142}
   - {fileID: 1823058371}
-  - {fileID: 1071701091}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &946907061
@@ -15831,8 +15850,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 19.226273, y: 39.868286, z: 2.3034115}
-  m_Center: {x: -6.099258, y: 3.9245937, z: 0.6517055}
+  m_Size: {x: 19.226273, y: 39.868286, z: 3.1361296}
+  m_Center: {x: -6.099258, y: 3.9245937, z: 0.23534626}
 --- !u!114 &1028255158
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15845,13 +15864,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83dc7b34223b2fd4b8b59010316efdfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  associatedQuest: {fileID: 11400000, guid: 95b00db5e85cff040a47da7a62ba9a36, type: 2}
+  associatedQuest: {fileID: 11400000, guid: be359c05f3dfc30469f16e05ec09d2dd, type: 2}
   objectiveIndex: 0
-  findActiveQuestByName: 1
   playerTag: Player
   requireButtonPress: 1
   interactKey: 101
-  destroyOnCollect: 1
+  destroyOnCollect: 0
   interactionPrompt: {fileID: 2087113534}
   promptText: Press E to collect
   hoverUIElement: {fileID: 0}
@@ -16577,13 +16595,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1071701090}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 11.5, z: 1.86}
-  m_LocalScale: {x: 2.3258, y: 2.3258, z: 2.3258}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 34.44, y: 2.0027342, z: 11.17}
+  m_LocalScale: {x: 0.123921506, y: 0.12392149, z: 1.5490187}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1192347747}
-  m_Father: {fileID: 941915368}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1071701092
 MonoBehaviour:
@@ -18618,13 +18636,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1192347746}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.03135497, y: 0.006789941, z: 0.019450432, w: 0.999296}
-  m_LocalPosition: {x: 2.21, y: -1.8, z: -0.093}
-  m_LocalScale: {x: 0.090797365, y: 0.055287138, z: 0.9686894}
+  m_LocalRotation: {x: -0.017835189, y: 0.9996616, z: -0.018878084, w: 0.0014919767}
+  m_LocalPosition: {x: 2.7599885, y: -1.1300004, z: 0.08353199}
+  m_LocalScale: {x: 0.09079739, y: 0.055287134, z: 0.9686896}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1071701091}
-  m_LocalEulerAnglesHint: {x: 3.578, y: 0.849, z: 2.257}
+  m_LocalEulerAnglesHint: {x: 2.16, y: 179.79, z: -2.048}
 --- !u!54 &1192347748
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -22454,7 +22472,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   questNameToCheck: Sov
-  questReferenceToCheck: {fileID: 11400000, guid: 95b00db5e85cff040a47da7a62ba9a36, type: 2}
+  questReferenceToCheck: {fileID: 11400000, guid: be359c05f3dfc30469f16e05ec09d2dd, type: 2}
   sceneToLoad: Stage 3
   loadDelay: 1
   showLoadingScreen: 0
@@ -23292,14 +23310,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   associatedQuest: {fileID: 11400000, guid: c3c2f38368eddf246ba45427d1454355, type: 2}
   objectiveIndex: 1
-  findActiveQuestByName: 1
   playerTag: Player
   requireButtonPress: 1
   interactKey: 101
   destroyOnCollect: 1
   interactionPrompt: {fileID: 0}
   promptText: Press E to collect
-  hoverUIElement: {fileID: 0}
+  hoverUIElement: {fileID: 2110651943}
   hoverUIDisplayTime: 0
   showOnlyForActiveQuest: 1
 --- !u!54 &1515218586
@@ -24163,14 +24180,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1555575573}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 9.98, z: 1.544}
+  m_LocalRotation: {x: 0, y: -1, z: 0, w: 0}
+  m_LocalPosition: {x: 3.6, y: 9.98, z: 6.19}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 266338708}
   m_Father: {fileID: 595150569}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
 --- !u!114 &1555575575
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24210,8 +24227,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 20.771254, y: 19.949562, z: 2.0555143}
-  m_Center: {x: 6.661796, y: 9.474781, z: -0.52775824}
+  m_Size: {x: 35.84971, y: 19.949562, z: 1.5214446}
+  m_Center: {x: 1.649993, y: 9.474781, z: -0.2607236}
 --- !u!1 &1570612775
 GameObject:
   m_ObjectHideFlags: 0
@@ -25711,14 +25728,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1682927208}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.0027794472, y: 14.200001, z: 1.0210931}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalPosition: {x: 7.5, y: 14.200001, z: 5.26}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1956712957}
   m_Father: {fileID: 1404395792}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!114 &1682927210
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25758,8 +25775,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 21.898811, y: 26.491272, z: 1.5034775}
-  m_Center: {x: 7.9690547, y: 2.7599266, z: -0.25174126}
+  m_Size: {x: 27.890213, y: 26.491272, z: 1.5034775}
+  m_Center: {x: 4.9733486, y: 2.7599266, z: -0.25174123}
 --- !u!1 &1683778687
 GameObject:
   m_ObjectHideFlags: 0
@@ -26740,6 +26757,61 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1785447551
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1785447553}
+  - component: {fileID: 1785447552}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1785447552
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1785447551}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e8e57b83d9a76b4bb9d4faebe82e4e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  questNameToCheck: SovD2
+  questReferenceToCheck: {fileID: 11400000, guid: be359c05f3dfc30469f16e05ec09d2dd, type: 2}
+  sceneToLoad: Stage 3
+  loadDelay: 2
+  showLoadingScreen: 0
+  loadingScreenPrefab: {fileID: 0}
+  initialDelay: 5
+  checkOnStart: 0
+  checkContinuously: 0
+  requireExplicitCompletion: 1
+  checkInterval: 1
+--- !u!4 &1785447553
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1785447551}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.12278779, y: 0.6963643, z: -0.12278779, w: 0.6963643}
+  m_LocalPosition: {x: 42.951, y: 2.284, z: 7.702}
+  m_LocalScale: {x: 0.0060000056, y: 0.007, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1793153901
 GameObject:
   m_ObjectHideFlags: 0
@@ -32193,14 +32265,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2043652596}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 13.5, z: 1.08}
+  m_LocalRotation: {x: 0, y: -1, z: 0, w: 0}
+  m_LocalPosition: {x: -0, y: 13.5, z: 5.57}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2014155784}
   m_Father: {fileID: 161079904}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
 --- !u!114 &2043652598
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -32252,8 +32324,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 40.42261, y: 14.36895, z: 1.9369079}
-  m_Center: {x: -2.0904427, y: 2.4140496, z: -0.3598086}
+  m_Size: {x: 46.41264, y: 14.36895, z: 1.9369079}
+  m_Center: {x: 0.90456474, y: 2.4140496, z: -0.3598086}
 --- !u!1 &2044262576
 GameObject:
   m_ObjectHideFlags: 0
@@ -32526,14 +32598,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   associatedQuest: {fileID: 11400000, guid: c3c2f38368eddf246ba45427d1454355, type: 2}
   objectiveIndex: 4
-  findActiveQuestByName: 1
   playerTag: Player
   requireButtonPress: 1
   interactKey: 101
   destroyOnCollect: 1
   interactionPrompt: {fileID: 0}
   promptText: Press E to collect
-  hoverUIElement: {fileID: 0}
+  hoverUIElement: {fileID: 1302265564}
   hoverUIDisplayTime: 0
   showOnlyForActiveQuest: 1
 --- !u!54 &2049945639
@@ -32775,14 +32846,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   associatedQuest: {fileID: 11400000, guid: c3c2f38368eddf246ba45427d1454355, type: 2}
   objectiveIndex: 3
-  findActiveQuestByName: 1
   playerTag: Player
   requireButtonPress: 1
   interactKey: 101
   destroyOnCollect: 1
   interactionPrompt: {fileID: 0}
   promptText: Press E to collect
-  hoverUIElement: {fileID: 0}
+  hoverUIElement: {fileID: 1193248604}
   hoverUIDisplayTime: 0
   showOnlyForActiveQuest: 1
 --- !u!54 &2073600771
@@ -33153,14 +33223,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   associatedQuest: {fileID: 11400000, guid: c3c2f38368eddf246ba45427d1454355, type: 2}
   objectiveIndex: 0
-  findActiveQuestByName: 1
   playerTag: Player
   requireButtonPress: 1
   interactKey: 101
   destroyOnCollect: 1
   interactionPrompt: {fileID: 0}
   promptText: Press E to collect
-  hoverUIElement: {fileID: 0}
+  hoverUIElement: {fileID: 2105792}
   hoverUIDisplayTime: 0
   showOnlyForActiveQuest: 1
 --- !u!54 &2083625532
@@ -33383,7 +33452,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2088701671}
   - component: {fileID: 2088701670}
-  - component: {fileID: 2088701672}
   m_Layer: 0
   m_Name: "S\xE4ngREAL_0"
   m_TagString: Untagged
@@ -33461,27 +33529,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1028255156}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
---- !u!65 &2088701672
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2088701669}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 18.653864, y: 42.761883, z: 0.20000005}
-  m_Center: {x: -5.9318056, y: 6.025335, z: 2.9141864e-15}
 --- !u!1 &2100631903
 GameObject:
   m_ObjectHideFlags: 0
@@ -34652,9 +34699,11 @@ SceneRoots:
   - {fileID: 595150569}
   - {fileID: 295535967}
   - {fileID: 516536404}
+  - {fileID: 1785447553}
   - {fileID: 867842931}
   - {fileID: 1481003194}
   - {fileID: 941915368}
+  - {fileID: 1071701091}
   - {fileID: 1404395792}
   - {fileID: 1714328760}
   - {fileID: 793154009}

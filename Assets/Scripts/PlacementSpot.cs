@@ -40,19 +40,24 @@ public class PlacementSpot : MonoBehaviour
             isPlayerInRange = true;
 
             // Only show prompt if quest is active and objective not completed
-            if (associatedQuest != null &&
-                associatedQuest.IsActive &&
-                !associatedQuest.objectives[objectiveIndex].isCompleted)
+            if (associatedQuest != null)
             {
-                if (interactionPrompt != null)
+                // Use our custom method to check if the quest is active
+                bool isActive = CheckQuestIsActive();
+                
+                if (isActive && objectiveIndex < associatedQuest.objectives.Count && 
+                    !associatedQuest.objectives[objectiveIndex].isCompleted)
                 {
-                    interactionPrompt.SetActive(true);
-
-                    TMPro.TextMeshProUGUI promptTextComponent =
-                        interactionPrompt.GetComponentInChildren<TMPro.TextMeshProUGUI>();
-                    if (promptTextComponent != null)
+                    if (interactionPrompt != null)
                     {
-                        promptTextComponent.text = promptText;
+                        interactionPrompt.SetActive(true);
+
+                        TMPro.TextMeshProUGUI promptTextComponent =
+                            interactionPrompt.GetComponentInChildren<TMPro.TextMeshProUGUI>();
+                        if (promptTextComponent != null)
+                        {
+                            promptTextComponent.text = promptText;
+                        }
                     }
                 }
             }
@@ -80,14 +85,38 @@ public class PlacementSpot : MonoBehaviour
         }
     }
 
+    private bool CheckQuestIsActive()
+    {
+        if (associatedQuest == null)
+            return false;
+        
+        // First check the property directly
+        if (associatedQuest.IsActive)
+            return true;
+        
+        // Then check if it's in the active quests list
+        if (QuestManager.Instance != null)
+        {
+            foreach (var quest in QuestManager.Instance.activeQuests)
+            {
+                if (quest.questName == associatedQuest.questName)
+                    return true;
+            }
+        }
+        
+        return false;
+    }
+
     public void TryPlaceItem()
     {
         if (isItemPlaced) return;
 
         if (associatedQuest != null && QuestManager.Instance != null)
         {
-            // Make sure the quest is active
-            if (!associatedQuest.IsActive)
+            bool isActive = CheckQuestIsActive();
+            Debug.Log($"<color=orange>PlacementSpot - Quest '{associatedQuest.questName}' active check: {isActive}</color>");
+            
+            if (!isActive)
             {
                 Debug.Log("Cannot place item - quest is not active");
                 return;
