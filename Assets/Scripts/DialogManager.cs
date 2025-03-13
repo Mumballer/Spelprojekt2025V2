@@ -34,7 +34,7 @@ public class DialogManager : MonoBehaviour
 
     public event Action OnShowDialog;
     public event Action OnHideDialog;
-    public event Action<Dialog> OnDialogComplete; // New event for quest integration
+    public event System.Action<Dialog> OnDialogComplete;
     public static DialogManager Instance { get; private set; }
 
     private Dialog dialog;
@@ -512,6 +512,7 @@ public class DialogManager : MonoBehaviour
 
         if (completedDialog != null)
         {
+            Debug.Log($"<color=yellow>DialogManager: Firing OnDialogComplete event for dialog {completedDialog.name}</color>");
             OnDialogComplete?.Invoke(completedDialog);
         }
     }
@@ -578,5 +579,10 @@ public class DialogManager : MonoBehaviour
                 imageRect.sizeDelta = new Vector2(size, size);
             }
         }
+    }
+
+    public GameObject GetDialogBox()
+    {
+        return dialogBox;
     }
 }
