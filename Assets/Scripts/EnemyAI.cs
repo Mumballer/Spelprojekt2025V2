@@ -80,8 +80,16 @@ public class EnemyAI : MonoBehaviour
         }
 
         // Set destination (enemy follows player)
-        stalkerAgent.SetDestination(player.position);
-        stalkerAgent.SetDestination(stalkerDes.transform.position);
+        if (IsPlayerInSight())
+        {
+            stalkerAgent.SetDestination(player.position);
+            stalkerAgent.Resume();
+        }
+        else
+        {
+            stalkerAgent.Stop();
+        }
+
 
         // Handle footstep audio based on distance
         float distanceToPlayer = Vector3.Distance(transform.position, stalkerDes.transform.position);
