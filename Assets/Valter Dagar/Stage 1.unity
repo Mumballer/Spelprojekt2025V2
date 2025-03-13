@@ -22044,7 +22044,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e91d67447a7b50f43a1e5720964d0c9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialog: {fileID: 0}
+  dialog: {fileID: 11400000, guid: ade105b4d68e91a40800f63d19cb57ab, type: 2}
   autoTrigger: 0
   triggerDistance: 3
   interactionPrompt: {fileID: 1029177602}
