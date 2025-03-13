@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a3f3aeca322ca444a011c0b02503c83, type: 3}
+  m_Name: SusanD3Opt1
+  m_EditorClassIdentifier: 
+  lines:
+  - text: Oh Nico.. I can make the table just go yoo your room and paint, it keeps
+      your brain active
+    choices:
+    - text: "But the guest are coming? I can\u2019t look silly infront of Calvin."
+      nextDialog: {fileID: 11400000, guid: 0a5e6b2d07a06d24ab02fe33f26bd354, type: 2}
+      quest: {fileID: 0}
+    character: {fileID: 0}
+    nextDialog: {fileID: 0}
