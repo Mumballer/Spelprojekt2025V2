@@ -17357,7 +17357,6 @@ GameObject:
   - component: {fileID: 1251371576}
   - component: {fileID: 1251371575}
   - component: {fileID: 1251371574}
-  - component: {fileID: 1251371573}
   - component: {fileID: 1251371572}
   - component: {fileID: 1251371571}
   - component: {fileID: 1251371578}
@@ -17420,18 +17419,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!114 &1251371573
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1251371570}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 620451de218aed5499af25129779e250, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!136 &1251371574
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -17545,6 +17532,8 @@ MonoBehaviour:
   mouseSensitivity: 2
   lookUpLimit: 80
   lookDownLimit: 80
+  walkingSound: {fileID: 8300000, guid: 8c63f986eba71cd419630ef5629edbb0, type: 3}
+  runningSound: {fileID: 8300000, guid: c7ed3f1d95cdc9f4d8dc20c1dd3deeaf, type: 3}
 --- !u!1 &1258411282
 GameObject:
   m_ObjectHideFlags: 0
@@ -32907,6 +32896,14 @@ PrefabInstance:
     - target: {fileID: 1389062358843904742, guid: 320e5eda242116c47846818c3f0cd925, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7021554512711592346, guid: 320e5eda242116c47846818c3f0cd925, type: 3}
+      propertyPath: m_SortingLayer
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7021554512711592346, guid: 320e5eda242116c47846818c3f0cd925, type: 3}
+      propertyPath: m_SortingLayerID
+      value: -1751059685
       objectReference: {fileID: 0}
     - target: {fileID: 7670693359826972081, guid: 320e5eda242116c47846818c3f0cd925, type: 3}
       propertyPath: m_Name

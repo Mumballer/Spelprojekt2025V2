@@ -1418,6 +1418,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7021554512711592346, guid: 320e5eda242116c47846818c3f0cd925, type: 3}
+      propertyPath: m_SortingLayer
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7021554512711592346, guid: 320e5eda242116c47846818c3f0cd925, type: 3}
+      propertyPath: m_SortingLayerID
+      value: -1751059685
+      objectReference: {fileID: 0}
     - target: {fileID: 7670693359826972081, guid: 320e5eda242116c47846818c3f0cd925, type: 3}
       propertyPath: m_Name
       value: Gramafon_JUNI
@@ -19560,6 +19568,8 @@ MonoBehaviour:
   mouseSensitivity: 2
   lookUpLimit: 80
   lookDownLimit: 80
+  walkingSound: {fileID: 8300000, guid: 8c63f986eba71cd419630ef5629edbb0, type: 3}
+  runningSound: {fileID: 8300000, guid: c7ed3f1d95cdc9f4d8dc20c1dd3deeaf, type: 3}
 --- !u!1 &1258411282
 GameObject:
   m_ObjectHideFlags: 0
