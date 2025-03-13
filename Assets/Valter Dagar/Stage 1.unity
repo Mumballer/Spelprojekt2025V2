@@ -12870,6 +12870,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8c3fed29ac661dd47a428beb539f66cc, type: 2}
   - {fileID: 11400000, guid: 1940d68440ce9de488f97ee5d6306262, type: 2}
   - {fileID: 11400000, guid: c3c2f38368eddf246ba45427d1454355, type: 2}
+  - {fileID: 11400000, guid: 7c74b2cf57e7f3e41a65532db2543618, type: 2}
+  - {fileID: 11400000, guid: f2ab126d02c36934d87c05b11261a7a5, type: 2}
   activeQuests: []
   completedQuests: []
   followUpQuests:
@@ -12883,6 +12885,10 @@ MonoBehaviour:
     followUpQuest: {fileID: 11400000, guid: f7e5dfb37c4650b4681e6dab4b79d991, type: 2}
   - initialQuest: {fileID: 11400000, guid: f7e5dfb37c4650b4681e6dab4b79d991, type: 2}
     followUpQuest: {fileID: 11400000, guid: be359c05f3dfc30469f16e05ec09d2dd, type: 2}
+  - initialQuest: {fileID: 11400000, guid: 7c74b2cf57e7f3e41a65532db2543618, type: 2}
+    followUpQuest: {fileID: 11400000, guid: f2ab126d02c36934d87c05b11261a7a5, type: 2}
+  - initialQuest: {fileID: 11400000, guid: f2ab126d02c36934d87c05b11261a7a5, type: 2}
+    followUpQuest: {fileID: 11400000, guid: b308543b23ee0df459845e131609b508, type: 2}
 --- !u!1 &949431676
 GameObject:
   m_ObjectHideFlags: 0
@@ -17506,7 +17512,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1251371570}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1

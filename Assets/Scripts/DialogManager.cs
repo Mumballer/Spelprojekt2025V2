@@ -30,7 +30,15 @@ public class DialogManager : MonoBehaviour
 
     [Header("Camera and Input Settings")]
     [SerializeField] private bool lockCameraDuringDialog = true;
+    [SerializeField] private bool allowCameraEffectsDuringDialog = true;
     [SerializeField] private bool showCursorDuringDialog = true;
+    [SerializeField] private string[] cameraControlComponentNames = new string[] 
+    { 
+        "MouseLook", 
+        "FirstPersonLook",
+        "PlayerLook",
+        "LookController" 
+    };
 
     public event Action OnShowDialog;
     public event Action OnHideDialog;
@@ -160,18 +168,47 @@ public class DialogManager : MonoBehaviour
             remainingLines.Enqueue(line);
         }
         
-        // Lock camera and show cursor
+        // Lock camera control but allow camera effects
         if (lockCameraDuringDialog && mainCamera != null)
         {
-            // Try to find components on the camera that handle look/rotation
-            var lookComponents = mainCamera.GetComponents<MonoBehaviour>();
-            foreach (var comp in lookComponents)
+            var cameraComponents = mainCamera.GetComponents<MonoBehaviour>();
+            foreach (var comp in cameraComponents)
             {
-                if (comp.GetType().Name.Contains("Look") || 
-                    comp.GetType().Name.Contains("Camera") ||
-                    comp.GetType().Name.Contains("Controller"))
+                string componentName = comp.GetType().Name;
+                
+                // Disable only specific camera control components
+                bool shouldDisable = false;
+                
+                if (cameraControlComponentNames.Length > 0)
+                {
+                    // Use the explicit list of components to disable
+                    foreach (var name in cameraControlComponentNames)
+                    {
+                        if (componentName.Contains(name))
+                        {
+                            shouldDisable = true;
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    // Fallback to generic naming detection for camera control
+                    shouldDisable = (componentName.Contains("Look") && componentName.Contains("Mouse")) ||
+                                   (componentName.Contains("Look") && componentName.Contains("Player")) || 
+                                   componentName.Contains("PlayerController");
+                }
+                
+                // Only disable the component if it's a control component
+                // and not a camera effect (like shake)
+                if (shouldDisable && 
+                    !(allowCameraEffectsDuringDialog && 
+                      (componentName.Contains("Shake") || 
+                       componentName.Contains("Effect") || 
+                       componentName.Contains("PostProcessing"))))
                 {
                     comp.enabled = false;
+                    Debug.Log($"<color=cyan>DialogManager: Disabled camera component: {componentName}</color>");
                 }
             }
         }
@@ -487,15 +524,38 @@ public class DialogManager : MonoBehaviour
         // Make sure to re-enable camera if it was disabled
         if (lockCameraDuringDialog && mainCamera != null)
         {
-            // Try to find components on the camera that handle look/rotation
-            var lookComponents = mainCamera.GetComponents<MonoBehaviour>();
-            foreach (var comp in lookComponents)
+            var cameraComponents = mainCamera.GetComponents<MonoBehaviour>();
+            foreach (var comp in cameraComponents)
             {
-                if (comp.GetType().Name.Contains("Look") || 
-                    comp.GetType().Name.Contains("Camera") ||
-                    comp.GetType().Name.Contains("Controller"))
+                string componentName = comp.GetType().Name;
+                
+                // Re-enable only specific camera control components
+                bool shouldReEnable = false;
+                
+                if (cameraControlComponentNames.Length > 0)
+                {
+                    // Use the explicit list of components to re-enable
+                    foreach (var name in cameraControlComponentNames)
+                    {
+                        if (componentName.Contains(name))
+                        {
+                            shouldReEnable = true;
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    // Fallback to generic naming detection for camera control
+                    shouldReEnable = (componentName.Contains("Look") && componentName.Contains("Mouse")) ||
+                                    (componentName.Contains("Look") && componentName.Contains("Player")) || 
+                                    componentName.Contains("PlayerController");
+                }
+                
+                if (shouldReEnable && !comp.enabled)
                 {
                     comp.enabled = true;
+                    Debug.Log($"<color=cyan>DialogManager: Re-enabled camera component: {componentName}</color>");
                 }
             }
         }

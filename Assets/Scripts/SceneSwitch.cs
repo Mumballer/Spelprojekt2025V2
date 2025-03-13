@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class SceneSwitch : MonoBehaviour
 {
@@ -9,16 +10,28 @@ public class SceneSwitch : MonoBehaviour
     [SerializeField] private float delayBeforeLoading = 0f;
     [SerializeField] private bool fadeOut = true;
     [SerializeField] private float fadeOutDuration = 1f;
-
+    
     [Header("Tags")]
     [SerializeField] private string targetTag = "SceneChanger";
-
+    
     private bool isLoading = false;
+    
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
+    {
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
 
     private void OnTriggerEnter(Collider other)
     {
         if (isLoading) return;
-
+        
         if (other.CompareTag(targetTag))
         {
             Debug.Log($"<color=cyan>SceneSwitch: Player touched object with {targetTag} tag</color>");
@@ -26,7 +39,7 @@ public class SceneSwitch : MonoBehaviour
             StartCoroutine(LoadNextScene());
         }
     }
-
+    
     private System.Collections.IEnumerator LoadNextScene()
     {
         // Optional delay
@@ -34,13 +47,13 @@ public class SceneSwitch : MonoBehaviour
         {
             yield return new WaitForSeconds(delayBeforeLoading);
         }
-
+        
         // Optional fade out
         if (fadeOut)
         {
             yield return StartCoroutine(FadeToBlack());
         }
-
+        
         // Load the scene
         if (useNextSceneInBuild)
         {
@@ -55,7 +68,7 @@ public class SceneSwitch : MonoBehaviour
             SceneManager.LoadScene(sceneToLoad);
         }
     }
-
+    
     private System.Collections.IEnumerator FadeToBlack()
     {
         // Create temporary fade panel
@@ -63,15 +76,15 @@ public class SceneSwitch : MonoBehaviour
         Canvas canvas = fadePanel.AddComponent<Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
         canvas.sortingOrder = 999; // Make sure it's on top
-
+        
         RectTransform rectTransform = fadePanel.GetComponent<RectTransform>();
         rectTransform.anchorMin = Vector2.zero;
         rectTransform.anchorMax = Vector2.one;
         rectTransform.sizeDelta = Vector2.zero;
-
+        
         UnityEngine.UI.Image fadeImage = fadePanel.AddComponent<UnityEngine.UI.Image>();
         fadeImage.color = new Color(0, 0, 0, 0);
-
+        
         // Fade over time
         float startTime = Time.time;
         while (Time.time < startTime + fadeOutDuration)
@@ -80,7 +93,7 @@ public class SceneSwitch : MonoBehaviour
             fadeImage.color = new Color(0, 0, 0, t);
             yield return null;
         }
-
+        
         fadeImage.color = new Color(0, 0, 0, 1);
         yield return new WaitForSeconds(0.2f); // Short pause at full black
     }
