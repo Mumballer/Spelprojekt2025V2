@@ -10,16 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1a3f3aeca322ca444a011c0b02503c83, type: 3}
-  m_Name: SusanD3
+  m_Name: SusanD3End2
   m_EditorClassIdentifier: 
   lines:
-  - text: Hi there honey, you feeling okay?..
+  - text: Dear god Nico.. Your daughter Emma is in her room
     choices:
-    - text: "I need to make the table\u2026"
-      nextDialog: {fileID: 11400000, guid: 34f1fd8e5af29ef49bd2e6a261bb1a63, type: 2}
-      quest: {fileID: 0}
-    - text: I don't wanna lay down all day, I can't rest anymore...
-      nextDialog: {fileID: 11400000, guid: 59e03b2d622ebab4f8ccfc97ecc553e3, type: 2}
-      quest: {fileID: 0}
+    - text: Oh.. Im sorry i forgot. I will go apologize after I set the table for
+        the guests.
+      nextDialog: {fileID: 0}
+      quest: {fileID: 11400000, guid: 7c74b2cf57e7f3e41a65532db2543618, type: 2}
     character: {fileID: 11400000, guid: a03606f4c5af2ac47a2a991625062ccb, type: 2}
     nextDialog: {fileID: 0}

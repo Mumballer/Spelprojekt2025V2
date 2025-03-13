@@ -17,6 +17,6 @@ MonoBehaviour:
     choices:
     - text: NO.
       nextDialog: {fileID: 0}
-      quest: {fileID: 0}
-    character: {fileID: 0}
+      quest: {fileID: 11400000, guid: 7c74b2cf57e7f3e41a65532db2543618, type: 2}
+    character: {fileID: 11400000, guid: a03606f4c5af2ac47a2a991625062ccb, type: 2}
     nextDialog: {fileID: 0}

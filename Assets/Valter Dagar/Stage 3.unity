@@ -503,7 +503,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83dc7b34223b2fd4b8b59010316efdfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  associatedQuest: {fileID: 11400000, guid: c3c2f38368eddf246ba45427d1454355, type: 2}
+  associatedQuest: {fileID: 11400000, guid: 7c74b2cf57e7f3e41a65532db2543618, type: 2}
   objectiveIndex: 1
   playerTag: Player
   requireButtonPress: 1
@@ -2017,7 +2017,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83dc7b34223b2fd4b8b59010316efdfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  associatedQuest: {fileID: 11400000, guid: c3c2f38368eddf246ba45427d1454355, type: 2}
+  associatedQuest: {fileID: 11400000, guid: 7c74b2cf57e7f3e41a65532db2543618, type: 2}
   objectiveIndex: 3
   playerTag: Player
   requireButtonPress: 1
@@ -4853,7 +4853,7 @@ Transform:
   m_GameObject: {fileID: 253874280}
   serializedVersion: 2
   m_LocalRotation: {x: -0.017835189, y: 0.9996616, z: -0.018878084, w: 0.0014919767}
-  m_LocalPosition: {x: 2.7599885, y: -1.1300004, z: 0.08353199}
+  m_LocalPosition: {x: 2.78, y: -1.56, z: 0.085}
   m_LocalScale: {x: 0.09079739, y: 0.055287134, z: 0.9686896}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8230,6 +8230,11 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 521788224}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &525824519 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3820932244574906744, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
+  m_PrefabInstance: {fileID: 669153379}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &527256101
 GameObject:
   m_ObjectHideFlags: 0
@@ -9616,7 +9621,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1060dc725b013744e9d6ab7c1f4dd130, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  associatedQuest: {fileID: 11400000, guid: f7e5dfb37c4650b4681e6dab4b79d991, type: 2}
+  associatedQuest: {fileID: 11400000, guid: f2ab126d02c36934d87c05b11261a7a5, type: 2}
   objectiveIndex: 3
   playerTag: Player
   requireButtonPress: 1
@@ -11523,7 +11528,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83dc7b34223b2fd4b8b59010316efdfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  associatedQuest: {fileID: 11400000, guid: c3c2f38368eddf246ba45427d1454355, type: 2}
+  associatedQuest: {fileID: 11400000, guid: 7c74b2cf57e7f3e41a65532db2543618, type: 2}
   objectiveIndex: 5
   playerTag: Player
   requireButtonPress: 1
@@ -12356,7 +12361,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83dc7b34223b2fd4b8b59010316efdfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  associatedQuest: {fileID: 11400000, guid: c3c2f38368eddf246ba45427d1454355, type: 2}
+  associatedQuest: {fileID: 11400000, guid: 7c74b2cf57e7f3e41a65532db2543618, type: 2}
   objectiveIndex: 0
   playerTag: Player
   requireButtonPress: 1
@@ -12601,7 +12606,7 @@ MonoBehaviour:
   dialog: {fileID: 0}
   autoTrigger: 0
   triggerDistance: 3
-  interactionPrompt: {fileID: 0}
+  interactionPrompt: {fileID: 525824519}
   questToComplete: {fileID: 0}
   objectiveIndex: 0
   completeQuestAfterDialog: 0
@@ -12761,7 +12766,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1060dc725b013744e9d6ab7c1f4dd130, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  associatedQuest: {fileID: 11400000, guid: f7e5dfb37c4650b4681e6dab4b79d991, type: 2}
+  associatedQuest: {fileID: 11400000, guid: f2ab126d02c36934d87c05b11261a7a5, type: 2}
   objectiveIndex: 0
   playerTag: Player
   requireButtonPress: 1
@@ -12933,7 +12938,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83dc7b34223b2fd4b8b59010316efdfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  associatedQuest: {fileID: 11400000, guid: c3c2f38368eddf246ba45427d1454355, type: 2}
+  associatedQuest: {fileID: 11400000, guid: 7c74b2cf57e7f3e41a65532db2543618, type: 2}
   objectiveIndex: 4
   playerTag: Player
   requireButtonPress: 1
@@ -14508,7 +14513,6 @@ GameObject:
   m_Component:
   - component: {fileID: 926370213}
   - component: {fileID: 926370212}
-  - component: {fileID: 926370211}
   m_Layer: 0
   m_Name: QuestSystem
   m_TagString: Untagged
@@ -14516,29 +14520,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &926370211
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 926370210}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e8e57b83d9a76b4bb9d4faebe82e4e5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  questNameToCheck: Sov
-  questReferenceToCheck: {fileID: 11400000, guid: be359c05f3dfc30469f16e05ec09d2dd, type: 2}
-  sceneToLoad: Stage 3
-  loadDelay: 1
-  showLoadingScreen: 0
-  loadingScreenPrefab: {fileID: 0}
-  initialDelay: 1
-  checkOnStart: 0
-  checkContinuously: 0
-  requireExplicitCompletion: 1
-  checkInterval: 3
 --- !u!114 &926370212
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14557,6 +14538,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 1940d68440ce9de488f97ee5d6306262, type: 2}
   - {fileID: 11400000, guid: f7e5dfb37c4650b4681e6dab4b79d991, type: 2}
   - {fileID: 11400000, guid: c3c2f38368eddf246ba45427d1454355, type: 2}
+  - {fileID: 11400000, guid: 7c74b2cf57e7f3e41a65532db2543618, type: 2}
+  - {fileID: 11400000, guid: f2ab126d02c36934d87c05b11261a7a5, type: 2}
   activeQuests: []
   completedQuests: []
   followUpQuests:
@@ -14570,6 +14553,10 @@ MonoBehaviour:
     followUpQuest: {fileID: 11400000, guid: f7e5dfb37c4650b4681e6dab4b79d991, type: 2}
   - initialQuest: {fileID: 11400000, guid: f7e5dfb37c4650b4681e6dab4b79d991, type: 2}
     followUpQuest: {fileID: 11400000, guid: be359c05f3dfc30469f16e05ec09d2dd, type: 2}
+  - initialQuest: {fileID: 11400000, guid: 7c74b2cf57e7f3e41a65532db2543618, type: 2}
+    followUpQuest: {fileID: 11400000, guid: f2ab126d02c36934d87c05b11261a7a5, type: 2}
+  - initialQuest: {fileID: 11400000, guid: f2ab126d02c36934d87c05b11261a7a5, type: 2}
+    followUpQuest: {fileID: 11400000, guid: b308543b23ee0df459845e131609b508, type: 2}
 --- !u!4 &926370213
 Transform:
   m_ObjectHideFlags: 0
@@ -14758,6 +14745,61 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1890247430}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &954359156
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 954359158}
+  - component: {fileID: 954359157}
+  m_Layer: 0
+  m_Name: SceneLoader
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &954359157
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 954359156}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e8e57b83d9a76b4bb9d4faebe82e4e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  questNameToCheck: Sov
+  questReferenceToCheck: {fileID: 11400000, guid: b308543b23ee0df459845e131609b508, type: 2}
+  sceneToLoad: Stage 4
+  loadDelay: 1
+  showLoadingScreen: 0
+  loadingScreenPrefab: {fileID: 0}
+  initialDelay: 1
+  checkOnStart: 0
+  checkContinuously: 0
+  requireExplicitCompletion: 1
+  checkInterval: 3
+--- !u!4 &954359158
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 954359156}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 1107.4523, y: 434.89267, z: -54.474915}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &960080929
 GameObject:
@@ -15689,6 +15731,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1028255156}
+  - component: {fileID: 1028255157}
+  - component: {fileID: 1028255158}
   m_Layer: 0
   m_Name: "stors\xE4ng"
   m_TagString: Untagged
@@ -15716,6 +15760,50 @@ Transform:
   - {fileID: 114044627}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 90, y: 90, z: 0}
+--- !u!65 &1028255157
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1028255155}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 19.180017, y: 41.461246, z: 3.7471247}
+  m_Center: {x: -5.769507, y: 4.059949, z: 0.31831002}
+--- !u!114 &1028255158
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1028255155}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83dc7b34223b2fd4b8b59010316efdfb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  associatedQuest: {fileID: 11400000, guid: b308543b23ee0df459845e131609b508, type: 2}
+  objectiveIndex: 0
+  playerTag: Player
+  requireButtonPress: 1
+  interactKey: 101
+  destroyOnCollect: 0
+  interactionPrompt: {fileID: 1844195020}
+  promptText: Press E to collect
+  hoverUIElement: {fileID: 0}
+  hoverUIDisplayTime: 0
+  showOnlyForActiveQuest: 1
 --- !u!1 &1028696228
 GameObject:
   m_ObjectHideFlags: 0
@@ -18036,7 +18124,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83dc7b34223b2fd4b8b59010316efdfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  associatedQuest: {fileID: 11400000, guid: c3c2f38368eddf246ba45427d1454355, type: 2}
+  associatedQuest: {fileID: 11400000, guid: 7c74b2cf57e7f3e41a65532db2543618, type: 2}
   objectiveIndex: 2
   playerTag: Player
   requireButtonPress: 1
@@ -20367,7 +20455,7 @@ Transform:
   m_GameObject: {fileID: 1251371570}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.044353954, y: 1.45, z: 0.07404432}
+  m_LocalPosition: {x: 0.044353954, y: 1.88, z: 0.07404432}
   m_LocalScale: {x: 1, y: 1.6612626, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -22140,7 +22228,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1060dc725b013744e9d6ab7c1f4dd130, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  associatedQuest: {fileID: 11400000, guid: f7e5dfb37c4650b4681e6dab4b79d991, type: 2}
+  associatedQuest: {fileID: 11400000, guid: f2ab126d02c36934d87c05b11261a7a5, type: 2}
   objectiveIndex: 2
   playerTag: Player
   requireButtonPress: 1
@@ -22167,8 +22255,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 23.499012, y: 17.28144, z: 1.2799187}
-  m_Center: {x: 1.4456047, y: 5.4362645, z: -0.13995948}
+  m_Size: {x: 17.973015, y: 12.234592, z: 0.82409483}
+  m_Center: {x: 4.208564, y: 2.9128485, z: 0.0879523}
 --- !u!1 &1393831586
 GameObject:
   m_ObjectHideFlags: 0
@@ -23598,6 +23686,11 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2490116536005928989, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
   m_PrefabInstance: {fileID: 1481384167}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1481384169 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3820932244574906744, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
+  m_PrefabInstance: {fileID: 1481384167}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1483551987
 GameObject:
   m_ObjectHideFlags: 0
@@ -24624,7 +24717,7 @@ Transform:
   m_GameObject: {fileID: 1541074773}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 7.5, y: 14.200001, z: 5.26}
+  m_LocalPosition: {x: 3.6, y: 14.200001, z: 5.26}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -24643,7 +24736,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1060dc725b013744e9d6ab7c1f4dd130, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  associatedQuest: {fileID: 11400000, guid: f7e5dfb37c4650b4681e6dab4b79d991, type: 2}
+  associatedQuest: {fileID: 11400000, guid: f2ab126d02c36934d87c05b11261a7a5, type: 2}
   objectiveIndex: 5
   playerTag: Player
   requireButtonPress: 1
@@ -24670,8 +24763,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 27.890213, y: 26.491272, z: 1.5034775}
-  m_Center: {x: 4.9733486, y: 2.7599266, z: -0.25174123}
+  m_Size: {x: 38.32383, y: 26.491272, z: 2.021942}
+  m_Center: {x: 5.4410458, y: 2.7599266, z: -0.5109743}
 --- !u!1 &1545816759
 GameObject:
   m_ObjectHideFlags: 0
@@ -27876,7 +27969,9 @@ GameObject:
   - component: {fileID: 1761263194}
   - component: {fileID: 1761263196}
   - component: {fileID: 1761263197}
-  m_Layer: 0
+  - component: {fileID: 1761263198}
+  - component: {fileID: 1761263199}
+  m_Layer: 7
   m_Name: Frugan2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27947,7 +28042,7 @@ Transform:
   m_GameObject: {fileID: 1761263193}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 40.66, y: 1.96, z: 3.09}
+  m_LocalPosition: {x: 42.18, y: 1.96, z: 3.09}
   m_LocalScale: {x: 0.04, y: 0.04, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -27980,10 +28075,56 @@ MonoBehaviour:
   dialog: {fileID: 11400000, guid: ec687cf81d9edce4b82ca8e9013cfe0a, type: 2}
   autoTrigger: 0
   triggerDistance: 3
-  interactionPrompt: {fileID: 0}
-  questToComplete: {fileID: 0}
+  interactionPrompt: {fileID: 1481384169}
+  questToComplete: {fileID: 11400000, guid: 7c74b2cf57e7f3e41a65532db2543618, type: 2}
   objectiveIndex: 0
   completeQuestAfterDialog: 0
+--- !u!114 &1761263198
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1761263193}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d38cff2b1027ab44b903f1efa0c34e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  questToGive: {fileID: 11400000, guid: 7c74b2cf57e7f3e41a65532db2543618, type: 2}
+  startQuestOnTriggerEnter: 0
+  initialDialog: {fileID: 0}
+  questOfferDialog: {fileID: 0}
+  acceptedDialog: {fileID: 0}
+  activeQuestDialog: {fileID: 0}
+  completedQuestDialog: {fileID: 0}
+  useDialogForQuest: 1
+  requireButtonPress: 1
+  interactKey: 101
+  playerTag: Player
+  interactionDistance: 3
+  interactionPrompt: {fileID: 1481384169}
+--- !u!65 &1761263199
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1761263193}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 83.899124, y: 109.62499, z: 0.7011983}
+  m_Center: {x: 1.8046097, y: 0, z: 0.06109649}
 --- !u!1 &1771619819
 GameObject:
   m_ObjectHideFlags: 0
@@ -29798,6 +29939,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1890247430}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1844195020 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3820932244574906744, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
+  m_PrefabInstance: {fileID: 1696630767}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1856893358
 GameObject:
   m_ObjectHideFlags: 0
@@ -30705,7 +30851,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1060dc725b013744e9d6ab7c1f4dd130, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  associatedQuest: {fileID: 11400000, guid: f7e5dfb37c4650b4681e6dab4b79d991, type: 2}
+  associatedQuest: {fileID: 11400000, guid: f2ab126d02c36934d87c05b11261a7a5, type: 2}
   objectiveIndex: 4
   playerTag: Player
   requireButtonPress: 1
@@ -34815,7 +34961,7 @@ Transform:
   m_GameObject: {fileID: 2131927202}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 2.4, y: 12.5, z: 5.75}
+  m_LocalPosition: {x: 4.5, y: 12.5, z: 5.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -34834,7 +34980,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1060dc725b013744e9d6ab7c1f4dd130, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  associatedQuest: {fileID: 11400000, guid: f7e5dfb37c4650b4681e6dab4b79d991, type: 2}
+  associatedQuest: {fileID: 11400000, guid: f2ab126d02c36934d87c05b11261a7a5, type: 2}
   objectiveIndex: 1
   playerTag: Player
   requireButtonPress: 1
@@ -35220,6 +35366,7 @@ SceneRoots:
   - {fileID: 92645976}
   - {fileID: 1559047436}
   - {fileID: 30900006}
+  - {fileID: 954359158}
   - {fileID: 926370213}
   - {fileID: 1556489910}
   - {fileID: 1362838671}
