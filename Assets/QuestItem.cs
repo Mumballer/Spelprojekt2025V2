@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class QuestItem : MonoBehaviour
 {
-    public string itemID; // Should match the itemID in QuestObjective
+    public string itemID; // matchar med quest objective
     
     private void OnTriggerEnter(Collider other)
     {
@@ -16,12 +16,12 @@ public class QuestItem : MonoBehaviour
     
     public void CollectItem()
     {
-        // Notify QuestManager that this item was collected
+        // säger till questmanager
         QuestManager.Instance.UpdateObjective(itemID);
         
-        // Optionally play sound, particle effect, etc.
+
         
-        // Remove the item from the scene
+
         gameObject.SetActive(false);
     }
 }

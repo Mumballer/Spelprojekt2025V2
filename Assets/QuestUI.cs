@@ -13,25 +13,27 @@ public class QuestUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI questDescriptionText;
     [SerializeField] private TextMeshProUGUI questStatusText;
     [SerializeField] private Button closeButton;
-    [SerializeField] private TextMeshProUGUI questCounterText; // Optional: Shows "Quest X/Y"
-    [SerializeField] private Button nextQuestButton;          // Optional: For multiple quests
-    [SerializeField] private Button prevQuestButton;          // Optional: For multiple quests
+    [SerializeField] private TextMeshProUGUI questCounterText;
+    [SerializeField] private Button nextQuestButton;
+    [SerializeField] private Button prevQuestButton;
 
     [Header("Text Settings")]
-    [SerializeField] private Color inProgressColor = new Color(1f, 0.92f, 0.016f); // Yellow
-    [SerializeField] private Color completedColor = new Color(0f, 0.75f, 0.22f);   // Green
-    [SerializeField] private float hideDelay = 3f; // Seconds to show completed quest before hiding
+    [SerializeField] private Color inProgressColor = new Color(1f, 0.92f, 0.016f);
+    [SerializeField] private Color completedColor = new Color(0f, 0.75f, 0.22f);
+    [SerializeField] private float hideDelay = 3f;
 
     public Quest currentQuest;
 
-    // Singleton pattern for easy access
     public static QuestUI Instance { get; private set; }
 
     private Coroutine hideCoroutine;
+    private int currentQuestIndex = 0;
+    private bool isAutoHiding = false;
+    private float lastQuestCompletionTime = 0f;
 
     private void Awake()
     {
-        // Setup singleton pattern
+        // skapar singleton
         if (Instance == null)
         {
             Instance = this;
@@ -44,7 +46,6 @@ public class QuestUI : MonoBehaviour
 
     private void Start()
     {
-        // Set up button listeners
         if (closeButton != null)
         {
             closeButton.onClick.AddListener(HideQuestPanel);
@@ -53,137 +54,170 @@ public class QuestUI : MonoBehaviour
         if (nextQuestButton != null)
         {
             nextQuestButton.onClick.AddListener(ShowNextQuest);
-            nextQuestButton.gameObject.SetActive(false); // Hide initially
+            nextQuestButton.gameObject.SetActive(false);
         }
 
         if (prevQuestButton != null)
         {
             prevQuestButton.onClick.AddListener(ShowPreviousQuest);
-            prevQuestButton.gameObject.SetActive(false); // Hide initially
+            prevQuestButton.gameObject.SetActive(false);
         }
 
-        // Register for quest events
-        if (QuestManager.Instance != null)
-        {
-            QuestManager.Instance.OnQuestStarted += HandleQuestStarted;
-            QuestManager.Instance.OnQuestCompleted += HandleQuestCompleted;
-            QuestManager.Instance.OnObjectiveUpdated += HandleObjectiveUpdated;
-        }
-        else
-        {
-            Debug.LogWarning("QuestUI: No QuestManager instance found");
-        }
-
-        // Hide initially
         if (questPanel != null)
         {
             questPanel.SetActive(false);
         }
 
-        // Check for active quests at start
-        CheckForActiveQuests();
+        if (QuestManager.Instance != null)
+        {
+            QuestManager.Instance.OnQuestAdded += HandleQuestAdded;
+            QuestManager.Instance.OnQuestObjectiveCompleted += HandleObjectiveCompleted;
+            QuestManager.Instance.OnQuestCompleted += HandleQuestCompleted;
+        }
     }
 
     private void OnDestroy()
     {
-        // Unregister from quest events
         if (QuestManager.Instance != null)
         {
-            QuestManager.Instance.OnQuestStarted -= HandleQuestStarted;
+            QuestManager.Instance.OnQuestAdded -= HandleQuestAdded;
+            QuestManager.Instance.OnQuestObjectiveCompleted -= HandleObjectiveCompleted;
             QuestManager.Instance.OnQuestCompleted -= HandleQuestCompleted;
-            QuestManager.Instance.OnObjectiveUpdated -= HandleObjectiveUpdated;
         }
-
-        // Clean up button listeners
-        if (closeButton != null)
-            closeButton.onClick.RemoveListener(HideQuestPanel);
-
-        if (nextQuestButton != null)
-            nextQuestButton.onClick.RemoveListener(ShowNextQuest);
-
-        if (prevQuestButton != null)
-            prevQuestButton.onClick.RemoveListener(ShowPreviousQuest);
-
-        // Clear singleton if this is the instance
-        if (Instance == this)
-            Instance = null;
     }
 
-    // Check for and display any active quests
-    private void CheckForActiveQuests()
+    private void HandleQuestAdded(Quest quest)
     {
-        if (QuestManager.Instance != null && QuestManager.Instance.activeQuests.Count > 0)
+        // visar nytt uppdrag
+        ShowQuest(quest);
+    }
+
+    private void HandleObjectiveCompleted(Quest quest, int objectiveIndex)
+    {
+        // uppdaterar när uppdragsmål avklaras
+        if (quest == currentQuest)
         {
-            currentQuest = QuestManager.Instance.activeQuests[0];
             UpdateQuestDisplay();
-            ShowQuestPanel();
         }
-    }
 
-    // Event Handlers
-    private void HandleQuestStarted(Quest quest)
-    {
-        Debug.Log($"QuestUI: Quest started - {quest.questName}");
+        questPanel.SetActive(true);
         
-        // Cancel any pending hide operations
         if (hideCoroutine != null)
         {
             StopCoroutine(hideCoroutine);
-            hideCoroutine = null;
-            Debug.Log("QuestUI: Canceled UI hiding due to new quest");
         }
         
-        currentQuest = quest;
-        UpdateQuestDisplay();
-        ShowQuestPanel();
-        UpdateNavigationButtons();
+        hideCoroutine = StartCoroutine(HideQuestPanelAfterDelay(hideDelay));
     }
 
     private void HandleQuestCompleted(Quest quest)
     {
-        Debug.Log($"QuestUI: Quest completed - {quest.questName}");
+        // uppdaterar när uppdrag avklaras
+        lastQuestCompletionTime = Time.time;
         
-        // Update display to show completion status
-        if (currentQuest == quest)
+        if (quest == currentQuest)
         {
             UpdateQuestDisplay();
-            
-            // Check if there are more active quests
-            if (QuestManager.Instance != null && QuestManager.Instance.activeQuests.Count > 0)
-            {
-                // Schedule switching to next quest after delay
-                // Store the coroutine reference so we can cancel it
-                hideCoroutine = StartCoroutine(SwitchToNextQuestAfterDelay(hideDelay));
-            }
-            else
-            {
-                // No more quests, schedule hiding after delay
-                // Store the coroutine reference so we can cancel it
-                hideCoroutine = StartCoroutine(HideQuestPanelAfterDelay(hideDelay));
-                return; // Exit early to avoid updating the now-hidden UI
-            }
         }
-
-        UpdateNavigationButtons();
+        
+        if (hideCoroutine != null)
+        {
+            StopCoroutine(hideCoroutine);
+        }
+        
+        hideCoroutine = StartCoroutine(HideQuestPanelAfterDelay(hideDelay * 1.5f));
     }
 
-    private void HandleObjectiveUpdated(QuestObjective objective)
+    public void ShowQuest(Quest quest)
     {
-        // Only update if the objective belongs to the current quest
-        if (currentQuest != null && currentQuest.objectives.Contains(objective))
+        // visar specifikt uppdrag
+        currentQuest = quest;
+        
+        if (quest == null)
         {
-            Debug.Log($"QuestUI: Objective updated for {currentQuest.questName}");
-            UpdateQuestDisplay();
+            Debug.LogWarning("Trying to show null quest");
+            return;
         }
+        
+        UpdateQuestDisplay();
+        ShowQuestPanel();
+        
+        if (hideCoroutine != null)
+        {
+            StopCoroutine(hideCoroutine);
+        }
+        
+        hideCoroutine = StartCoroutine(HideQuestPanelAfterDelay(hideDelay));
     }
 
-    // Panel visibility methods
+    private void ShowNextQuest()
+    {
+        // visar nästa uppdrag
+        if (QuestManager.Instance == null || QuestManager.Instance.activeQuests.Count == 0)
+            return;
+            
+        currentQuestIndex = (currentQuestIndex + 1) % QuestManager.Instance.activeQuests.Count;
+        currentQuest = QuestManager.Instance.activeQuests[currentQuestIndex];
+        UpdateQuestDisplay();
+    }
+
+    private void ShowPreviousQuest()
+    {
+        // visar föregående uppdrag
+        if (QuestManager.Instance == null || QuestManager.Instance.activeQuests.Count == 0)
+            return;
+            
+        currentQuestIndex--;
+        if (currentQuestIndex < 0)
+            currentQuestIndex = QuestManager.Instance.activeQuests.Count - 1;
+            
+        currentQuest = QuestManager.Instance.activeQuests[currentQuestIndex];
+        UpdateQuestDisplay();
+    }
+
     public void ShowQuestPanel()
     {
+        // visar uppdragspanelen
         if (questPanel != null)
         {
             questPanel.SetActive(true);
+            UpdateNavigationButtons();
         }
+    }
+
+    private void UpdateNavigationButtons()
+    {
+        if (QuestManager.Instance == null)
+            return;
+            
+        bool multipleQuests = QuestManager.Instance.activeQuests.Count > 1;
+        
+        if (nextQuestButton != null)
+            nextQuestButton.gameObject.SetActive(multipleQuests);
+            
+        if (prevQuestButton != null)
+            prevQuestButton.gameObject.SetActive(multipleQuests);
+            
+        if (questCounterText != null && multipleQuests)
+        {
+            int index = QuestManager.Instance.activeQuests.IndexOf(currentQuest) + 1;
+            questCounterText.text = $"{index}/{QuestManager.Instance.activeQuests.Count}";
+            questCounterText.gameObject.SetActive(true);
+        }
+        else if (questCounterText != null)
+        {
+            questCounterText.gameObject.SetActive(false);
+        }
+    }
+
+    private IEnumerator HideQuestPanelAfterDelay(float delay)
+    {
+        // gömmer panelen efter tid
+        isAutoHiding = true;
+        yield return new WaitForSeconds(delay);
+        HideQuestPanel();
+        isAutoHiding = false;
+        hideCoroutine = null;
     }
 
     public void HideQuestPanel()
@@ -196,178 +230,96 @@ public class QuestUI : MonoBehaviour
 
     public void ForceHideQuestPanel()
     {
-        Debug.Log("QuestUI: Force hiding quest panel");
-        currentQuest = null;
+        // tvingar gömma panel
+        if (hideCoroutine != null)
+        {
+            StopCoroutine(hideCoroutine);
+            hideCoroutine = null;
+        }
+        
         HideQuestPanel();
-
-        // If we're using a coroutine to hide, stop it
-        StopAllCoroutines();
     }
 
-    // Display update methods
-    public void UpdateQuestDisplay()
+    private void UpdateQuestDisplay()
     {
-        if (currentQuest == null)
-        {
-            Debug.LogWarning("QuestUI: Can't update display - no current quest");
+        // uppdaterar uppdragsinformation
+        if (currentQuest == null || questTitleText == null || 
+            questDescriptionText == null || questStatusText == null)
             return;
-        }
 
-        // Update title
-        if (questTitleText != null)
-        {
-            questTitleText.text = currentQuest.questName;
-            Debug.Log($"Setting title text to: {currentQuest.questName}");
-        }
+        questTitleText.text = currentQuest.questName;
+        questDescriptionText.text = currentQuest.description;
 
-        // Update description
-        if (questDescriptionText != null)
-        {
-            questDescriptionText.text = currentQuest.description;
-            Debug.Log($"Setting description text to: {currentQuest.description}");
-        }
+        int completedObjectives = 0;
+        string objectivesText = "";
 
-        // Update status and progress
-        if (questStatusText != null)
+        foreach (QuestObjective objective in currentQuest.objectives)
         {
-            int completedObjectives = 0;
-            foreach (var objective in currentQuest.objectives)
+            if (objective.isCompleted)
             {
-                if (objective.isCompleted)
-                    completedObjectives++;
-            }
-
-            bool isCompleted = completedObjectives >= currentQuest.objectives.Count;
-
-            if (isCompleted)
-            {
-                questStatusText.text = "[COMPLETED]";
-                questStatusText.color = completedColor;
+                completedObjectives++;
+                objectivesText += $"<color=#{ColorUtility.ToHtmlStringRGB(completedColor)}>{objective.description} ✓</color>\n";
             }
             else
             {
-                questStatusText.text = "[IN PROGRESS]";
-                questStatusText.color = inProgressColor;
-
-                // Add progress info
-                if (currentQuest.objectives.Count > 0)
-                {
-                    questStatusText.text += $" ({completedObjectives}/{currentQuest.objectives.Count})";
-                }
+                objectivesText += $"<color=#{ColorUtility.ToHtmlStringRGB(inProgressColor)}>{objective.description}</color>\n";
             }
-
-            Debug.Log($"Setting status text to: {questStatusText.text}");
         }
 
-        // Update quest counter if available
-        UpdateQuestCounter();
-    }
+        questDescriptionText.text += $"\n\n{objectivesText}";
 
-    // Quest navigation methods
-    public void ShowNextQuest()
-    {
-        if (QuestManager.Instance == null || QuestManager.Instance.activeQuests.Count <= 1)
-            return;
-
-        int currentIndex = QuestManager.Instance.activeQuests.IndexOf(currentQuest);
-        if (currentIndex == -1)
-            currentIndex = 0;
-
-        int nextIndex = (currentIndex + 1) % QuestManager.Instance.activeQuests.Count;
-        currentQuest = QuestManager.Instance.activeQuests[nextIndex];
-
-        UpdateQuestDisplay();
-    }
-
-    public void ShowPreviousQuest()
-    {
-        if (QuestManager.Instance == null || QuestManager.Instance.activeQuests.Count <= 1)
-            return;
-
-        int currentIndex = QuestManager.Instance.activeQuests.IndexOf(currentQuest);
-        if (currentIndex == -1)
-            currentIndex = 0;
-
-        int prevIndex = (currentIndex - 1 + QuestManager.Instance.activeQuests.Count) % QuestManager.Instance.activeQuests.Count;
-        currentQuest = QuestManager.Instance.activeQuests[prevIndex];
-
-        UpdateQuestDisplay();
-    }
-
-    private void UpdateQuestCounter()
-    {
-        if (questCounterText == null || QuestManager.Instance == null)
-            return;
-
-        int totalQuests = QuestManager.Instance.activeQuests.Count;
-
-        if (totalQuests > 0)
+        if (currentQuest.IsCompleted)
         {
-            int currentIndex = QuestManager.Instance.activeQuests.IndexOf(currentQuest);
-            if (currentIndex == -1) currentIndex = 0;
-
-            questCounterText.text = $"Quest {currentIndex + 1}/{totalQuests}";
-            questCounterText.gameObject.SetActive(totalQuests > 1);
+            questStatusText.text = "Completed";
+            questStatusText.color = completedColor;
         }
         else
         {
-            questCounterText.gameObject.SetActive(false);
+            questStatusText.text = "In Progress";
+            questStatusText.color = inProgressColor;
+        }
+
+        UpdateNavigationButtons();
+    }
+
+    private void Update()
+    {
+        // uppdaterar knappar
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            if (!questPanel.activeSelf)
+            {
+                ShowAllQuests();
+            }
+            else
+            {
+                HideQuestPanel();
+            }
         }
     }
 
-    private void UpdateNavigationButtons()
+    public void ShowAllQuests()
     {
-        bool hasMultipleQuests = (QuestManager.Instance != null && QuestManager.Instance.activeQuests.Count > 1);
+        // visar alla uppdrag
+        if (QuestManager.Instance == null || QuestManager.Instance.activeQuests.Count == 0)
+        {
+            Debug.Log("No active quests to show");
+            return;
+        }
 
-        if (nextQuestButton != null)
-            nextQuestButton.gameObject.SetActive(hasMultipleQuests);
-
-        if (prevQuestButton != null)
-            prevQuestButton.gameObject.SetActive(hasMultipleQuests);
-    }
-
-    // Delayed actions
-    private IEnumerator HideQuestPanelAfterDelay(float delay)
-    {
-        yield return new WaitForSeconds(delay);
+        currentQuestIndex = 0;
+        currentQuest = QuestManager.Instance.activeQuests[0];
         
-        // Double-check that we should still hide the panel
-        if (QuestManager.Instance != null && QuestManager.Instance.activeQuests.Count > 0)
-        {
-            Debug.Log("QuestUI: Not hiding panel after delay because there are active quests");
-            yield break;
-        }
-        
-        Debug.Log("QuestUI: Hiding quest panel after delay");
-        HideQuestPanel();
+        UpdateQuestDisplay();
+        ShowQuestPanel();
     }
 
-    private IEnumerator SwitchToNextQuestAfterDelay(float delay)
+    public void ShowTestQuest()
     {
-        yield return new WaitForSeconds(delay);
-
-        if (QuestManager.Instance != null && QuestManager.Instance.activeQuests.Count > 0)
-        {
-            Debug.Log("QuestUI: Switching to next quest after delay");
-            currentQuest = QuestManager.Instance.activeQuests[0];
-            UpdateQuestDisplay();
-        }
-        else
-        {
-            Debug.Log("QuestUI: No more quests to switch to, hiding panel");
-            HideQuestPanel();
-        }
-    }
-
-    // Testing methods
-    public void ForceShowTestQuest()
-    {
-        // Create a test quest
         Quest testQuest = ScriptableObject.CreateInstance<Quest>();
         testQuest.questName = "Test Quest";
-        testQuest.description = "This is a test quest for UI debugging.";
+        testQuest.description = "This is a test quest for UI debugging";
 
-        // Create objectives
         testQuest.objectives = new List<QuestObjective>();
 
         QuestObjective objective1 = new QuestObjective
@@ -385,7 +337,6 @@ public class QuestUI : MonoBehaviour
         testQuest.objectives.Add(objective1);
         testQuest.objectives.Add(objective2);
 
-        // Display the test quest
         currentQuest = testQuest;
         UpdateQuestDisplay();
         ShowQuestPanel();

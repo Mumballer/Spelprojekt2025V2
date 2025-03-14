@@ -58,8 +58,8 @@ public class DialogManager : MonoBehaviour
     {
         // skapar singleton-instans
         if (Instance == null)
-        {
-            Instance = this;
+    {
+        Instance = this;
             DontDestroyOnLoad(gameObject);
         }
         else
@@ -78,10 +78,10 @@ public class DialogManager : MonoBehaviour
             dialogBox.SetActive(false);
         }
 
-        if (choicesContainer != null)
-        {
-            choicesContainer.SetActive(false);
-        }
+            if (choicesContainer != null)
+            {
+                choicesContainer.SetActive(false);
+            }
     }
 
     public bool CanStartDialog()
@@ -356,7 +356,7 @@ public class DialogManager : MonoBehaviour
             if (currentDialogLine.NextDialog != null)
             {
                 dialog = currentDialogLine.NextDialog;
-                currentLine = 0;
+        currentLine = 0;
                 ShowPortrait(dialog.Lines[currentLine].Character);
                 typingCoroutine = StartCoroutine(TypeText(dialog.Lines[currentLine].Text));
             }
@@ -402,25 +402,25 @@ public class DialogManager : MonoBehaviour
     public IEnumerator ShowDialog(Dialog dialog)
     {
         StartDialog(dialog);
-        yield break;
-    }
+            yield break;
+        }
 
     private void SetPortraitSizeAndPosition(float size, Vector2 offset)
-    {
-        if (portraitFrame != null)
         {
-            portraitFrame.sizeDelta = new Vector2(size, size);
-            portraitFrame.anchoredPosition = offset;
-
-            RectTransform imageRect = portraitImage.GetComponent<RectTransform>();
-            if (imageRect != null && imageRect != portraitFrame)
+            if (portraitFrame != null)
             {
-                imageRect.anchorMin = new Vector2(0.5f, 0.5f);
-                imageRect.anchorMax = new Vector2(0.5f, 0.5f);
-                imageRect.pivot = new Vector2(0.5f, 0.5f);
-                imageRect.anchoredPosition = Vector2.zero;
-                imageRect.sizeDelta = new Vector2(size, size);
-            }
+                portraitFrame.sizeDelta = new Vector2(size, size);
+                portraitFrame.anchoredPosition = offset;
+
+                RectTransform imageRect = portraitImage.GetComponent<RectTransform>();
+                if (imageRect != null && imageRect != portraitFrame)
+                {
+                    imageRect.anchorMin = new Vector2(0.5f, 0.5f);
+                    imageRect.anchorMax = new Vector2(0.5f, 0.5f);
+                    imageRect.pivot = new Vector2(0.5f, 0.5f);
+                    imageRect.anchoredPosition = Vector2.zero;
+                    imageRect.sizeDelta = new Vector2(size, size);
+                }
         }
     }
 

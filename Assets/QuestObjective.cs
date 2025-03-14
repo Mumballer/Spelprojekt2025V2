@@ -8,8 +8,7 @@ public enum ObjectiveType
     Interact,
     GoToLocation,
     KillEnemy,
-    PlaceItem    // New type for placing items
-    // Add more types as needed
+    PlaceItem 
 }
 
 [CreateAssetMenu(fileName = "New Objective", menuName = "Quests/Objective")]
@@ -18,8 +17,8 @@ public class QuestObjective : ScriptableObject
     public string description;
     public ObjectiveType type;
 
-    // For collection quests
-    public string itemID; // Identifier for what needs to be collected
+
+    public string itemID; // checkar vad som ska collectas
     public int requiredAmount = 1;
 
     [HideInInspector]

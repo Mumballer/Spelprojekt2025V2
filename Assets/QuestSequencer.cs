@@ -28,13 +28,13 @@ public class QuestSequencer : MonoBehaviour
             return;
         }
 
-        // Create both quests
+
         CreateQuestSequence();
 
-        // Assign the collection quest to the quest giver
+
         if (questGiver != null)
         {
-            // Use reflection to set the private field
+
             var field = typeof(QuestGiver).GetField("questToGive",
                 System.Reflection.BindingFlags.Instance |
                 System.Reflection.BindingFlags.NonPublic);
@@ -48,7 +48,7 @@ public class QuestSequencer : MonoBehaviour
 
     private void CreateQuestSequence()
     {
-        // Create collection quest
+        // skapar collection questen
         collectionQuest = ScriptableObject.CreateInstance<Quest>();
         collectionQuest.questName = collectionQuestName;
         collectionQuest.description = collectionQuestDescription;
@@ -65,12 +65,12 @@ public class QuestSequencer : MonoBehaviour
             collectionQuest.objectives.Add(objective);
         }
 
-        // Create placement quest
+        // gör placement questen
         placementQuest = ScriptableObject.CreateInstance<Quest>();
         placementQuest.questName = placementQuestName;
         placementQuest.description = placementQuestDescription;
 
-        // Add placement objectives
+        // fixar objectives
         for (int i = 0; i < Mathf.Min(itemNames.Length, itemIDs.Length); i++)
         {
             QuestObjective objective = ScriptableObject.CreateInstance<QuestObjective>();
@@ -82,15 +82,14 @@ public class QuestSequencer : MonoBehaviour
             placementQuest.objectives.Add(objective);
         }
 
-        // Initialize both quests
+
         collectionQuest.Initialize();
         placementQuest.Initialize();
 
-        // Add to available quests
         QuestManager.Instance.availableQuests.Add(collectionQuest);
         QuestManager.Instance.availableQuests.Add(placementQuest);
 
-        // Create the follow-up relationship
+
         QuestPair questPair = new QuestPair
         {
             initialQuest = collectionQuest,
