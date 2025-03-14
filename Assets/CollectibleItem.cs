@@ -17,9 +17,9 @@ public class CollectibleItem : MonoBehaviour
     [SerializeField] private string promptText = "Press E to collect";
 
     [Header("Hover UI Settings")]
-    [SerializeField] private GameObject hoverUIElement; // UI element to show when hovering
-    [SerializeField] private float hoverUIDisplayTime = 0f; // 0 means display as long as hovering
-    [SerializeField] private bool showOnlyForActiveQuest = true; // Only show for active quest items
+    [SerializeField] private GameObject hoverUIElement;
+    [SerializeField] private float hoverUIDisplayTime = 0f;
+    [SerializeField] private bool showOnlyForActiveQuest = true;
 
     private bool isPlayerInRange = false;
     private bool isCollected = false;
@@ -40,14 +40,13 @@ public class CollectibleItem : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        // spelaren är nära objektet
         if (other.CompareTag(playerTag) && !isCollected)
         {
             isPlayerInRange = true;
 
-            // Only show prompt if quest is active and objective not completed
             if (associatedQuest != null)
             {
-                // Use our improved CheckQuestIsActive method instead of direct check
                 bool isActive = CheckQuestIsActive();
                 
                 Debug.Log($"<color=magenta>CollectibleItem - OnTriggerEnter - Quest '{associatedQuest.questName}' active: {isActive}</color>");
@@ -55,39 +54,38 @@ public class CollectibleItem : MonoBehaviour
                 if (isActive && objectiveIndex < associatedQuest.objectives.Count &&
                     !associatedQuest.objectives[objectiveIndex].isCompleted)
                 {
-                    if (interactionPrompt != null)
-                    {
-                        interactionPrompt.SetActive(true);
-                        Debug.Log($"<color=magenta>CollectibleItem - Showing interaction prompt</color>");
-
-                        TMPro.TextMeshProUGUI promptTextComponent =
-                            interactionPrompt.GetComponentInChildren<TMPro.TextMeshProUGUI>();
-                        if (promptTextComponent != null)
-                        {
-                            promptTextComponent.text = promptText;
-                            Debug.Log($"<color=magenta>CollectibleItem - Set prompt text to: {promptText}</color>");
-                        }
-                        else
-                        {
-                            Debug.LogWarning($"<color=red>CollectibleItem - No TextMeshProUGUI found in interaction prompt!</color>");
-                        }
-                    }
-                    else
-                    {
-                        Debug.LogWarning($"<color=red>CollectibleItem - No interaction prompt assigned!</color>");
-                    }
-
-                    // Show hover UI if available
-                    if (hoverUIElement != null)
+                    ShowPrompt();
+                    
+                    if (hoverUIElement != null && showOnlyForActiveQuest)
                     {
                         hoverUIElement.SetActive(true);
                         hoverUITimer = hoverUIDisplayTime;
-                        Debug.Log($"<color=magenta>CollectibleItem - Showing hover UI</color>");
+                    }
+                    
+                    if (!requireButtonPress)
+                    {
+                        CollectItem();
                     }
                 }
-                else
+                else if (hoverUIElement != null && !showOnlyForActiveQuest)
                 {
-                    Debug.Log($"<color=orange>CollectibleItem - Cannot show UI - Quest active: {isActive}, Objective completed: {(objectiveIndex < associatedQuest.objectives.Count ? associatedQuest.objectives[objectiveIndex].isCompleted : false)}</color>");
+                    hoverUIElement.SetActive(true);
+                    hoverUITimer = hoverUIDisplayTime;
+                }
+            }
+            else if (interactionPrompt != null)
+            {
+                ShowPrompt();
+                
+                if (hoverUIElement != null)
+                {
+                    hoverUIElement.SetActive(true);
+                    hoverUITimer = hoverUIDisplayTime;
+                }
+                
+                if (!requireButtonPress)
+                {
+                    CollectItem();
                 }
             }
         }
@@ -98,13 +96,12 @@ public class CollectibleItem : MonoBehaviour
         if (other.CompareTag(playerTag))
         {
             isPlayerInRange = false;
-
-            // Hide both UI elements when player leaves
+            
             if (interactionPrompt != null)
             {
                 interactionPrompt.SetActive(false);
             }
-
+            
             if (hoverUIElement != null)
             {
                 hoverUIElement.SetActive(false);
@@ -114,14 +111,12 @@ public class CollectibleItem : MonoBehaviour
 
     private void Update()
     {
-        // Try to find the active quest reference periodically
-        if (Time.frameCount % 30 == 0) // Check roughly every 30 frames
+        if (requireButtonPress && isPlayerInRange && Input.GetKeyDown(interactKey) && !isCollected)
         {
-            FindMatchingActiveQuest();
+            CollectItem();
         }
-
-        // Handle hover UI timer if it's set
-        if (hoverUIDisplayTime > 0 && hoverUIElement != null && hoverUIElement.activeSelf)
+        
+        if (hoverUIElement != null && hoverUIElement.activeSelf && hoverUIDisplayTime > 0)
         {
             hoverUITimer -= Time.deltaTime;
             if (hoverUITimer <= 0)
@@ -129,10 +124,20 @@ public class CollectibleItem : MonoBehaviour
                 hoverUIElement.SetActive(false);
             }
         }
+    }
 
-        if (requireButtonPress && isPlayerInRange && Input.GetKeyDown(interactKey) && !isCollected)
+    private void ShowPrompt()
+    {
+        if (interactionPrompt != null)
         {
-            CollectItem();
+            interactionPrompt.SetActive(true);
+            
+            TMPro.TextMeshProUGUI promptTextComponent = 
+                interactionPrompt.GetComponentInChildren<TMPro.TextMeshProUGUI>();
+            if (promptTextComponent != null)
+            {
+                promptTextComponent.text = promptText;
+            }
         }
     }
 
@@ -141,11 +146,9 @@ public class CollectibleItem : MonoBehaviour
         if (associatedQuest == null)
             return false;
         
-        // First check the property directly
         if (associatedQuest.IsActive)
             return true;
         
-        // Then check if it's in the active quests list
         if (QuestManager.Instance != null)
         {
             foreach (var quest in QuestManager.Instance.activeQuests)
@@ -158,38 +161,15 @@ public class CollectibleItem : MonoBehaviour
         return false;
     }
 
-    // Find active quest with the same name
-    private bool FindMatchingActiveQuest()
-    {
-        if (associatedQuest == null || QuestManager.Instance == null)
-            return false;
-        
-        string questName = associatedQuest.questName;
-        
-        foreach (var quest in QuestManager.Instance.activeQuests)
-        {
-            if (quest.questName == questName)
-            {
-                associatedQuest = quest; // Update to the active instance
-                return true;
-            }
-        }
-        
-        return false;
-    }
-
     public void CollectItem()
     {
+        // samlar in föremålet
         if (isCollected) return;
-
-        // Try to find the right quest reference first
-        FindMatchingActiveQuest();
 
         if (associatedQuest != null && QuestManager.Instance != null)
         {
-            // Make sure the quest is active - check in active quests list
             bool isActive = CheckQuestIsActive();
-            Debug.Log($"<color=orange>CollectItem - Quest '{associatedQuest.questName}' active check: {isActive}</color>");
+            Debug.Log($"<color=magenta>CollectibleItem - Collecting - Quest '{associatedQuest.questName}' active: {isActive}</color>");
             
             if (!isActive)
             {
@@ -199,13 +179,10 @@ public class CollectibleItem : MonoBehaviour
 
             Debug.Log($"<color=green>Completing objective {objectiveIndex} for quest {associatedQuest.questName}</color>");
 
-            // Complete this specific objective
             QuestManager.Instance.CompleteObjective(associatedQuest, objectiveIndex);
 
-            // Mark as collected
             isCollected = true;
 
-            // Debug logs for quest status
             Debug.Log("Quest objectives status after collection:");
             foreach (var objective in associatedQuest.objectives)
             {
@@ -215,7 +192,6 @@ public class CollectibleItem : MonoBehaviour
 
             Debug.Log($"Collected item for quest: {associatedQuest.questName}, objective: {objectiveIndex}");
 
-            // Hide all UI elements
             if (interactionPrompt != null)
             {
                 interactionPrompt.SetActive(false);
@@ -226,14 +202,12 @@ public class CollectibleItem : MonoBehaviour
                 hoverUIElement.SetActive(false);
             }
 
-            // Destroy the item if configured to do so
             if (destroyOnCollect)
             {
                 Destroy(gameObject);
             }
             else
             {
-                // Just disable visuals
                 MeshRenderer renderer = GetComponent<MeshRenderer>();
                 if (renderer != null)
                 {

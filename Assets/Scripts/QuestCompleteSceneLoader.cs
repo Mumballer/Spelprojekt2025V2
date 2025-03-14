@@ -5,60 +5,55 @@ using System.Collections;
 public class QuestCompleteSceneLoader : MonoBehaviour
 {
     [Header("Quest to Check")]
-    [SerializeField] private string questNameToCheck; // Name of the quest to check
-    [SerializeField] private Quest questReferenceToCheck; // Direct reference (optional)
+    [SerializeField] private string questNameToCheck;
+    [SerializeField] private Quest questReferenceToCheck;
     
     [Header("Scene Loading")]
-    [SerializeField] private string sceneToLoad; // Scene to load when quest completes
-    [SerializeField] private float loadDelay = 2f; // Optional delay before loading
-    [SerializeField] private bool showLoadingScreen = false; // Whether to show a loading screen
-    [SerializeField] private GameObject loadingScreenPrefab; // Optional loading screen
+    [SerializeField] private string sceneToLoad;
+    [SerializeField] private float loadDelay = 2f;
+    [SerializeField] private bool showLoadingScreen = false;
+    [SerializeField] private GameObject loadingScreenPrefab;
     
     [Header("Check Settings")]
-    [SerializeField] private float initialDelay = 5f; // Delay before loader becomes active
-    [SerializeField] private bool checkOnStart = false; // Set this to FALSE
-    [SerializeField] private bool checkContinuously = false; // Set this to FALSE
-    [SerializeField] private bool requireExplicitCompletion = true; // Add this field
-    [SerializeField] private float checkInterval = 1f; // How often to check (seconds)
+    [SerializeField] private float initialDelay = 5f;
+    [SerializeField] private bool checkOnStart = false;
+    [SerializeField] private bool checkContinuously = false;
+    [SerializeField] private bool requireExplicitCompletion = true;
+    [SerializeField] private float checkInterval = 1f;
     
     private float timeSinceLastCheck = 0f;
     private bool isLoading = false;
-    private bool isActive = false; // Whether this loader is currently active
+    private bool isActive = false;
     
     private void Start()
     {
-        // Start with the loader inactive
         isActive = false;
         
-        // Start the activation delay
         StartCoroutine(ActivateAfterDelay());
     }
     
     private IEnumerator ActivateAfterDelay()
     {
+        // väntar innan aktivering
         Debug.Log($"QuestCompleteSceneLoader will activate in {initialDelay} seconds");
         yield return new WaitForSeconds(initialDelay);
         
-        // Now activate the loader
         isActive = true;
         Debug.Log("QuestCompleteSceneLoader is now active");
         
-        // Subscribe to quest completion events
         if (QuestManager.Instance != null)
         {
             QuestManager.Instance.OnQuestCompleted += HandleQuestCompleted;
         }
         
-        // Initial check if configured
         if (checkOnStart)
         {
             CheckQuestAndLoadScene();
         }
     }
-    
+
     private void OnDestroy()
     {
-        // Clean up event subscription
         if (QuestManager.Instance != null)
         {
             QuestManager.Instance.OnQuestCompleted -= HandleQuestCompleted;
@@ -67,119 +62,105 @@ public class QuestCompleteSceneLoader : MonoBehaviour
     
     private void Update()
     {
-        // Don't do anything until we're active
-        if (!isActive) return;
+        if (!isActive || isLoading) return;
         
-        if (checkContinuously && !isLoading)
+        if (checkContinuously)
         {
             timeSinceLastCheck += Time.deltaTime;
+            
             if (timeSinceLastCheck >= checkInterval)
             {
-                CheckQuestAndLoadScene();
                 timeSinceLastCheck = 0f;
+                CheckQuestAndLoadScene();
             }
         }
     }
     
-    // Event handler for quest completion
-    private void HandleQuestCompleted(Quest quest)
+    private void HandleQuestCompleted(Quest completedQuest)
     {
-        // Skip if not active yet
-        if (!isActive) return;
-        
-        if (quest == questReferenceToCheck || 
-            (!string.IsNullOrEmpty(questNameToCheck) && quest.questName == questNameToCheck))
-        {
-            LoadNextScene();
-        }
-    }
-    
-    // Public method for manual checking (can be called by buttons, triggers, etc.)
-    public void CheckQuestAndLoadScene()
-    {
-        // Skip if not active yet
-        if (!isActive) return;
-        
-        if (QuestManager.Instance == null || isLoading) return;
-        
-        // Add this diagnostic code
-        Debug.Log("=== QUEST CHECK DIAGNOSTICS ===");
-        if (QuestManager.Instance.completedQuests != null)
-        {
-            Debug.Log($"Total completed quests: {QuestManager.Instance.completedQuests.Count}");
-            foreach (var q in QuestManager.Instance.completedQuests)
-            {
-                Debug.Log($"Quest in completed list: {q.questName}");
-            }
-        }
+        // kollar uppdrag är klart
+        if (!isActive || isLoading) return;
         
         if (questReferenceToCheck != null)
         {
-            Debug.Log($"Checking quest by reference: {questReferenceToCheck.questName}");
-            Debug.Log($"Has objectives: {questReferenceToCheck.objectives != null && questReferenceToCheck.objectives.Count > 0}");
-            if (questReferenceToCheck.objectives != null)
+            if (completedQuest == questReferenceToCheck)
             {
-                foreach (var obj in questReferenceToCheck.objectives)
-                {
-                    Debug.Log($"Objective: {obj.description}, Completed: {obj.isCompleted}");
-                }
+                LoadNextScene();
             }
         }
-        
-        if (!string.IsNullOrEmpty(questNameToCheck))
-        {
-            Debug.Log($"Checking quest by name: {questNameToCheck}");
-        }
-        // End diagnostic code
-        
-        bool isComplete = false;
-        
-        // Check with direct reference if provided
-        if (questReferenceToCheck != null)
-        {
-            isComplete = IsQuestComplete(questReferenceToCheck);
-        }
-        // Otherwise check by name
         else if (!string.IsNullOrEmpty(questNameToCheck))
         {
-            // Check if this quest is in completed quests list
-            if (QuestManager.Instance.completedQuests != null)
+            if (completedQuest.questName == questNameToCheck)
             {
-                foreach (var quest in QuestManager.Instance.completedQuests)
+                LoadNextScene();
+            }
+        }
+    }
+    
+    private void CheckQuestAndLoadScene()
+    {
+        if (isLoading) return;
+        
+        if (QuestManager.Instance == null)
+        {
+            Debug.LogWarning("No QuestManager instance found!");
+            return;
+        }
+        
+        Quest questToCheck = null;
+        
+        if (questReferenceToCheck != null)
+        {
+            questToCheck = questReferenceToCheck;
+        }
+        else if (!string.IsNullOrEmpty(questNameToCheck))
+        {
+            foreach (var quest in QuestManager.Instance.completedQuests)
+            {
+                if (quest.questName == questNameToCheck)
+                {
+                    questToCheck = quest;
+                    break;
+                }
+            }
+            
+            if (questToCheck == null)
+            {
+                foreach (var quest in QuestManager.Instance.activeQuests)
                 {
                     if (quest.questName == questNameToCheck)
                     {
-                        isComplete = true;
+                        questToCheck = quest;
                         break;
                     }
                 }
             }
         }
         
-        if (isComplete)
+        if (questToCheck != null)
         {
-            LoadNextScene();
+            bool isCompleted = false;
+            
+            if (requireExplicitCompletion)
+            {
+                isCompleted = QuestManager.Instance.IsQuestCompleted(questToCheck);
+            }
+            else
+            {
+                isCompleted = AreAllObjectivesComplete(questToCheck);
+            }
+            
+            if (isCompleted)
+            {
+                LoadNextScene();
+            }
         }
     }
     
-    // Helper method to check if a quest is complete
-    private bool IsQuestComplete(Quest quest)
+    private bool AreAllObjectivesComplete(Quest quest)
     {
-        if (quest == null) return false;
+        if (quest == null || quest.objectives == null) return false;
         
-        // Check if it's in the completed list
-        if (QuestManager.Instance.completedQuests.Contains(quest))
-        {
-            return true;
-        }
-        
-        // Require at least one objective
-        if (quest.objectives == null || quest.objectives.Count == 0) 
-        {
-            return false; // Empty quests are not "complete"
-        }
-        
-        // Check all objectives
         bool allObjectivesComplete = true;
         foreach (var objective in quest.objectives)
         {
@@ -195,6 +176,7 @@ public class QuestCompleteSceneLoader : MonoBehaviour
     
     private void LoadNextScene()
     {
+        // laddar nästa scen
         if (isLoading) return;
         
         if (!string.IsNullOrEmpty(sceneToLoad))
@@ -202,20 +184,17 @@ public class QuestCompleteSceneLoader : MonoBehaviour
             isLoading = true;
             Debug.Log($"Quest '{questNameToCheck}' is complete. Loading scene: {sceneToLoad}");
             
-            // Show loading screen if configured
             if (showLoadingScreen && loadingScreenPrefab != null)
             {
                 Instantiate(loadingScreenPrefab, Vector3.zero, Quaternion.identity);
             }
             
-            // Load with optional delay
             if (loadDelay > 0)
             {
                 StartCoroutine(LoadSceneWithDelay(sceneToLoad, loadDelay));
             }
             else
             {
-                // Make sure the scene is in the build settings
                 if (Application.CanStreamedLevelBeLoaded(sceneToLoad))
                 {
                     SceneManager.LoadScene(sceneToLoad);

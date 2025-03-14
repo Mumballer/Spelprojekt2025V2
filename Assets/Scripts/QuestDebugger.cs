@@ -6,6 +6,7 @@ public class QuestDebugger : MonoBehaviour
     
     void Start()
     {
+        // skriver ut uppdragsinfo
         if (questToDebug != null)
         {
             Debug.Log($"=== QUEST DEBUG: {questToDebug.questName} ===");

@@ -15,6 +15,7 @@ public class DialogChoiceButton : MonoBehaviour
 
     private void Awake()
     {
+        // fixar knappens layout
         rectTransform = GetComponent<RectTransform>();
 
         layoutElement = GetComponent<LayoutElement>();
@@ -41,6 +42,7 @@ public class DialogChoiceButton : MonoBehaviour
 
     public void SetText(string text)
     {
+        // ställer in knappens text
         if (buttonText == null) return;
 
         buttonText.text = text;

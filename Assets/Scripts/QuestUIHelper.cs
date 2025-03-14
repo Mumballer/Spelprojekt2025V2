@@ -6,7 +6,6 @@ public class QuestUIHelper : MonoBehaviour
 
     private void Start()
     {
-        // If not assigned in inspector, try to find in scene
         if (questUI == null)
         {
             questUI = FindObjectOfType<QuestUI>();
@@ -15,6 +14,7 @@ public class QuestUIHelper : MonoBehaviour
 
     public void HideAllQuestUI()
     {
+        // gömmer uppdragsgränssnittet
         if (questUI != null)
         {
             questUI.ForceHideQuestPanel();
@@ -27,7 +27,7 @@ public class QuestUIHelper : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.H)) // H for hide
+        if (Input.GetKeyDown(KeyCode.H))
         {
             HideAllQuestUI();
         }

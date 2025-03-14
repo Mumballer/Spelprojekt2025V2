@@ -6,8 +6,8 @@ using System.Collections;
 public class DialogSceneLoader : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private DialogManager dialogManager; // Direct reference
-    [SerializeField] private GameObject dialogBox; // Reference to the dialog UI box
+    [SerializeField] private DialogManager dialogManager;
+    [SerializeField] private GameObject dialogBox;
 
     [Header("Scene Loading Settings")]
     [SerializeField] private string sceneToLoad;
@@ -33,14 +33,12 @@ public class DialogSceneLoader : MonoBehaviour
         
         Debug.Log($"<color=cyan>DialogSceneLoader ready on {gameObject.name}, scene to load: {sceneToLoad}</color>");
         
-        // Show prompt immediately
         if (interactionPrompt != null)
         {
             interactionPrompt.SetActive(true);
             Debug.Log("<color=cyan>DialogSceneLoader: Showing interaction prompt</color>");
         }
         
-        // Try to find DialogManager if not assigned
         if (dialogManager == null)
         {
             dialogManager = FindObjectOfType<DialogManager>();
@@ -50,15 +48,12 @@ public class DialogSceneLoader : MonoBehaviour
             }
         }
         
-        // Try to find dialog box if not assigned
         if (dialogBox == null && dialogManager != null)
         {
-            // Try to get it from the DialogManager
             dialogBox = dialogManager.GetDialogBox();
             
             if (dialogBox == null)
             {
-                // Fallback: search by common names
                 dialogBox = GameObject.Find("DialogBox");
                 if (dialogBox == null) dialogBox = GameObject.Find("DialogPanel");
                 if (dialogBox == null) dialogBox = GameObject.Find("DialogUI");
@@ -77,18 +72,16 @@ public class DialogSceneLoader : MonoBehaviour
     
     private void Update()
     {
-        // APPROACH 1: Check for interaction key to start dialog
+        // kollar efter knapptryck
         if (!hasStartedDialog && Input.GetKeyDown(interactKey))
         {
             Debug.Log("<color=cyan>DialogSceneLoader: Interaction key pressed</color>");
             
-            // Hide the prompt
             if (interactionPrompt != null)
             {
                 interactionPrompt.SetActive(false);
             }
             
-            // Start dialog
             if (dialogTrigger != null)
             {
                 dialogTrigger.TriggerDialog();
@@ -97,12 +90,11 @@ public class DialogSceneLoader : MonoBehaviour
             }
         }
         
-        // APPROACH 2: Monitor dialog box active state to detect when dialog completes
+        // kollar om dialog är slut
         if (dialogBox != null)
         {
             bool isDialogBoxActive = dialogBox.activeSelf;
             
-            // Detect when dialog box was active but is now inactive (dialog ended)
             if (wasDialogBoxActive && !isDialogBoxActive && hasStartedDialog && !isLoadingScene)
             {
                 Debug.Log("<color=green>DialogSceneLoader: Dialog box became inactive - dialog completed</color>");
@@ -120,27 +112,24 @@ public class DialogSceneLoader : MonoBehaviour
         
         Debug.Log($"<color=green>DialogSceneLoader: Preparing to load scene: {sceneToLoad}</color>");
         
-        // Wait a short delay after dialog completes
         yield return new WaitForSeconds(delayAfterDialogComplete);
         
-        // Do fade out if requested
         if (fadeOutBeforeLoading)
         {
             yield return StartCoroutine(FadeToBlack());
         }
         
-        // Load the scene
+        // laddar nästa scen
         Debug.Log($"<color=cyan>DialogSceneLoader: Loading scene {sceneToLoad}</color>");
         SceneManager.LoadScene(sceneToLoad);
     }
     
     private IEnumerator FadeToBlack()
     {
-        // Create temporary fade panel
         GameObject fadePanel = new GameObject("FadePanel");
         Canvas canvas = fadePanel.AddComponent<Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-        canvas.sortingOrder = 999; // Make sure it's on top
+        canvas.sortingOrder = 999;
         
         RectTransform rectTransform = fadePanel.GetComponent<RectTransform>();
         rectTransform.anchorMin = Vector2.zero;
@@ -150,7 +139,7 @@ public class DialogSceneLoader : MonoBehaviour
         UnityEngine.UI.Image fadeImage = fadePanel.AddComponent<UnityEngine.UI.Image>();
         fadeImage.color = new Color(0, 0, 0, 0);
         
-        // Fade over time
+        // gör skärmen svart
         float startTime = Time.time;
         while (Time.time < startTime + fadeOutDuration)
         {
@@ -160,6 +149,6 @@ public class DialogSceneLoader : MonoBehaviour
         }
         
         fadeImage.color = new Color(0, 0, 0, 1);
-        yield return new WaitForSeconds(0.2f); // Short pause at full black
+        yield return new WaitForSeconds(0.2f);
     }
 } 

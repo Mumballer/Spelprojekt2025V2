@@ -35,6 +35,7 @@ public class PlacementSpot : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        // aktiverar prompt vid rätt tillfälle
         if (other.CompareTag(playerTag) && !isItemPlaced)
         {
             isPlayerInRange = true;
@@ -109,6 +110,7 @@ public class PlacementSpot : MonoBehaviour
 
     public void TryPlaceItem()
     {
+        // placerar objektet
         if (isItemPlaced) return;
 
         if (associatedQuest != null && QuestManager.Instance != null)

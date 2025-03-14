@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 public class Gramophone : MonoBehaviour
 {
     [Header("Audio Settings")]
-    [SerializeField] private AudioSource externalAudioSource; // Changed to AudioSource
+    [SerializeField] private AudioSource externalAudioSource;
     [SerializeField] private float volumeLevel = 0.5f;
     [SerializeField] private float fadeTime = 1.0f;
 
@@ -35,40 +35,34 @@ public class Gramophone : MonoBehaviour
     private Coroutine fadeCoroutine;
     private bool playerInRange = false;
     private bool objectiveCompleted = false;
-    private string questName; // Store quest name for reconnection
-    private float currentVolume = 0f; // Track volume for the external source
+    private string questName;
+    private float currentVolume = 0f;
 
-    // Public property to check if music is playing
     public bool IsPlaying => isPlaying;
 
     private void Start()
     {
-        // Check if external audio source is assigned
+        // kollar ljudkällan
         if (externalAudioSource == null)
         {
             Debug.LogError($"External AudioSource not assigned to Gramophone '{name}'! Please assign an AudioSource in the inspector.");
             return;
         }
 
-        // Configure the external audio source
         currentVolume = 0f;
         externalAudioSource.volume = 0;
 
-        // Initialize UI
         if (interactionPrompt != null)
         {
             interactionPrompt.SetActive(false);
         }
 
-        // Check if objective is already completed BUT DON'T COMPLETE IT
         if (associatedQuest != null && objectiveIndex >= 0 &&
             objectiveIndex < associatedQuest.objectives.Count)
         {
             objectiveCompleted = associatedQuest.objectives[objectiveIndex].isCompleted;
-            // Don't add any code here that might complete the objective
         }
 
-        // Add enhanced quest association logging
         if (associatedQuest != null)
         {
             Debug.Log($"<color=yellow>Gramophone '{name}' is linked to quest '{associatedQuest.questName}', objective {objectiveIndex}</color>");
@@ -78,10 +72,8 @@ public class Gramophone : MonoBehaviour
             Debug.Log($"<color=yellow>Gramophone '{name}' is not linked to any quest</color>");
         }
 
-        // Call immediately on start
         CheckAndActivateIfNeeded();
 
-        // Only persist in certain scenes (e.g., Scene1)
         string currentSceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
         if (currentSceneName == "Scene1" || currentSceneName == "YourFirstSceneName")
         {
@@ -89,27 +81,22 @@ public class Gramophone : MonoBehaviour
         }
         else
         {
-            // Don't persist this gramophone if it's in other scenes
             Debug.Log($"<color=cyan>Gramophone '{gameObject.name}' is scene-specific and won't persist</color>");
         }
     }
 
     private void OnEnable()
     {
-        // Also call when object is enabled
         CheckAndActivateIfNeeded();
     }
 
-    // Add this to ensure the gramophone stays active
     private void Update()
     {
-        // Check periodically while game is running
+        // kollar kontinuerligt
         CheckAndActivateIfNeeded();
 
-        // Handle player interaction
         if (playerInRange && Input.GetKeyDown(interactKey))
         {
-            // Check if interaction is allowed based on quest state
             if (CanInteract())
             {
                 Debug.Log($"<color=cyan>Player interacting with gramophone {name}</color>");
@@ -122,13 +109,11 @@ public class Gramophone : MonoBehaviour
             }
         }
 
-        // Quest reconnection code...
         questCheckTimer += Time.deltaTime;
         if (questCheckTimer >= QUEST_CHECK_INTERVAL)
         {
             questCheckTimer = 0f;
 
-            // If our quest is not active, try to find it
             if (associatedQuest != null && !associatedQuest.IsActive)
             {
                 if (FindMatchingQuestAndUpdate())
@@ -142,14 +127,11 @@ public class Gramophone : MonoBehaviour
 
     private bool CanInteract()
     {
-        // If no quest restrictions, always allow interaction
         if (associatedQuest == null)
             return true;
 
-        // Use our custom active check
         bool isActive = IsQuestActive();
 
-        // Show debug info
         Debug.Log($"<color=cyan>CanInteract check - Quest '{associatedQuest.questName}' is active: {isActive}, Objective completed: {objectiveCompleted}</color>");
 
         if (!requireActiveQuest || isActive)
@@ -162,10 +144,8 @@ public class Gramophone : MonoBehaviour
 
     private void UpdatePrompt()
     {
-        // Safety check
         if (interactionPrompt == null) return;
 
-        // Debug quest state during prompt update
         if (associatedQuest != null)
         {
             Debug.Log($"<color=magenta>UpdatePrompt - Quest '{associatedQuest.questName}' Active: {associatedQuest.IsActive}, ObjectiveCompleted: {objectiveCompleted}</color>");
@@ -177,10 +157,8 @@ public class Gramophone : MonoBehaviour
             return;
         }
 
-        // Show prompt when player is in range
         interactionPrompt.SetActive(true);
 
-        // Update interaction message based on state
         TMPro.TextMeshProUGUI promptText = interactionPrompt.GetComponentInChildren<TMPro.TextMeshProUGUI>();
         if (promptText != null)
         {
@@ -197,7 +175,6 @@ public class Gramophone : MonoBehaviour
         }
     }
 
-    // Public method for toggling music state
     public void ToggleMusic()
     {
         Debug.Log($"<color=cyan>Toggling music on gramophone {name}</color>");
@@ -206,33 +183,26 @@ public class Gramophone : MonoBehaviour
 
         if (isPlaying)
         {
-            // Start playing
             if (!externalAudioSource.isPlaying)
             {
                 externalAudioSource.Play();
             }
             StartMusic();
 
-            // Complete quest objective if required
             if (completeObjectiveOnPlay)
             {
-                // Make sure quest is up to date before completing
                 FindMatchingQuestAndUpdate();
                 CompleteQuestObjective();
 
-                // Log objective completion attempt
                 Debug.Log($"<color=cyan>Attempting to complete objective for quest: {associatedQuest?.questName}</color>");
             }
         }
         else
         {
-            // Stop playing
             StopMusic();
 
-            // Complete quest objective if required
             if (completeObjectiveOnStop)
             {
-                // Make sure quest is up to date before completing
                 FindMatchingQuestAndUpdate();
                 CompleteQuestObjective();
             }
@@ -243,14 +213,12 @@ public class Gramophone : MonoBehaviour
     {
         if (associatedQuest != null)
         {
-            // Try to find active quest with the same name
             FindMatchingQuestAndUpdate();
 
-            // Use our custom active check instead of relying on the quest's IsActive property
             bool isActive = IsQuestActive();
             Debug.Log($"<color=orange>CompleteQuestObjective - Quest '{associatedQuest.questName}' Active check: {isActive}</color>");
 
-            if (isActive) // Use our custom check here
+            if (isActive)
             {
                 if (objectiveIndex >= 0 && objectiveIndex < associatedQuest.objectives.Count)
                 {
@@ -258,12 +226,10 @@ public class Gramophone : MonoBehaviour
                     {
                         Debug.Log($"<color=yellow>Completing objective {objectiveIndex} for quest '{associatedQuest.questName}'</color>");
 
-                        // Use the QuestManager instance to complete the objective
                         QuestManager.Instance.CompleteObjective(associatedQuest, objectiveIndex);
 
                         objectiveCompleted = true;
 
-                        // Log completion status
                         Debug.Log($"<color=green>Quest objective completed! Quest status: {associatedQuest.IsCompleted}</color>");
                     }
                     else
@@ -280,7 +246,6 @@ public class Gramophone : MonoBehaviour
             {
                 Debug.Log($"<color=red>Cannot complete objective - quest is not active (custom check)</color>");
 
-                // Force-complete the objective anyway as a fallback
                 if (QuestManager.Instance != null && objectiveIndex >= 0 && objectiveIndex < associatedQuest.objectives.Count)
                 {
                     Debug.Log($"<color=orange>FORCING objective completion despite inactive quest status</color>");
@@ -291,7 +256,6 @@ public class Gramophone : MonoBehaviour
         }
     }
 
-    // New method to find matching quest by name in active quests
     private bool FindMatchingQuestAndUpdate()
     {
         if (associatedQuest == null || QuestManager.Instance == null)
@@ -304,7 +268,7 @@ public class Gramophone : MonoBehaviour
             if (quest.questName == questName)
             {
                 Debug.Log($"<color=lime>Gramophone found matching active quest: {questName}</color>");
-                associatedQuest = quest; // Update to the active instance
+                associatedQuest = quest;
                 return true;
             }
         }
@@ -361,7 +325,6 @@ public class Gramophone : MonoBehaviour
         fadeCoroutine = null;
     }
 
-    // For editor testing
     public void ForcePlayMusic()
     {
         isPlaying = true;
@@ -376,7 +339,6 @@ public class Gramophone : MonoBehaviour
         UpdatePrompt();
     }
 
-    // Draw gizmo for interaction range
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.green;
@@ -385,14 +347,12 @@ public class Gramophone : MonoBehaviour
 
     public void CheckAndActivateIfNeeded()
     {
-        // Check if this gameObject is inactive
         if (!gameObject.activeSelf)
         {
             Debug.Log("Gramophone was inactive - activating now");
             gameObject.SetActive(true);
         }
 
-        // Also check any child objects that need to be active
         if (transform.childCount > 0)
         {
             foreach (Transform child in transform)
@@ -406,16 +366,13 @@ public class Gramophone : MonoBehaviour
         }
     }
 
-    // Optional - make the gramophone persistent between scenes
     private void Awake()
     {
-        // Store quest name for quest tracking
         if (associatedQuest != null)
         {
             questName = associatedQuest.questName;
         }
 
-        // Subscribe to scene loaded events for quest reconnection
         SceneManager.sceneLoaded += OnSceneLoaded;
 
         Debug.Log($"<color=cyan>Gramophone '{gameObject.name}' is scene-specific</color>");
@@ -423,26 +380,22 @@ public class Gramophone : MonoBehaviour
 
     private void OnDestroy()
     {
-        // Unsubscribe from events
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // Reconnect to quest when a new scene loads
         StartCoroutine(ReconnectToQuestAfterDelay());
     }
 
     private IEnumerator ReconnectToQuestAfterDelay()
     {
-        // Wait for QuestManager to initialize in new scene
         yield return new WaitForSeconds(0.5f);
 
         if (!string.IsNullOrEmpty(questName) && QuestManager.Instance != null)
         {
             Debug.Log($"<color=orange>Gramophone attempting to reconnect to quest: {questName}</color>");
 
-            // Look for quest with matching name in active quests
             foreach (var quest in QuestManager.Instance.activeQuests)
             {
                 if (quest.questName == questName)
@@ -450,7 +403,6 @@ public class Gramophone : MonoBehaviour
                     associatedQuest = quest;
                     Debug.Log($"<color=orange>Gramophone successfully reconnected to quest: {questName}</color>");
 
-                    // Reset objective completed flag
                     objectiveCompleted = false;
                     if (objectiveIndex >= 0 && objectiveIndex < associatedQuest.objectives.Count)
                     {
@@ -488,19 +440,15 @@ public class Gramophone : MonoBehaviour
         }
     }
 
-    // Add this to update method to periodically check for quest updates
     private float questCheckTimer = 0f;
     private const float QUEST_CHECK_INTERVAL = 1.0f;
 
-    // Add this method to override the IsActive check
     private bool IsQuestActive()
     {
         if (associatedQuest == null) return false;
 
-        // First check the object's own property
         if (associatedQuest.IsActive) return true;
 
-        // Then double-check if it's in the active quests list
         if (QuestManager.Instance == null) return false;
 
         foreach (var quest in QuestManager.Instance.activeQuests)

@@ -32,6 +32,7 @@ public class SceneSwitch : MonoBehaviour
     {
         if (isLoading) return;
         
+        // kollar vid kollision
         if (other.CompareTag(targetTag))
         {
             Debug.Log($"<color=cyan>SceneSwitch: Player touched object with {targetTag} tag</color>");
@@ -42,19 +43,17 @@ public class SceneSwitch : MonoBehaviour
     
     private System.Collections.IEnumerator LoadNextScene()
     {
-        // Optional delay
         if (delayBeforeLoading > 0)
         {
             yield return new WaitForSeconds(delayBeforeLoading);
         }
         
-        // Optional fade out
         if (fadeOut)
         {
             yield return StartCoroutine(FadeToBlack());
         }
         
-        // Load the scene
+        // laddar nästa scen
         if (useNextSceneInBuild)
         {
             int currentIndex = SceneManager.GetActiveScene().buildIndex;
@@ -71,11 +70,10 @@ public class SceneSwitch : MonoBehaviour
     
     private System.Collections.IEnumerator FadeToBlack()
     {
-        // Create temporary fade panel
         GameObject fadePanel = new GameObject("FadePanel");
         Canvas canvas = fadePanel.AddComponent<Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-        canvas.sortingOrder = 999; // Make sure it's on top
+        canvas.sortingOrder = 999;
         
         RectTransform rectTransform = fadePanel.GetComponent<RectTransform>();
         rectTransform.anchorMin = Vector2.zero;
@@ -85,7 +83,7 @@ public class SceneSwitch : MonoBehaviour
         UnityEngine.UI.Image fadeImage = fadePanel.AddComponent<UnityEngine.UI.Image>();
         fadeImage.color = new Color(0, 0, 0, 0);
         
-        // Fade over time
+        // tonar in svart
         float startTime = Time.time;
         while (Time.time < startTime + fadeOutDuration)
         {
@@ -95,6 +93,6 @@ public class SceneSwitch : MonoBehaviour
         }
         
         fadeImage.color = new Color(0, 0, 0, 1);
-        yield return new WaitForSeconds(0.2f); // Short pause at full black
+        yield return new WaitForSeconds(0.2f);
     }
 }

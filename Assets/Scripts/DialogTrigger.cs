@@ -19,6 +19,7 @@ public class DialogTrigger : MonoBehaviour
 
     private void Start()
     {
+        // hittar spelaren i scenen
         PlayerController player = UnityEngine.Object.FindFirstObjectByType<PlayerController>();
         if (player != null)
         {
@@ -30,7 +31,6 @@ public class DialogTrigger : MonoBehaviour
             interactionPrompt.SetActive(false);
         }
 
-        // Subscribe to dialog events to handle prompt visibility
         if (DialogManager.Instance != null)
         {
             DialogManager.Instance.OnShowDialog += HidePrompt;
@@ -41,7 +41,6 @@ public class DialogTrigger : MonoBehaviour
 
     private void OnDestroy()
     {
-        // Unsubscribe from events
         if (DialogManager.Instance != null)
         {
             DialogManager.Instance.OnShowDialog -= HidePrompt;
@@ -58,7 +57,7 @@ public class DialogTrigger : MonoBehaviour
 
         if (distance <= triggerDistance)
         {
-            // Only show prompt if no dialog is active
+            // visar prompt när nära
             if (interactionPrompt != null && !DialogManager.Instance.IsDialogActive)
             {
                 interactionPrompt.SetActive(true);
@@ -84,7 +83,6 @@ public class DialogTrigger : MonoBehaviour
         }
     }
 
-    // Hide prompt when any dialog starts
     private void HidePrompt()
     {
         if (interactionPrompt != null)
@@ -93,7 +91,6 @@ public class DialogTrigger : MonoBehaviour
         }
     }
 
-    // Check if we should show prompt when dialog ends
     private void CheckShowPrompt()
     {
         if (playerTransform == null) return;
@@ -107,6 +104,7 @@ public class DialogTrigger : MonoBehaviour
 
     public void TriggerDialog()
     {
+        // startar dialogen
         if (dialog == null)
         {
             Debug.LogError("Dialog is null!");
@@ -137,9 +135,9 @@ public class DialogTrigger : MonoBehaviour
         }
     }
 
-    // Handle quest completion after dialog
     private void OnDialogCompleted(Dialog completedDialog)
     {
+        // avslutar uppdragsmål efter dialog
         if (completedDialog == dialog && completeQuestAfterDialog &&
             questToComplete != null && QuestManager.Instance != null)
         {

@@ -13,8 +13,8 @@ public class Dialog : ScriptableObject
     // Utility to quickly add lines
     public void AddLine(string text, DialogCharacter character = null)
     {
+        // lägger till ny rad
         DialogLine newLine = new DialogLine();
-        // Set private fields through properties
         newLine.SetText(text);
         newLine.Character = character;
         lines.Add(newLine);

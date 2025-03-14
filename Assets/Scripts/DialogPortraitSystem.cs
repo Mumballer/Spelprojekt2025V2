@@ -24,6 +24,7 @@ public class DialogPortraitSystem : MonoBehaviour
 
     public void UpdatePortrait(DialogCharacter character)
     {
+        // uppdaterar porträttet
         if (character == null)
         {
             HidePortrait();
@@ -38,15 +39,12 @@ public class DialogPortraitSystem : MonoBehaviour
 
             if (portraitFrame != null)
             {
-                // Use character-specific settings if available, otherwise use defaults
                 float size = character.portraitSize > 0 ? character.portraitSize : defaultPortraitSize;
                 Vector2 offset = character.portraitOffset != Vector2.zero ? character.portraitOffset : defaultPortraitOffset;
 
-                // Set the portrait image size
                 portraitFrame.sizeDelta = new Vector2(size, size);
                 portraitFrame.anchoredPosition = offset;
 
-                // Ensure the portrait image is centered within its frame
                 RectTransform imageRect = portraitImage.GetComponent<RectTransform>();
                 if (imageRect != null && imageRect != portraitFrame)
                 {
@@ -57,7 +55,6 @@ public class DialogPortraitSystem : MonoBehaviour
                     imageRect.sizeDelta = new Vector2(size, size);
                 }
 
-                // Log for debugging
                 Debug.Log($"Setting portrait for {character.characterName}: Size={size}, Offset={offset}");
             }
         }
