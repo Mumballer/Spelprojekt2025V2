@@ -1459,7 +1459,7 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 7670693359826972081, guid: 320e5eda242116c47846818c3f0cd925, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 467482502}
+      addedObject: {fileID: 467482498}
   m_SourcePrefab: {fileID: 100100000, guid: 320e5eda242116c47846818c3f0cd925, type: 3}
 --- !u!4 &86708158 stripped
 Transform:
@@ -2619,7 +2619,7 @@ Transform:
   m_GameObject: {fileID: 154254065}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 34.46, y: 2.52, z: 10.67}
+  m_LocalPosition: {x: 34.63, y: 2.52, z: 8.217}
   m_LocalScale: {x: 0.03, y: 0.03, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2634,9 +2634,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 154254065}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc7117d6437f6d64a99df07f3f1990e4, type: 3}
+  m_Script: {fileID: 11500000, guid: 6a32bec322e4ad04195e2e265acbd7a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lookAtCamera: 1
+  freezeYAxis: 1
+  rotationSpeed: 10
+  offset: {x: 0, y: 0, z: 0}
 --- !u!1 &161079901
 GameObject:
   m_ObjectHideFlags: 0
@@ -7211,7 +7215,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 7670693359826972081, guid: 320e5eda242116c47846818c3f0cd925, type: 3}
   m_PrefabInstance: {fileID: 86708157}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &467482502
+--- !u!114 &467482498
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7220,9 +7224,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 467482497}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 103b392106ab4df4b9f790e77bcaa770, type: 3}
+  m_Script: {fileID: 11500000, guid: 6a32bec322e4ad04195e2e265acbd7a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lookAtCamera: 1
+  freezeYAxis: 1
+  rotationSpeed: 10
+  offset: {x: 0, y: 0, z: 0}
 --- !u!1 &470725358
 GameObject:
   m_ObjectHideFlags: 0
@@ -19552,14 +19560,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1251371570}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.044353954, y: 1.45, z: 0.07404432}
+  m_LocalRotation: {x: -0, y: 0.7283419, z: -0, w: 0.6852139}
+  m_LocalPosition: {x: 6.24, y: 1.45, z: 20.946077}
   m_LocalScale: {x: 1, y: 1.6612626, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1122226044}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 93.495, z: 0}
 --- !u!114 &1251371578
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21241,6 +21249,11 @@ PrefabInstance:
 --- !u!224 &1391486526 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2490116536005928989, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
+  m_PrefabInstance: {fileID: 1391486525}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1391486527 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3820932244574906744, guid: 8543b4736e387c146a2de3c291a0b42a, type: 3}
   m_PrefabInstance: {fileID: 1391486525}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1393831586
@@ -33655,7 +33668,7 @@ MonoBehaviour:
   dialog: {fileID: 11400000, guid: 9de4c91c4d324f04ebdef31b45476e49, type: 2}
   autoTrigger: 0
   triggerDistance: 3
-  interactionPrompt: {fileID: 0}
+  interactionPrompt: {fileID: 1391486527}
   questToComplete: {fileID: 11400000, guid: a069e25193c8e0641b434ac4f97fb1f5, type: 2}
   objectiveIndex: 0
   completeQuestAfterDialog: 0
@@ -34541,6 +34554,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: "EnD\xD6rr"
       objectReference: {fileID: 0}
+    - target: {fileID: 7480949739981596364, guid: 040c9b6f4b9b4ce408f9b39f9361757b, type: 3}
+      propertyPath: doorSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 976594d83b694ee488d9c9e2d028644c, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
