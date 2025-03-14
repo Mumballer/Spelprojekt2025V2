@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: Emma End1
   m_EditorClassIdentifier: 
   lines:
-  - text: That's fine Dad I'm not exactly 13 anymore.
+  - text: Hahahahahah, of course you did. By the way, make sure you set the table
+      before the guests come!
     choices:
-    - text: No, I guess you're not haha.
+    - text: "Yea, yea I\u2019ll get to it right now"
       nextDialog: {fileID: 0}
       quest: {fileID: 11400000, guid: 079958ddc4b28084face6cc392bc0a3c, type: 2}
     character: {fileID: 11400000, guid: c2405cd586ae9254c862d66121dfc807, type: 2}

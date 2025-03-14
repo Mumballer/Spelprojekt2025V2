@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a3f3aeca322ca444a011c0b02503c83, type: 3}
+  m_Name: Susan OPT3P2
+  m_EditorClassIdentifier: 
+  lines:
+  - text: oh yes right, you still do that. My little Picasso
+    choices:
+    - text: old age must be getting to you honey
+      nextDialog: {fileID: 11400000, guid: b6f95fd79e6b27047acf790b51488112, type: 2}
+      quest: {fileID: 0}
+    character: {fileID: 11400000, guid: e21005152e6683e42989884abc2c2927, type: 2}
+    nextDialog: {fileID: 0}

@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: Emma End2
   m_EditorClassIdentifier: 
   lines:
-  - text: "Hahahahahah, of course you did. Don\u2019t forget to set the table by
-      the way!"
+  - text: That's fine Dad I'm not exactly 13 anymore.
     choices:
-    - text: "Yea, yea I\u2019ll get to it right now"
-      nextDialog: {fileID: 0}
-      quest: {fileID: 11400000, guid: 079958ddc4b28084face6cc392bc0a3c, type: 2}
+    - text: Oh god don't remind me. You have grown so big already. I still remember
+        how you used to boss me around when you were just a little bean.
+      nextDialog: {fileID: 11400000, guid: daeb510eb1737d94d9b45894f2aa4940, type: 2}
+      quest: {fileID: 0}
     character: {fileID: 11400000, guid: c2405cd586ae9254c862d66121dfc807, type: 2}
     nextDialog: {fileID: 0}

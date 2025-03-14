@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a3f3aeca322ca444a011c0b02503c83, type: 3}
+  m_Name: EmmaD2Opt3
+  m_EditorClassIdentifier: 
+  lines:
+  - text: What? Uhh you okay dad? I've been here since yesterday..
+    choices:
+    - text: Oh what? I must have missed you, I was asleep for so long yesterday so
+        that's probably why.
+      nextDialog: {fileID: 11400000, guid: 11914a587ce35bf4eb287b3a58b7c383, type: 2}
+      quest: {fileID: 0}
+    character: {fileID: 11400000, guid: 902c9ecf90c47fc46b61b74de8e0e880, type: 2}
+    nextDialog: {fileID: 0}

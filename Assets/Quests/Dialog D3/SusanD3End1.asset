@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SusanD3End1
   m_EditorClassIdentifier: 
   lines:
-  - text: "Dont you worry about that Nico, I\u2019ll take care of it.."
+  - text: Kyle? oh Nico.. don't worry i will take care of the table
     choices:
     - text: NO.
       nextDialog: {fileID: 0}

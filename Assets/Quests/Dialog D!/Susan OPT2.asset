@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Susan OPT2
   m_EditorClassIdentifier: 
   lines:
-  - text: Ahhh, summer 1924. I still remember your costume you hunk.
+  - text: Ahhh, summer 1924. I still remember your costume, you hunk.
     choices:
     - text: Hahahaha, you were not too bad yourself
       nextDialog: {fileID: 11400000, guid: aa78718661352b548bce12327e9613cf, type: 2}

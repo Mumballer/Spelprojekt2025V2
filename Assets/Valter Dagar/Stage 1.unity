@@ -13810,7 +13810,13 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   lockCameraDuringDialog: 1
+  allowCameraEffectsDuringDialog: 1
   showCursorDuringDialog: 1
+  cameraControlComponentNames:
+  - MouseLook
+  - FirstPersonLook
+  - PlayerLook
+  - LookController
 --- !u!4 &1007833950
 Transform:
   m_ObjectHideFlags: 0
@@ -16773,6 +16779,51 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1639370899}
   m_LocalEulerAnglesHint: {x: 0, y: 268.504, z: 0}
+--- !u!1 &1171131433
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1171131435}
+  - component: {fileID: 1171131434}
+  m_Layer: 0
+  m_Name: QuickSkip
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1171131434
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1171131433}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8399815496047bb4ba0f96b950e98891, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneToLoad: Stage 2
+--- !u!4 &1171131435
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1171131433}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 309.361, y: 278.8025, z: -396.27316}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1175060790
 GameObject:
   m_ObjectHideFlags: 0
@@ -21613,7 +21664,7 @@ MonoBehaviour:
   questOfferDialog: {fileID: 0}
   acceptedDialog: {fileID: 0}
   activeQuestDialog: {fileID: 0}
-  completedQuestDialog: {fileID: 0}
+  completedQuestDialog: {fileID: 11400000, guid: 32195151c1afc4f43ba0eaac8ef33302, type: 2}
   useDialogForQuest: 1
   requireButtonPress: 1
   interactKey: 101
@@ -22020,13 +22071,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1548107256}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 29.994621, y: 2.12, z: 21.38082}
+  m_LocalRotation: {x: 0, y: -0.7114129, z: 0, w: 0.7027742}
+  m_LocalPosition: {x: 14.52, y: 2.12, z: 17.53}
   m_LocalScale: {x: 0.037, y: 0.037, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -90.7, z: 0}
 --- !u!114 &1548107259
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33018,3 +33069,4 @@ SceneRoots:
   - {fileID: 2014207276}
   - {fileID: 2046055010}
   - {fileID: 890340666}
+  - {fileID: 1171131435}

@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: Susan End1
   m_EditorClassIdentifier: 
   lines:
-  - text: Oh god thats sounds awful. Im sorry you dreamt that dear. By the way, Can
-      you turn on the music and set the table for the guests? Your daughter is also
-      here now.
+  - text: Oh God, that sounds awful. I'm sorry you dreamt that dear. By the way,
+      Can you turn on the music and set the table for the guests? Your daughter is
+      also here now.
     choices:
-    - text: Of course.
+    - text: "Well, it's just a dream after all. I\u2019ll get right on it!"
       nextDialog: {fileID: 0}
       quest: {fileID: 11400000, guid: 8c3fed29ac661dd47a428beb539f66cc, type: 2}
     character: {fileID: 11400000, guid: e21005152e6683e42989884abc2c2927, type: 2}

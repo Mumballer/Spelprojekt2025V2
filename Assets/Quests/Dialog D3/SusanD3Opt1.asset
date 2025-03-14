@@ -16,7 +16,7 @@ MonoBehaviour:
   - text: Oh Nico.. I can make the table just go yoo your room and paint, it keeps
       your brain active
     choices:
-    - text: "But the guest are coming? I can\u2019t look silly infront of Calvin."
+    - text: "But the guests are coming? I can\u2019t look silly in front of Kyle."
       nextDialog: {fileID: 11400000, guid: 0a5e6b2d07a06d24ab02fe33f26bd354, type: 2}
       quest: {fileID: 0}
     character: {fileID: 11400000, guid: a03606f4c5af2ac47a2a991625062ccb, type: 2}

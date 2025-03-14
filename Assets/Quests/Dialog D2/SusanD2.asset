@@ -13,13 +13,16 @@ MonoBehaviour:
   m_Name: SusanD2
   m_EditorClassIdentifier: 
   lines:
-  - text: Good morning Nico, Slept a bit longer then usual today huh?
+  - text: Good morning Nico, Slept a bit longer than usual today huh?
     choices:
     - text: Ah, yes i had a weird dream
       nextDialog: {fileID: 11400000, guid: 86a838a998ac1f149a9acd974f84135e, type: 2}
       quest: {fileID: 0}
     - text: '*Yawn* Yea i slept like a log'
       nextDialog: {fileID: 11400000, guid: b575cfded486813419d922c2ef12a12f, type: 2}
+      quest: {fileID: 0}
+    - text: Huh? Oh did I? I didn't notice.
+      nextDialog: {fileID: 11400000, guid: 9fb43a303661317498667d3a29443bff, type: 2}
       quest: {fileID: 0}
     character: {fileID: 11400000, guid: 314a9546f111aa64a890056f6cad0283, type: 2}
     nextDialog: {fileID: 0}

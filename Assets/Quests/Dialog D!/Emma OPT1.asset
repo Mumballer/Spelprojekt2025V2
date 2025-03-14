@@ -15,7 +15,7 @@ MonoBehaviour:
   lines:
   - text: Glad to see you too. How did the golfing go?
     choices:
-    - text: Good, I won of course, Calvin stands no chance against me!
+    - text: Good, I won of course, Calvin stands no chance against me.
       nextDialog: {fileID: 11400000, guid: d5dbe7badcc61204f8d9ed6473dea32c, type: 2}
       quest: {fileID: 0}
     character: {fileID: 11400000, guid: c2405cd586ae9254c862d66121dfc807, type: 2}

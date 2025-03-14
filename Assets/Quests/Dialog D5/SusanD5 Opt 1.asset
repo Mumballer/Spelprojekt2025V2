@@ -17,7 +17,7 @@ MonoBehaviour:
       active regress slower but you\u2019re wandering about as if you\u2019re lost
       in your own house\u2026"
     choices:
-    - text: To kranio mou einai tromera kleistofoviko..
+    - text: "Pou vr\xEDskomai?"
       nextDialog: {fileID: 11400000, guid: 4f8d21eff26c34140b5d4dd6df10ae89, type: 2}
       quest: {fileID: 0}
     character: {fileID: 11400000, guid: cc07c4b94aa404747a5533c50779a23f, type: 2}

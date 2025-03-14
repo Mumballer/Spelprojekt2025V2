@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lines:
   - text: Seriously Nico? You know when she stayed up multiple days in a row then
-      slept off the whole friday and saturday?
+      slept off the whole Friday and saturday?
     choices:
-    - text: Oh, yes ofcourse. I remember now.
-      nextDialog: {fileID: 0}
-      quest: {fileID: 11400000, guid: 1940d68440ce9de488f97ee5d6306262, type: 2}
+    - text: Oh.. yes of course.. I remember now
+      nextDialog: {fileID: 11400000, guid: 172959792c1b0d64a88e03a923d71bea, type: 2}
+      quest: {fileID: 0}
     character: {fileID: 11400000, guid: 314a9546f111aa64a890056f6cad0283, type: 2}
     nextDialog: {fileID: 0}

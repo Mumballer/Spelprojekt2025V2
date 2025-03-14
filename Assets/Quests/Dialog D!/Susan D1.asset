@@ -21,5 +21,8 @@ MonoBehaviour:
     - text: I slept great! Dreamt about our ballad.
       nextDialog: {fileID: 11400000, guid: 86381b22e3b097f4180b67da949df8fb, type: 2}
       quest: {fileID: 0}
+    - text: I struggled getting up, the bed is so cozy
+      nextDialog: {fileID: 11400000, guid: 565b3e4e440848c46988c03c99551b71, type: 2}
+      quest: {fileID: 0}
     character: {fileID: 11400000, guid: e21005152e6683e42989884abc2c2927, type: 2}
     nextDialog: {fileID: 0}

@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: SusanEndD5
   m_EditorClassIdentifier: 
   lines:
-  - text: CALM DOWN NICO, PLEASE ITS JUST ME ITS VICTORIA, YOUR WIFE.
+  - text: I'm so afraid of losing you darling, maybe we should visit the doctor again.
     choices:
-    - text: O THEE TI MOU SYMVAINEI
-      nextDialog: {fileID: 0}
+    - text: POIOS STO DIAOLO EISAI?! FYGE APO TO SPITI MOU
+      nextDialog: {fileID: 11400000, guid: 10bd7187ec72fd641a47e19cab09370e, type: 2}
       quest: {fileID: 0}
     character: {fileID: 11400000, guid: cc07c4b94aa404747a5533c50779a23f, type: 2}
     nextDialog: {fileID: 0}

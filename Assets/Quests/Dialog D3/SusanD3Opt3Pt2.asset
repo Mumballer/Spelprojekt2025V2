@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a3f3aeca322ca444a011c0b02503c83, type: 3}
+  m_Name: SusanD3Opt3Pt2
+  m_EditorClassIdentifier: 
+  lines:
+  - text: "Oh god.. I\u2019m sorry Nico i can't do this.. please just leave me alone
+      for now\r"
+    choices:
+    - text: I'm sorry.. I don't know why I can't remember.
+      nextDialog: {fileID: 0}
+      quest: {fileID: 11400000, guid: 7c74b2cf57e7f3e41a65532db2543618, type: 2}
+    character: {fileID: 11400000, guid: a03606f4c5af2ac47a2a991625062ccb, type: 2}
+    nextDialog: {fileID: 0}

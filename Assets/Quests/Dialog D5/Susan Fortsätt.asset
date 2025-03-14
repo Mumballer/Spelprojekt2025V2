@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: "Susan Forts\xE4tt"
   m_EditorClassIdentifier: 
   lines:
-  - text: Im so afraid of losing you darling, maybe we should visit the doctor again.
+  - text: I don't understand you Nico.. I know you're talking Greek but I never learnt
+      it.. I'm so sorry..
     choices:
-    - text: "Poios sto di\xE1olo eisai?! FYGE APO TO SPITI MOU"
+    - text: To kranio mou einai tromera kleistofoviko..
       nextDialog: {fileID: 11400000, guid: 8a90a41b278bdb54aa0e3e641909d577, type: 2}
       quest: {fileID: 0}
     character: {fileID: 11400000, guid: cc07c4b94aa404747a5533c50779a23f, type: 2}

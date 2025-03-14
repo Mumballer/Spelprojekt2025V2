@@ -12,4 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a3f3aeca322ca444a011c0b02503c83, type: 3}
   m_Name: EmmaD2
   m_EditorClassIdentifier: 
-  lines: []
+  lines:
+  - text: Good Morning Dad! How are you, btw why did you put on the music?
+    choices:
+    - text: I'm alright, bit dizzy that's all, what do you mean? we have guest coming
+      nextDialog: {fileID: 11400000, guid: 86052a6eb6b84334ea135626479ba013, type: 2}
+      quest: {fileID: 0}
+    - text: I'm feeling a bit stiff that's all, how are you sweetie? Also, what do
+        you mean? we have guests coming, remember?
+      nextDialog: {fileID: 11400000, guid: a20fcaa891aa2724bb1981b6c53aaa9f, type: 2}
+      quest: {fileID: 0}
+    - text: What? Oh you're here? Hi sweetie!
+      nextDialog: {fileID: 11400000, guid: ac8afa171c458e945b6e272d5c0facf8, type: 2}
+      quest: {fileID: 0}
+    character: {fileID: 11400000, guid: 902c9ecf90c47fc46b61b74de8e0e880, type: 2}
+    nextDialog: {fileID: 0}

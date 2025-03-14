@@ -1435,6 +1435,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8300000, guid: 3242551daa8905946b9821912b462303, type: 3}
     - target: {fileID: 8581350227635636241, guid: 320e5eda242116c47846818c3f0cd925, type: 3}
+      propertyPath: playPromptText
+      value: Play the Ballad from ??
+      objectReference: {fileID: 0}
+    - target: {fileID: 8581350227635636241, guid: 320e5eda242116c47846818c3f0cd925, type: 3}
       propertyPath: associatedQuest
       value: 
       objectReference: {fileID: 11400000, guid: 1940d68440ce9de488f97ee5d6306262, type: 2}
@@ -5044,7 +5048,13 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   lockCameraDuringDialog: 1
+  allowCameraEffectsDuringDialog: 1
   showCursorDuringDialog: 1
+  cameraControlComponentNames:
+  - MouseLook
+  - FirstPersonLook
+  - PlayerLook
+  - LookController
 --- !u!4 &295535967
 Transform:
   m_ObjectHideFlags: 0
@@ -5168,6 +5178,51 @@ Transform:
   m_Children: []
   m_Father: {fileID: 778701646}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!1 &301739831
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 301739833}
+  - component: {fileID: 301739832}
+  m_Layer: 0
+  m_Name: QuickSkip
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &301739832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 301739831}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8399815496047bb4ba0f96b950e98891, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneToLoad: Stage 3
+--- !u!4 &301739833
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 301739831}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 309.361, y: 278.8025, z: -396.27316}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &302963493
 GameObject:
   m_ObjectHideFlags: 0
@@ -12003,7 +12058,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 26a952f8445e3344e9e1b648c8e52f80, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 688b9ea2d662c284aa0edde1250d8bdb, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -27617,7 +27672,13 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   lockCameraDuringDialog: 1
+  allowCameraEffectsDuringDialog: 1
   showCursorDuringDialog: 1
+  cameraControlComponentNames:
+  - MouseLook
+  - FirstPersonLook
+  - PlayerLook
+  - LookController
 --- !u!4 &1828752464
 Transform:
   m_ObjectHideFlags: 0
@@ -33591,7 +33652,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e91d67447a7b50f43a1e5720964d0c9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialog: {fileID: 0}
+  dialog: {fileID: 11400000, guid: 9de4c91c4d324f04ebdef31b45476e49, type: 2}
   autoTrigger: 0
   triggerDistance: 3
   interactionPrompt: {fileID: 0}
@@ -33663,7 +33724,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: f33be0ad448cd9744a7ed8ca5eb2b195, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e9f162f3515030c48886f6ca3ec4ded7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -34684,4 +34745,5 @@ SceneRoots:
   - {fileID: 1404395792}
   - {fileID: 1714328760}
   - {fileID: 793154009}
+  - {fileID: 301739833}
   - {fileID: 86708157}

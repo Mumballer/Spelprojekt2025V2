@@ -15,9 +15,9 @@ MonoBehaviour:
   lines:
   - text: Dear god Nico.. Your daughter Emma is in her room
     choices:
-    - text: Oh.. Im sorry i forgot. I will go apologize after I set the table for
-        the guests.
-      nextDialog: {fileID: 0}
-      quest: {fileID: 11400000, guid: 7c74b2cf57e7f3e41a65532db2543618, type: 2}
+    - text: Oh.. I'm sorry I forgot. I will go apologize to her after i set the table
+        for the guest
+      nextDialog: {fileID: 11400000, guid: 6d689a856243c094685f1e48f0992bee, type: 2}
+      quest: {fileID: 0}
     character: {fileID: 11400000, guid: a03606f4c5af2ac47a2a991625062ccb, type: 2}
     nextDialog: {fileID: 0}
