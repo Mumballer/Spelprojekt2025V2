@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Susan End2
   m_EditorClassIdentifier: 
   lines:
-  - text: Flirtatious as ever Nico. By the way, Can you turn on the music and set
-      the table for the guests? Your daughter is also here now.
+  - text: Flirtatious as ever Nico. By the way, Can you turn on the music? Your daughter
+      is also waiting for you in her room.
     choices:
     - text: "I\u2019ll get right on it!"
       nextDialog: {fileID: 0}
