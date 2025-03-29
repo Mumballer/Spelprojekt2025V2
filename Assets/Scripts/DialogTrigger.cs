@@ -109,31 +109,39 @@ public class DialogTrigger : MonoBehaviour
     {
         if (dialog == null)
         {
-            Debug.LogError("Dialog is null!");
+            Debug.LogError($"DialogTrigger on {gameObject.name}: Dialog asset is null!");
             return;
         }
-        
+
         if (dialog.Lines == null)
         {
-            Debug.LogError("Dialog Lines collection is null!");
+            Debug.LogError($"DialogTrigger on {gameObject.name}: Dialog '{dialog.name}' Lines collection is null!");
             return;
         }
-        
+
         if (dialog.Lines.Count == 0)
         {
-            Debug.LogError("Dialog has 0 lines!");
+            Debug.LogError($"DialogTrigger on {gameObject.name}: Dialog '{dialog.name}' has 0 lines!");
             return;
         }
-        
+
         if (DialogManager.Instance != null && DialogManager.Instance.CanStartDialog())
         {
-            Debug.Log($"Triggering dialog from {gameObject.name}");
-            StartCoroutine(DialogManager.Instance.ShowDialog(dialog));
-            
+            Debug.Log($"Triggering dialog '{dialog.name}' from {gameObject.name}");
+            DialogManager.Instance.StartDialog(dialog);
+
             if (interactionPrompt != null)
             {
                 interactionPrompt.SetActive(false);
             }
+        }
+        else if (DialogManager.Instance == null)
+        {
+             Debug.LogError($"DialogTrigger on {gameObject.name}: DialogManager instance not found!");
+        }
+        else if (!DialogManager.Instance.CanStartDialog())
+        {
+             Debug.Log($"DialogTrigger on {gameObject.name}: Cannot start dialog right now (cooldown or already active).");
         }
     }
 

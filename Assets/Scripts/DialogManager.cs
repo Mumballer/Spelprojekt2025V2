@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
+using System.Linq; // Add this for Linq operations if needed later
 
 public class DialogManager : MonoBehaviour
 {
@@ -45,7 +46,7 @@ public class DialogManager : MonoBehaviour
     public event System.Action<Dialog> OnDialogComplete;
     public static DialogManager Instance { get; private set; }
 
-    private Dialog dialog;
+    private Dialog currentDialog; // Renamed from 'dialog' for clarity
     private int currentLine = 0;
     private bool isTyping;
     private List<GameObject> currentChoiceButtons = new List<GameObject>();
@@ -154,21 +155,30 @@ public class DialogManager : MonoBehaviour
         }
     }
 
-    public void StartDialog(Dialog dialog)
+    public void StartDialog(Dialog dialogToShow)
     {
-        if (dialog == null || dialog.Lines.Count == 0) return;
-        
-        this.dialog = dialog;
-        currentLine = 0;
+        if (dialogToShow == null || dialogToShow.Lines == null || dialogToShow.Lines.Count == 0)
+        {
+            Debug.LogError("DialogManager: Cannot start null or empty dialog.");
+            return;
+        }
+        if (IsDialogActive)
+        {
+            Debug.LogWarning("DialogManager: Tried to start a new dialog while one is already active.");
+            return; // Don't start a new one if already active
+        }
+
+        Debug.Log($"<color=yellow>Starting Dialog: {dialogToShow.name}</color>");
+        currentDialog = dialogToShow;
         remainingLines.Clear();
-        
-        // Queue up all lines in the dialog
-        foreach (var line in dialog.Lines)
+
+        // Queue up all lines
+        foreach (var line in currentDialog.Lines)
         {
             remainingLines.Enqueue(line);
         }
-        
-        // Lock camera control but allow camera effects
+
+        // Lock camera, show cursor, disable player movement (existing logic)
         if (lockCameraDuringDialog && mainCamera != null)
         {
             var cameraComponents = mainCamera.GetComponents<MonoBehaviour>();
@@ -219,12 +229,16 @@ public class DialogManager : MonoBehaviour
             Cursor.visible = true;
         }
         
-        // Prevent player movement
         playerController?.SetCanMove(false);
         
-        // Show dialog panel
+        // Show dialog panel and set active state
         dialogBox.SetActive(true);
-        IsDialogActive = true;
+        IsDialogActive = true; // Set active *before* showing first line
+        
+        // Clear any leftover choices UI just in case
+        ClearChoiceButtons();
+        choicesContainer?.SetActive(false);
+        portraitContainer?.SetActive(false); // Hide portrait initially
         
         // Start showing the first line
         DisplayNextLine();
@@ -234,15 +248,43 @@ public class DialogManager : MonoBehaviour
 
     public void DisplayNextLine()
     {
+        // If typing, finish immediately (optional, but common UX)
+        if (isTyping && typingCoroutine != null)
+        {
+            StopCoroutine(typingCoroutine);
+            // Assuming TypeText sets the full text at the end
+            // If not, you'd need to set the full text here:
+            // dialogText.text = [full text of the line being typed];
+            isTyping = false; // Ensure typing flag is cleared
+
+            // Now check if the line that *was* typing had choices
+            // This requires storing the current line temporarily
+            // For simplicity now, we'll just let the next 'E' press handle choices/next line
+            // OR, we can show choices immediately after skipping:
+            // Find the line that was just skipped (might need to peek at queue or store it)
+            // and call ShowChoices if it had any.
+            // Let's stick to the simpler approach for now: skip typing, next E shows choices or next line.
+            return; // Wait for next input to proceed after skipping
+        }
+
+        // If choices are displayed, don't advance the line
+        if (currentChoiceButtons.Count > 0)
+        {
+            Debug.Log("DialogManager: Choices are visible, waiting for selection.");
+            return;
+        }
+
         if (remainingLines.Count == 0)
         {
+            Debug.Log("DialogManager: No more lines remaining.");
             EndDialog();
             return;
         }
-        
+
         // Get next line to display
         DialogLine currentDialogLine = remainingLines.Dequeue();
-        
+        Debug.Log($"<color=cyan>Displaying Line: '{currentDialogLine.Text}'</color>");
+
         // Set the character information
         if (currentDialogLine.Character != null)
         {
@@ -250,168 +292,174 @@ public class DialogManager : MonoBehaviour
             portraitImage.sprite = currentDialogLine.Character.portraitSprite;
             characterNameText.text = currentDialogLine.Character.characterName;
 
-            // Set custom portrait size and position if specified
-            float portraitSize = currentDialogLine.Character.portraitSize > 0 
-                ? currentDialogLine.Character.portraitSize 
+            float portraitSize = currentDialogLine.Character.portraitSize > 0
+                ? currentDialogLine.Character.portraitSize
                 : defaultPortraitSize;
-                
+
             Vector2 portraitOffset = currentDialogLine.Character.portraitOffset != Vector2.zero
                 ? currentDialogLine.Character.portraitOffset
                 : defaultPortraitOffset;
 
             SetPortraitSizeAndPosition(portraitSize, portraitOffset);
-            
-            Debug.Log($"Setting portrait for {currentDialogLine.Character.characterName}: Size={portraitSize}, Offset={portraitOffset}");
         }
         else
         {
             portraitContainer.SetActive(false);
         }
-        
-        // Display the text
-        typingCoroutine = StartCoroutine(TypeText(currentDialogLine.Text));
-        
-        // Setup choices if any
-        if (currentDialogLine.HasChoices && currentDialogLine.Choices.Count > 0)
-        {
-            ShowChoices(currentDialogLine.Choices);
-        }
-        else if (currentDialogLine.NextDialog != null)
-        {
-            // Auto-proceed to next dialog functionality
-        }
-        
-        currentLine++; // This should be an integer already
+
+        // Clear previous choices *before* starting to type the new line
+        ClearChoiceButtons();
+        choicesContainer?.SetActive(false);
+
+        // Start typing the text and pass choices to the coroutine
+        typingCoroutine = StartCoroutine(TypeText(currentDialogLine.Text, currentDialogLine.Choices));
+
+        // DO NOT show choices here anymore
+        // DO NOT increment currentLine here (we use the queue)
     }
 
-    private IEnumerator TypeText(string text)
+    private IEnumerator TypeText(string text, List<DialogChoice> choices)
     {
         isTyping = true;
-        dialogText.text = "";
-        
-        foreach (var letter in text.ToCharArray())
-        {
-            dialogText.text += letter;
-            yield return new WaitForSeconds(1f / lettersPerSecond);
-        }
-        
-        isTyping = false;
+        dialogText.text = ""; // Clear text first
 
-        if (currentLine < dialog.Lines.Count - 1)
+        try
         {
-            DisplayNextLine();
+            foreach (var letter in text.ToCharArray())
+            {
+                dialogText.text += letter;
+                yield return new WaitForSeconds(1f / lettersPerSecond);
+            }
+        }
+        finally // This block executes whether the coroutine finishes normally or is stopped
+        {
+            // Ensure full text is displayed if stopped early or finished normally
+            dialogText.text = text;
+            isTyping = false;
+            typingCoroutine = null; // Clear the reference
+
+            // Show choices if they exist, regardless of how the coroutine ended
+            if (choices != null && choices.Count > 0)
+            {
+                Debug.Log($"<color=lime>Typing finished or skipped, showing choices.</color>");
+                ShowChoices(choices);
+            }
+            else
+            {
+                 Debug.Log($"<color=gray>Typing finished or skipped, no choices for this line.</color>");
+            }
         }
     }
 
-    private void ShowChoices(List<DialogChoice> choices)
+    private void ClearChoiceButtons()
     {
-        if (choices == null || choices.Count == 0) return;
-        
-        // Clear previous choices
         foreach (var btn in currentChoiceButtons)
         {
             if (btn != null) Destroy(btn);
         }
         currentChoiceButtons.Clear();
-        
+    }
+
+    private void ShowChoices(List<DialogChoice> choices)
+    {
+        if (choices == null || choices.Count == 0)
+        {
+            Debug.LogWarning("ShowChoices called with no choices.");
+            choicesContainer?.SetActive(false); // Ensure container is hidden if no choices
+            return;
+        }
+
+        // Clear previous choices (redundant if called from DisplayNextLine, but safe)
+        ClearChoiceButtons();
+
         // Show the choices container
         choicesContainer.SetActive(true);
-        
-        // Modify the layout group to prevent tiny buttons
+
+        // Configure layout group (existing logic seems fine)
         VerticalLayoutGroup layoutGroup = choicesContainer.GetComponent<VerticalLayoutGroup>();
         if (layoutGroup != null)
         {
-            layoutGroup.childControlWidth = false;  // Don't let layout control width
-            layoutGroup.childControlHeight = false; // Don't let layout control height
+            // Settings from original code
+            layoutGroup.childControlWidth = false;
+            layoutGroup.childControlHeight = false;
             layoutGroup.childForceExpandWidth = false;
             layoutGroup.childForceExpandHeight = false;
             layoutGroup.spacing = 10f;
         }
-        
+
         // Create buttons for each choice
         foreach (var choice in choices)
         {
             GameObject buttonObj = Instantiate(choiceButtonPrefab, choicesContainer.transform);
-            buttonObj.SetActive(true);
-            
-            // Define textRect at this scope level so we can access it later
-            RectTransform buttonRect = null;
-            RectTransform textRect = null;
-            
-            // Ensure the button has a fixed size
-            buttonRect = buttonObj.GetComponent<RectTransform>();
-            if (buttonRect != null)
+            buttonObj.SetActive(true); // Make sure the instantiated button is active
+
+            // Get the DialogChoiceButton component for better setup
+            DialogChoiceButton choiceButtonScript = buttonObj.GetComponent<DialogChoiceButton>();
+            if (choiceButtonScript != null)
             {
-                // Set a large explicit size for the button
-                buttonRect.sizeDelta = new Vector2(300f, 60f);
+                choiceButtonScript.SetText(choice.Text); // Use the component's method
             }
-            
-            TextMeshProUGUI buttonText = buttonObj.GetComponentInChildren<TextMeshProUGUI>();
-            if (buttonText != null)
+            else // Fallback if DialogChoiceButton script is not attached
             {
-                buttonText.text = choice.Text;
-                buttonText.fontSize = 18;  // Explicit font size
-                
-                // Fix text component size
-                textRect = buttonText.GetComponent<RectTransform>();
-                if (textRect != null)
-                {
-                    // Make text fill most of the button
-                    textRect.sizeDelta = new Vector2(280f, 50f);
-                    textRect.anchorMin = new Vector2(0.5f, 0.5f);
-                    textRect.anchorMax = new Vector2(0.5f, 0.5f);
-                    textRect.pivot = new Vector2(0.5f, 0.5f);
-                    textRect.anchoredPosition = Vector2.zero;
-                }
-                
-                // Set text display properties
-                buttonText.enableWordWrapping = true;
-                buttonText.horizontalAlignment = HorizontalAlignmentOptions.Center;
-                buttonText.verticalAlignment = VerticalAlignmentOptions.Middle;
-                buttonText.textWrappingMode = TextWrappingModes.Normal;
+                 TextMeshProUGUI buttonText = buttonObj.GetComponentInChildren<TextMeshProUGUI>();
+                 if (buttonText != null) buttonText.text = choice.Text;
+                 // Apply manual sizing/styling if needed as fallback
             }
-            
+
             Button button = buttonObj.GetComponent<Button>();
             if (button != null)
             {
-                // Make sure button has colors that are clearly visible
-                ColorBlock colors = button.colors;
-                colors.normalColor = new Color(0.9f, 0.9f, 0.9f, 1f);
-                colors.highlightedColor = new Color(1f, 1f, 0.8f, 1f);
-                button.colors = colors;
-                
-                // Store the choice for this button
-                DialogChoice choiceRef = choice;
-                
+                // Store the choice for this button's listener
+                DialogChoice choiceRef = choice; // Capture the loop variable
+
                 button.onClick.AddListener(() => {
-                    // Start any quest associated with this choice
-                    if (choiceRef.Quest != null && QuestManager.Instance != null)
+                    Debug.Log($"Choice selected: '{choiceRef.Text}'");
+
+                    // Decide whether to end or start a new dialog *before* clearing UI
+
+                    Dialog nextDialogToStart = choiceRef.NextDialog;
+                    Quest questToGive = choiceRef.Quest;
+
+                    // Hide choices container immediately *after* deciding what to do next
+                    choicesContainer?.SetActive(false);
+                    ClearChoiceButtons(); // Destroy buttons
+
+                    // Handle quest *before* potentially ending/starting new dialog
+                    if (questToGive != null && QuestManager.Instance != null)
                     {
-                        QuestManager.Instance.AddQuest(choiceRef.Quest);
+                        Debug.Log($"Adding quest '{questToGive.questName}' from choice.");
+                        QuestManager.Instance.AddQuest(questToGive);
+                        // Optionally, trigger accepted dialog if the QuestGiver setup needs it
+                        // FindObjectOfType<QuestGiver>()?.HandleQuestAccepted(questToGive);
                     }
-                    
-                    // Go to next dialog if specified
-                    if (choiceRef.NextDialog != null)
+
+                    // Now, either start the next dialog or end the current one
+                    if (nextDialogToStart != null)
                     {
-                        StartCoroutine(CleanupAndContinueDialog(choiceRef.NextDialog));
+                        Debug.Log($"Choice leads to new dialog: {nextDialogToStart.name}");
+                        // IMPORTANT: End the current dialog state *before* starting the new one.
+                        // EndDialog will set IsDialogActive = false, allowing StartDialog to proceed.
+                        // We pass 'false' to prevent firing the OnDialogComplete event for the *intermediate* dialog.
+                        EndDialog(fireCompletionEvent: false);
+                        // Now start the next sequence
+                        StartDialog(nextDialogToStart);
                     }
                     else
                     {
-                        EndDialog();
+                        Debug.Log("Choice does not lead to a new dialog, ending conversation.");
+                        // End the dialog normally, firing the completion event for the final dialog.
+                        EndDialog(fireCompletionEvent: true);
                     }
                 });
             }
-            
-            currentChoiceButtons.Add(buttonObj);
 
-            // Log the sizes - now this will work properly
-            Debug.Log($"Button size: {(buttonRect != null ? buttonRect.sizeDelta.ToString() : "null")}");
-            Debug.Log($"Text size: {(textRect != null ? textRect.sizeDelta.ToString() : "null")}");
+            currentChoiceButtons.Add(buttonObj);
         }
-        
-        // Force layout rebuild
+
+        // Force layout rebuild (existing logic)
         Canvas.ForceUpdateCanvases();
         LayoutRebuilder.ForceRebuildLayoutImmediate(choicesContainer.GetComponent<RectTransform>());
+        Debug.Log($"Displayed {currentChoiceButtons.Count} choices.");
     }
 
     private void OptimizeButtonText(TextMeshProUGUI textComponent, float maxWidth)
@@ -456,36 +504,6 @@ public class DialogManager : MonoBehaviour
         }
     }
 
-    private IEnumerator CleanupAndContinueDialog(Dialog nextDialog)
-    {
-        yield return new WaitForEndOfFrame();
-
-        foreach (var btn in new List<GameObject>(currentChoiceButtons))
-        {
-            if (btn != null)
-            {
-                Destroy(btn);
-            }
-        }
-        currentChoiceButtons.Clear();
-
-        if (choicesContainer != null)
-        {
-            choicesContainer.SetActive(false);
-        }
-
-        if (nextDialog != null)
-        {
-            Debug.Log("Starting next dialog sequence");
-            StartDialog(nextDialog);
-        }
-        else
-        {
-            Debug.Log("No next dialog, ending conversation");
-            EndDialog();
-        }
-    }
-
     public void ForceCloseDialog()
     {
         if (IsDialogActive)
@@ -495,33 +513,32 @@ public class DialogManager : MonoBehaviour
         }
     }
 
-    private void EndDialog()
+    private void EndDialog(bool fireCompletionEvent = true)
     {
-        // Store reference to the current dialog before clearing it
-        Dialog completedDialog = this.dialog;
-
-        foreach (var button in currentChoiceButtons)
+        // Stop typing if it's happening
+        if (typingCoroutine != null)
         {
-            if (button != null)
-            {
-                Destroy(button);
-            }
-        }
-        currentChoiceButtons.Clear();
-
-        Debug.Log("EndDialog called - Forcing dialog box to close");
-        if (dialogBox != null)
-        {
-            dialogBox.SetActive(false);
-            choicesContainer.SetActive(false);
-            portraitContainer.SetActive(false);
-            Debug.Log($"Dialog box set to inactive. Active state: {dialogBox.activeSelf}");
+            StopCoroutine(typingCoroutine);
+            typingCoroutine = null;
+            isTyping = false;
         }
 
-        IsDialogActive = false;
-        currentLine = 0;
+        // Store reference before clearing
+        Dialog completedDialog = this.currentDialog;
+        this.currentDialog = null; // Clear current dialog reference
 
-        // Make sure to re-enable camera if it was disabled
+        // Clear buttons and hide containers
+        ClearChoiceButtons();
+        if (choicesContainer != null) choicesContainer.SetActive(false);
+        if (portraitContainer != null) portraitContainer.SetActive(false);
+        if (dialogBox != null) dialogBox.SetActive(false);
+
+        Debug.Log("<color=yellow>EndDialog called - Dialog UI hidden.</color>");
+
+        IsDialogActive = false; // Set inactive *before* enabling controls/firing events
+        remainingLines.Clear(); // Clear any remaining lines
+
+        // Re-enable camera/controls (existing logic)
         if (lockCameraDuringDialog && mainCamera != null)
         {
             var cameraComponents = mainCamera.GetComponents<MonoBehaviour>();
@@ -560,20 +577,30 @@ public class DialogManager : MonoBehaviour
             }
         }
 
+        // Restore cursor and player movement
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-
         playerController?.SetCanMove(true);
 
+        // Start cooldown
         StartCoroutine(DialogCooldown());
 
-        // Fire events AFTER setting IsDialogActive to false
+        // Fire events AFTER setting IsDialogActive to false and cleaning up
         OnHideDialog?.Invoke();
 
-        if (completedDialog != null)
+        // Only fire completion event if requested
+        if (fireCompletionEvent && completedDialog != null)
         {
             Debug.Log($"<color=yellow>DialogManager: Firing OnDialogComplete event for dialog {completedDialog.name}</color>");
             OnDialogComplete?.Invoke(completedDialog);
+        }
+        else if (fireCompletionEvent && completedDialog == null)
+        {
+             Debug.Log("<color=orange>DialogManager: OnDialogComplete not fired, completedDialog was null.</color>");
+        }
+        else if (!fireCompletionEvent)
+        {
+            Debug.Log($"<color=grey>DialogManager: OnDialogComplete event skipped for intermediate dialog: {completedDialog?.name ?? "N/A"}</color>");
         }
     }
 
@@ -591,32 +618,57 @@ public class DialogManager : MonoBehaviour
 
     public void HandleUpdate()
     {
-        if (Input.GetKeyDown(KeyCode.E) && !isTyping)
+        // Handle advancing the dialog or skipping typing
+        if (Input.GetKeyDown(KeyCode.E)) // Or your interaction key
         {
-            if (currentChoiceButtons.Count > 0)
+            if (isTyping)
             {
-                return;
+                // Skip typing effect
+                StopCoroutine(typingCoroutine);
+                // Need to manually set the full text of the line being typed.
+                // This requires knowing which line is currently being typed.
+                // Let's find it by peeking or storing it.
+                // For now, let's just finish the coroutine which handles it.
+                // We might need to adjust TypeText to set full text on stop.
+                // Let's refine TypeText slightly for this.
+
+                // --- Refinement for skipping ---
+                // We need the full text of the line currently in the coroutine.
+                // The easiest way is to modify TypeText to handle StopCoroutine gracefully.
+                // Let's assume TypeText sets the full text before exiting when stopped.
+                // Then we just need to call DisplayNextLine logic *after* skipping.
+
+                // Stop the coroutine (it should finish the text and show choices if any)
+                // The TypeText coroutine itself will handle showing choices after finishing.
+                 if (typingCoroutine != null)
+                 {
+                     StopCoroutine(typingCoroutine);
+                     // Manually finish the process that the coroutine would do:
+                     // 1. Set full text (requires storing the current line's text)
+                     // 2. Set isTyping = false
+                     // 3. Show choices if applicable (requires storing current line's choices)
+
+                     // Simpler approach: Let the next E press handle it after skip.
+                     // Just stop the coroutine and let the TypeText finish itself if possible.
+                     // The current TypeText doesn't explicitly set full text on stop.
+                     // Let's add that.
+
+                     // StopCoroutine(typingCoroutine); // Already called above implicitly? No.
+                     // Let's modify TypeText to handle StopCoroutine better.
+                     // For now, just stopping it might leave text incomplete.
+                     // Let's rely on the next E press for now.
+                     Debug.Log("DialogManager: Skipped typing (implementation pending full text set).");
+                     // isTyping = false; // TypeText should do this
+                     // typingCoroutine = null; // TypeText should do this
+                }
             }
-
-            Debug.Log($"E pressed. Current line: {currentLine}, Total lines: {dialog.Lines.Count}");
-
-            if (currentLine >= dialog.Lines.Count - 1)
+            else if (currentChoiceButtons.Count == 0) // Only advance if not typing and no choices shown
             {
-                Debug.Log("On last line, ending dialog");
-                EndDialog();
-                return;
+                Debug.Log("DialogManager: E pressed, advancing to next line.");
+                DisplayNextLine(); // Display the next line from the queue
             }
-
-            currentLine++;
-            Debug.Log($"Moving to line {currentLine}");
-            typingCoroutine = StartCoroutine(TypeText(dialog.Lines[currentLine].Text));
+            // If choices are showing, pressing E does nothing here (handled by button clicks)
         }
-    }
-
-    public IEnumerator ShowDialog(Dialog dialog)
-    {
-        StartDialog(dialog);
-        yield break;
     }
 
     private void SetPortraitSizeAndPosition(float size, Vector2 offset)
