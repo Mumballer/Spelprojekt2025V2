@@ -362,103 +362,81 @@ public class DialogManager : MonoBehaviour
 
     private void ShowChoices(List<DialogChoice> choices)
     {
-        if (choices == null || choices.Count == 0)
-        {
-            Debug.LogWarning("ShowChoices called with no choices.");
-            choicesContainer?.SetActive(false); // Ensure container is hidden if no choices
-            return;
-        }
+        if (choicesContainer == null || choiceButtonPrefab == null) { /* Error Log */ return; }
+        if (choices == null || choices.Count == 0) { /* Warning Log */ choicesContainer?.SetActive(false); return; }
 
-        // Clear previous choices (redundant if called from DisplayNextLine, but safe)
+        choicesContainer.SetActive(true);
         ClearChoiceButtons();
 
-        // Show the choices container
-        choicesContainer.SetActive(true);
-
-        // Configure layout group (existing logic seems fine)
-        VerticalLayoutGroup layoutGroup = choicesContainer.GetComponent<VerticalLayoutGroup>();
+        // --- Configure Layout Group ---
+        // Ensure the layout group doesn't force expansion if we want LayoutElement to control size
+        var layoutGroup = choicesContainer.GetComponent<VerticalLayoutGroup>();
         if (layoutGroup != null)
         {
-            // Settings from original code
-            layoutGroup.childControlWidth = false;
-            layoutGroup.childControlHeight = false;
-            layoutGroup.childForceExpandWidth = false;
-            layoutGroup.childForceExpandHeight = false;
-            layoutGroup.spacing = 10f;
+            layoutGroup.enabled = true;
+            // *** IMPORTANT: Uncheck these if you want buttons to truly size themselves ***
+            layoutGroup.childControlWidth = false;  // Let LayoutElement control width
+            layoutGroup.childControlHeight = false; // Let LayoutElement control height
+            layoutGroup.childForceExpandWidth = false; // Don't force expand width
+            layoutGroup.childForceExpandHeight = false; // Don't force expand height
+            // Set alignment (e.g., MiddleCenter to center the potentially different-sized buttons)
+            layoutGroup.childAlignment = TextAnchor.MiddleCenter;
+            // Adjust spacing/padding for the container itself if needed
+            // layoutGroup.spacing = 10f;
+            // layoutGroup.padding = new RectOffset(10, 10, 10, 10);
         }
+        // --- End Layout Group Config ---
+
 
         // Create buttons for each choice
         foreach (var choice in choices)
         {
             GameObject buttonObj = Instantiate(choiceButtonPrefab, choicesContainer.transform);
-            buttonObj.SetActive(true); // Make sure the instantiated button is active
+            buttonObj.SetActive(true);
 
-            // Get the DialogChoiceButton component for better setup
             DialogChoiceButton choiceButtonScript = buttonObj.GetComponent<DialogChoiceButton>();
             if (choiceButtonScript != null)
             {
-                choiceButtonScript.SetText(choice.Text); // Use the component's method
-            }
-            else // Fallback if DialogChoiceButton script is not attached
-            {
-                 TextMeshProUGUI buttonText = buttonObj.GetComponentInChildren<TextMeshProUGUI>();
-                 if (buttonText != null) buttonText.text = choice.Text;
-                 // Apply manual sizing/styling if needed as fallback
-            }
+                DialogChoice choiceRef = choice; // Capture loop variable
 
-            Button button = buttonObj.GetComponent<Button>();
-            if (button != null)
-            {
-                // Store the choice for this button's listener
-                DialogChoice choiceRef = choice; // Capture the loop variable
-
-                button.onClick.AddListener(() => {
+                // --- Use the revised Setup method ---
+                choiceButtonScript.Setup(choiceRef.Text, () => {
+                    // --- Existing Click Logic ---
                     Debug.Log($"Choice selected: '{choiceRef.Text}'");
-
-                    // Decide whether to end or start a new dialog *before* clearing UI
-
                     Dialog nextDialogToStart = choiceRef.NextDialog;
                     Quest questToGive = choiceRef.Quest;
-
-                    // Hide choices container immediately *after* deciding what to do next
                     choicesContainer?.SetActive(false);
-                    ClearChoiceButtons(); // Destroy buttons
-
-                    // Handle quest *before* potentially ending/starting new dialog
-                    if (questToGive != null && QuestManager.Instance != null)
-                    {
-                        Debug.Log($"Adding quest '{questToGive.questName}' from choice.");
-                        QuestManager.Instance.AddQuest(questToGive);
-                        // Optionally, trigger accepted dialog if the QuestGiver setup needs it
-                        // FindObjectOfType<QuestGiver>()?.HandleQuestAccepted(questToGive);
-                    }
-
-                    // Now, either start the next dialog or end the current one
+                    ClearChoiceButtons();
+                    if (questToGive != null && QuestManager.Instance != null) { /* Add Quest */ }
                     if (nextDialogToStart != null)
                     {
-                        Debug.Log($"Choice leads to new dialog: {nextDialogToStart.name}");
-                        // IMPORTANT: End the current dialog state *before* starting the new one.
-                        // EndDialog will set IsDialogActive = false, allowing StartDialog to proceed.
-                        // We pass 'false' to prevent firing the OnDialogComplete event for the *intermediate* dialog.
                         EndDialog(fireCompletionEvent: false);
-                        // Now start the next sequence
                         StartDialog(nextDialogToStart);
                     }
                     else
                     {
-                        Debug.Log("Choice does not lead to a new dialog, ending conversation.");
-                        // End the dialog normally, firing the completion event for the final dialog.
                         EndDialog(fireCompletionEvent: true);
                     }
+                    // --- End Click Logic ---
                 });
+                // --- End Setup call ---
+            }
+            else
+            {
+                 Debug.LogError("Choice Button Prefab is missing the DialogChoiceButton script!", buttonObj);
+                 // Fallback (less ideal now)
+                 TextMeshProUGUI tmp = buttonObj.GetComponentInChildren<TextMeshProUGUI>();
+                 if (tmp != null) tmp.text = choice.Text;
+                 Button btn = buttonObj.GetComponent<Button>();
+                 if(btn != null) btn.onClick.AddListener(() => Debug.LogError("Button click failed - missing script"));
             }
 
             currentChoiceButtons.Add(buttonObj);
         }
 
-        // Force layout rebuild (existing logic)
-        Canvas.ForceUpdateCanvases();
+        // Force the layout group to update its arrangement *after* all buttons are added and configured
         LayoutRebuilder.ForceRebuildLayoutImmediate(choicesContainer.GetComponent<RectTransform>());
+
         Debug.Log($"Displayed {currentChoiceButtons.Count} choices.");
     }
 

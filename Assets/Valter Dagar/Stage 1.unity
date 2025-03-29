@@ -23811,10 +23811,10 @@ MonoBehaviour:
     m_Bottom: 10
   m_ChildAlignment: 4
   m_Spacing: 10
-  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
-  m_ChildControlWidth: 1
-  m_ChildControlHeight: 1
+  m_ChildControlWidth: 0
+  m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
@@ -24841,6 +24841,17 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 35.810146, y: 22.868122, z: 0.20000005}
   m_Center: {x: -1.4720083, y: -6.8315516, z: -0.00000012104105}
+--- !u!114 &1757941572 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6510795932177284450, guid: 58b6d411068885443a80a496dea22f74, type: 3}
+  m_PrefabInstance: {fileID: 5646561621422570604}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1762148851
 GameObject:
   m_ObjectHideFlags: 0
@@ -33128,13 +33139,57 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4071027332493067210, guid: 58b6d411068885443a80a496dea22f74, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5646561621422570609}
+    - targetCorrespondingSourceObject: {fileID: 4071027332493067210, guid: 58b6d411068885443a80a496dea22f74, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5646561621422570610}
   m_SourcePrefab: {fileID: 100100000, guid: 58b6d411068885443a80a496dea22f74, type: 3}
 --- !u!224 &5646561621422570605 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 197851290392045844, guid: 58b6d411068885443a80a496dea22f74, type: 3}
   m_PrefabInstance: {fileID: 5646561621422570604}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &5646561621422570609
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 422575510}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6402344ddb9086b45a4a0eb181f7947b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonText: {fileID: 1757941572}
+  horizontalPadding: 30
+  verticalPadding: 15
+  minWidth: 150
+  minHeight: 50
+  maxWidth: 500
+--- !u!114 &5646561621422570610
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 422575510}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreLayout: 0
+  m_MinWidth: -1
+  m_MinHeight: -1
+  m_PreferredWidth: -1
+  m_PreferredHeight: -1
+  m_FlexibleWidth: -1
+  m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!1001 &6228211216986014196
 PrefabInstance:
   m_ObjectHideFlags: 0
