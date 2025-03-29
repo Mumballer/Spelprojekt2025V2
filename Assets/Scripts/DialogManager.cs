@@ -405,9 +405,21 @@ public class DialogManager : MonoBehaviour
                     Debug.Log($"Choice selected: '{choiceRef.Text}'");
                     Dialog nextDialogToStart = choiceRef.NextDialog;
                     Quest questToGive = choiceRef.Quest;
+
+                    // +++ ADD THIS LOG +++
+                    Debug.Log($"---> Checking choice '{choiceRef.Text}': Quest field is {(questToGive == null ? "NULL" : questToGive.name)}, NextDialog is {(nextDialogToStart == null ? "NULL" : nextDialogToStart.name)}");
+                    // ++++++++++++++++++++
+
                     choicesContainer?.SetActive(false);
                     ClearChoiceButtons();
-                    if (questToGive != null && QuestManager.Instance != null) { /* Add Quest */ }
+
+                    // Handle quest *before* potentially ending/starting new dialog
+                    if (questToGive != null && QuestManager.Instance != null) // Check quest *after* logging
+                    {
+                        Debug.Log($"Adding quest '{questToGive.questName}' from choice."); // This log is missing
+                        QuestManager.Instance.AddQuest(questToGive);
+                    }
+
                     if (nextDialogToStart != null)
                     {
                         EndDialog(fireCompletionEvent: false);

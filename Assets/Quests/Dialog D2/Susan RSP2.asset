@@ -10,14 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1a3f3aeca322ca444a011c0b02503c83, type: 3}
-  m_Name: EmmaD2Opt1Pt2
+  m_Name: Susan RSP2
   m_EditorClassIdentifier: 
   lines:
-  - text: Oh well, anyways of course your dizzy you always keep painting for hours
-      straight with Luca, I told you to take breaks dad
+  - text: Finished already?
     choices:
-    - text: Yea yea, I will be fine it's just dizziness
-      nextDialog: {fileID: 11400000, guid: 7cb11e759b4dea64894511644fc576e0, type: 2}
+    - text: ...
+      nextDialog: {fileID: 0}
       quest: {fileID: 0}
-    character: {fileID: 11400000, guid: 902c9ecf90c47fc46b61b74de8e0e880, type: 2}
+    character: {fileID: 11400000, guid: 314a9546f111aa64a890056f6cad0283, type: 2}
     nextDialog: {fileID: 0}
