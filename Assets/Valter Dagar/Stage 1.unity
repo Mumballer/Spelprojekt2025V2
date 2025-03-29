@@ -13498,7 +13498,7 @@ MonoBehaviour:
   itemIDs: []
   placementQuestName: Place down the nametags in the right spots.
   placementQuestDescription: 
-  questGiver: {fileID: 1531552670}
+  questGiver: {fileID: 0}
 --- !u!1 &995342637
 GameObject:
   m_ObjectHideFlags: 0
@@ -16997,7 +16997,7 @@ Transform:
   m_GameObject: {fileID: 1186081197}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -1.5010006, y: 0, z: 248.79994}
+  m_LocalPosition: {x: -1.509, y: 0, z: 246.8}
   m_LocalScale: {x: 99.99994, y: 1, z: 0.009999998}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -21609,7 +21609,6 @@ GameObject:
   - component: {fileID: 1531552666}
   - component: {fileID: 1531552668}
   - component: {fileID: 1531552669}
-  - component: {fileID: 1531552670}
   - component: {fileID: 1531552671}
   m_Layer: 7
   m_Name: Frun
@@ -21701,9 +21700,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialog: {fileID: 11400000, guid: 6345a2f24563dd942a79034ae7b95daa, type: 2}
+  repeatDialog: {fileID: 11400000, guid: 32195151c1afc4f43ba0eaac8ef33302, type: 2}
   autoTrigger: 0
   triggerDistance: 3
   interactionPrompt: {fileID: 918904907}
+  resetOnDialogEnd: 0
   questToComplete: {fileID: 11400000, guid: 8c3fed29ac661dd47a428beb539f66cc, type: 2}
   objectiveIndex: 0
   completeQuestAfterDialog: 0
@@ -21728,31 +21729,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 64.22157, y: 109.62499, z: 0.4901596}
   m_Center: {x: -0.16259998, y: 0, z: 0.1450798}
---- !u!114 &1531552670
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1531552665}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d38cff2b1027ab44b903f1efa0c34e3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  questToGive: {fileID: 11400000, guid: 8c3fed29ac661dd47a428beb539f66cc, type: 2}
-  startQuestOnTriggerEnter: 0
-  initialDialog: {fileID: 0}
-  questOfferDialog: {fileID: 0}
-  acceptedDialog: {fileID: 0}
-  activeQuestDialog: {fileID: 0}
-  completedQuestDialog: {fileID: 11400000, guid: 32195151c1afc4f43ba0eaac8ef33302, type: 2}
-  useDialogForQuest: 1
-  requireButtonPress: 1
-  interactKey: 101
-  playerTag: Player
-  interactionDistance: 3
-  interactionPrompt: {fileID: 0}
 --- !u!114 &1531552671
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22081,7 +22057,6 @@ GameObject:
   - component: {fileID: 1548107257}
   - component: {fileID: 1548107260}
   - component: {fileID: 1548107259}
-  - component: {fileID: 1548107261}
   - component: {fileID: 1548107262}
   m_Layer: 7
   m_Name: Dotter
@@ -22173,9 +22148,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialog: {fileID: 11400000, guid: ade105b4d68e91a40800f63d19cb57ab, type: 2}
+  repeatDialog: {fileID: 11400000, guid: d7cc2022d59e1224b811964a96c39315, type: 2}
   autoTrigger: 0
   triggerDistance: 3
   interactionPrompt: {fileID: 1029177602}
+  resetOnDialogEnd: 0
   questToComplete: {fileID: 11400000, guid: 079958ddc4b28084face6cc392bc0a3c, type: 2}
   objectiveIndex: 0
   completeQuestAfterDialog: 0
@@ -22200,31 +22177,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 43.24882, y: 109.62499, z: 0.5014492}
   m_Center: {x: 1.9154162, y: 0, z: -0.15072459}
---- !u!114 &1548107261
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1548107256}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d38cff2b1027ab44b903f1efa0c34e3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  questToGive: {fileID: 11400000, guid: 079958ddc4b28084face6cc392bc0a3c, type: 2}
-  startQuestOnTriggerEnter: 0
-  initialDialog: {fileID: 0}
-  questOfferDialog: {fileID: 0}
-  acceptedDialog: {fileID: 0}
-  activeQuestDialog: {fileID: 0}
-  completedQuestDialog: {fileID: 0}
-  useDialogForQuest: 1
-  requireButtonPress: 1
-  interactKey: 101
-  playerTag: Player
-  interactionDistance: 3
-  interactionPrompt: {fileID: 0}
 --- !u!114 &1548107262
 MonoBehaviour:
   m_ObjectHideFlags: 0

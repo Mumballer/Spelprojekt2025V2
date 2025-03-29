@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1a3f3aeca322ca444a011c0b02503c83, type: 3}
-  m_Name: Susan RSP1
+  m_Name: Emma RSP1
   m_EditorClassIdentifier: 
   lines:
-  - text: Have you done what I asked?
+  - text: Done already?
     choices:
     - text: ...
       nextDialog: {fileID: 0}
       quest: {fileID: 0}
-    character: {fileID: 11400000, guid: e21005152e6683e42989884abc2c2927, type: 2}
+    character: {fileID: 11400000, guid: c2405cd586ae9254c862d66121dfc807, type: 2}
     nextDialog: {fileID: 0}

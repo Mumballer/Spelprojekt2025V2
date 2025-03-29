@@ -618,56 +618,17 @@ public class DialogManager : MonoBehaviour
 
     public void HandleUpdate()
     {
-        // Handle advancing the dialog or skipping typing
+        // Handle advancing the dialog
         if (Input.GetKeyDown(KeyCode.E)) // Or your interaction key
         {
-            if (isTyping)
-            {
-                // Skip typing effect
-                StopCoroutine(typingCoroutine);
-                // Need to manually set the full text of the line being typed.
-                // This requires knowing which line is currently being typed.
-                // Let's find it by peeking or storing it.
-                // For now, let's just finish the coroutine which handles it.
-                // We might need to adjust TypeText to set full text on stop.
-                // Let's refine TypeText slightly for this.
-
-                // --- Refinement for skipping ---
-                // We need the full text of the line currently in the coroutine.
-                // The easiest way is to modify TypeText to handle StopCoroutine gracefully.
-                // Let's assume TypeText sets the full text before exiting when stopped.
-                // Then we just need to call DisplayNextLine logic *after* skipping.
-
-                // Stop the coroutine (it should finish the text and show choices if any)
-                // The TypeText coroutine itself will handle showing choices after finishing.
-                 if (typingCoroutine != null)
-                 {
-                     StopCoroutine(typingCoroutine);
-                     // Manually finish the process that the coroutine would do:
-                     // 1. Set full text (requires storing the current line's text)
-                     // 2. Set isTyping = false
-                     // 3. Show choices if applicable (requires storing current line's choices)
-
-                     // Simpler approach: Let the next E press handle it after skip.
-                     // Just stop the coroutine and let the TypeText finish itself if possible.
-                     // The current TypeText doesn't explicitly set full text on stop.
-                     // Let's add that.
-
-                     // StopCoroutine(typingCoroutine); // Already called above implicitly? No.
-                     // Let's modify TypeText to handle StopCoroutine better.
-                     // For now, just stopping it might leave text incomplete.
-                     // Let's rely on the next E press for now.
-                     Debug.Log("DialogManager: Skipped typing (implementation pending full text set).");
-                     // isTyping = false; // TypeText should do this
-                     // typingCoroutine = null; // TypeText should do this
-                }
-            }
-            else if (currentChoiceButtons.Count == 0) // Only advance if not typing and no choices shown
+            // Only advance if NOT typing and NO choices are shown
+            if (!isTyping && currentChoiceButtons.Count == 0)
             {
                 Debug.Log("DialogManager: E pressed, advancing to next line.");
                 DisplayNextLine(); // Display the next line from the queue
             }
             // If choices are showing, pressing E does nothing here (handled by button clicks)
+            // If typing is in progress, pressing E also does nothing now.
         }
     }
 
