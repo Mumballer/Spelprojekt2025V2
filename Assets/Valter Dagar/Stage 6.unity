@@ -3826,7 +3826,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4071027332493067210, guid: 58b6d411068885443a80a496dea22f74, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 124831769}
+    - targetCorrespondingSourceObject: {fileID: 4071027332493067210, guid: 58b6d411068885443a80a496dea22f74, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 124831768}
   m_SourcePrefab: {fileID: 100100000, guid: 58b6d411068885443a80a496dea22f74, type: 3}
 --- !u!224 &124831765 stripped
 RectTransform:
@@ -3838,6 +3844,55 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 4071027332493067210, guid: 58b6d411068885443a80a496dea22f74, type: 3}
   m_PrefabInstance: {fileID: 124831764}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &124831767 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6510795932177284450, guid: 58b6d411068885443a80a496dea22f74, type: 3}
+  m_PrefabInstance: {fileID: 124831764}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &124831768
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 124831766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6402344ddb9086b45a4a0eb181f7947b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonText: {fileID: 124831767}
+  horizontalPadding: 30
+  verticalPadding: 15
+  minWidth: 150
+  minHeight: 45
+  maxWidth: 500
+--- !u!114 &124831769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 124831766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreLayout: 0
+  m_MinWidth: -1
+  m_MinHeight: -1
+  m_PreferredWidth: -1
+  m_PreferredHeight: -1
+  m_FlexibleWidth: -1
+  m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!1 &131074990
 GameObject:
   m_ObjectHideFlags: 0
@@ -4076,7 +4131,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 131972507}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -24346,7 +24401,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 24.408, y: -3.3899999}
+  m_AnchoredPosition: {x: 24.39, y: -3.3899999}
   m_SizeDelta: {x: 20, y: 5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &800701080
@@ -34486,6 +34541,10 @@ PrefabInstance:
     - target: {fileID: 2718509326422844558, guid: c92da429ea863e24b90c519d847c3d97, type: 3}
       propertyPath: m_Color.r
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2718509326422844558, guid: c92da429ea863e24b90c519d847c3d97, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2718509326422844558, guid: c92da429ea863e24b90c519d847c3d97, type: 3}
       propertyPath: m_DrawMode
@@ -46133,9 +46192,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialog: {fileID: 11400000, guid: 5ea03c9241215e943a30667322a4a0f5, type: 2}
+  repeatDialog: {fileID: 11400000, guid: 4fde5311cf0a97a4fbece5d3b2fea3e0, type: 2}
   autoTrigger: 0
   triggerDistance: 2.5
   interactionPrompt: {fileID: 332203618}
+  resetOnDialogEnd: 0
   questToComplete: {fileID: 0}
   objectiveIndex: 0
   completeQuestAfterDialog: 0
@@ -46596,9 +46657,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialog: {fileID: 11400000, guid: b16cedeec5a5d964d9dcc846a38f5b3e, type: 2}
-  autoTrigger: 1
+  repeatDialog: {fileID: 11400000, guid: e5b2ca04a65166c48ae0c81ba3242f93, type: 2}
+  autoTrigger: 0
   triggerDistance: 2.5
   interactionPrompt: {fileID: 407810309}
+  resetOnDialogEnd: 0
   questToComplete: {fileID: 0}
   objectiveIndex: 0
   completeQuestAfterDialog: 0
@@ -59128,7 +59191,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 24.408, y: -3.02}
+  m_AnchoredPosition: {x: 24.36, y: -3.02}
   m_SizeDelta: {x: 20, y: 5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1978777436

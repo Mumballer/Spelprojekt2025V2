@@ -947,6 +947,7 @@ GameObject:
   - component: {fileID: 70486826}
   - component: {fileID: 70486825}
   - component: {fileID: 70486824}
+  - component: {fileID: 70486827}
   m_Layer: 10
   m_Name: Lisa
   m_TagString: Susan
@@ -1072,6 +1073,29 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &70486827
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 70486822}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83dc7b34223b2fd4b8b59010316efdfb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  associatedQuest: {fileID: 11400000, guid: f2ab126d02c36934d87c05b11261a7a5, type: 2}
+  objectiveIndex: 0
+  playerTag: Player
+  requireButtonPress: 1
+  interactKey: 101
+  destroyOnCollect: 0
+  interactionPrompt: {fileID: 0}
+  promptText: Press E to collect
+  hoverUIElement: {fileID: 0}
+  hoverUIDisplayTime: 0
+  showOnlyForActiveQuest: 1
 --- !u!1 &73469508
 GameObject:
   m_ObjectHideFlags: 0
@@ -4912,6 +4936,7 @@ GameObject:
   - component: {fileID: 253874284}
   - component: {fileID: 253874283}
   - component: {fileID: 253874282}
+  - component: {fileID: 253874285}
   m_Layer: 10
   m_Name: Nico
   m_TagString: Nametag
@@ -5037,6 +5062,29 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &253874285
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 253874280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83dc7b34223b2fd4b8b59010316efdfb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  associatedQuest: {fileID: 11400000, guid: f2ab126d02c36934d87c05b11261a7a5, type: 2}
+  objectiveIndex: 0
+  playerTag: Player
+  requireButtonPress: 1
+  interactKey: 101
+  destroyOnCollect: 0
+  interactionPrompt: {fileID: 0}
+  promptText: Press E to collect
+  hoverUIElement: {fileID: 0}
+  hoverUIDisplayTime: 0
+  showOnlyForActiveQuest: 1
 --- !u!1001 &262062675
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12509,7 +12557,7 @@ GameObject:
   - component: {fileID: 804836410}
   - component: {fileID: 804836412}
   - component: {fileID: 804836413}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Dottern3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12611,9 +12659,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialog: {fileID: 11400000, guid: 68524e6aa43eaf946964b06512d3b7b7, type: 2}
+  repeatDialog: {fileID: 11400000, guid: e4cd2cfabbb24d547ae2640136607c0c, type: 2}
   autoTrigger: 1
   triggerDistance: 3
   interactionPrompt: {fileID: 525824519}
+  resetOnDialogEnd: 0
   questToComplete: {fileID: 0}
   objectiveIndex: 0
   completeQuestAfterDialog: 0
@@ -13276,7 +13326,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4071027332493067210, guid: 58b6d411068885443a80a496dea22f74, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 861809634}
+    - targetCorrespondingSourceObject: {fileID: 4071027332493067210, guid: 58b6d411068885443a80a496dea22f74, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 861809633}
   m_SourcePrefab: {fileID: 100100000, guid: 58b6d411068885443a80a496dea22f74, type: 3}
 --- !u!224 &861809628 stripped
 RectTransform:
@@ -13288,6 +13344,44 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 4071027332493067210, guid: 58b6d411068885443a80a496dea22f74, type: 3}
   m_PrefabInstance: {fileID: 861809627}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &861809633
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 861809629}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6402344ddb9086b45a4a0eb181f7947b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonText: {fileID: 2117278918}
+  horizontalPadding: 30
+  verticalPadding: 15
+  minWidth: 150
+  minHeight: 45
+  maxWidth: 500
+--- !u!114 &861809634
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 861809629}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreLayout: 0
+  m_MinWidth: -1
+  m_MinHeight: -1
+  m_PreferredWidth: -1
+  m_PreferredHeight: -1
+  m_FlexibleWidth: -1
+  m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!1 &867314597
 GameObject:
   m_ObjectHideFlags: 0
@@ -18602,6 +18696,59 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1147602184
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1147602186}
+  - component: {fileID: 1147602185}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!65 &1147602185
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1147602184}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 16.819197, y: 38.942604, z: 3.0132735}
+  m_Center: {x: -0.76558745, y: 4.384167, z: 1.0066363}
+--- !u!4 &1147602186
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1147602184}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.5, y: 0.5, z: -0.5, w: 0.5}
+  m_LocalPosition: {x: 4.42, y: 3.17, z: 19.66}
+  m_LocalScale: {x: 0.3, y: 0.20000006, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1147623782
 GameObject:
   m_ObjectHideFlags: 0
@@ -19570,6 +19717,7 @@ GameObject:
   - component: {fileID: 1199001888}
   - component: {fileID: 1199001887}
   - component: {fileID: 1199001886}
+  - component: {fileID: 1199001889}
   m_Layer: 10
   m_Name: Susan
   m_TagString: Nico
@@ -19695,6 +19843,29 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1199001889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1199001884}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83dc7b34223b2fd4b8b59010316efdfb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  associatedQuest: {fileID: 11400000, guid: f2ab126d02c36934d87c05b11261a7a5, type: 2}
+  objectiveIndex: 0
+  playerTag: Player
+  requireButtonPress: 1
+  interactKey: 101
+  destroyOnCollect: 0
+  interactionPrompt: {fileID: 0}
+  promptText: Press E to collect
+  hoverUIElement: {fileID: 0}
+  hoverUIDisplayTime: 0
+  showOnlyForActiveQuest: 1
 --- !u!1 &1214058788
 GameObject:
   m_ObjectHideFlags: 0
@@ -22745,6 +22916,7 @@ GameObject:
   - component: {fileID: 1414159499}
   - component: {fileID: 1414159498}
   - component: {fileID: 1414159497}
+  - component: {fileID: 1414159500}
   m_Layer: 10
   m_Name: Emma
   m_TagString: Emma
@@ -22870,6 +23042,29 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1414159500
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1414159495}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83dc7b34223b2fd4b8b59010316efdfb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  associatedQuest: {fileID: 11400000, guid: f2ab126d02c36934d87c05b11261a7a5, type: 2}
+  objectiveIndex: 0
+  playerTag: Player
+  requireButtonPress: 1
+  interactKey: 101
+  destroyOnCollect: 0
+  interactionPrompt: {fileID: 0}
+  promptText: Press E to collect
+  hoverUIElement: {fileID: 0}
+  hoverUIDisplayTime: 0
+  showOnlyForActiveQuest: 1
 --- !u!1 &1416240751
 GameObject:
   m_ObjectHideFlags: 0
@@ -25825,6 +26020,7 @@ GameObject:
   - component: {fileID: 1595632762}
   - component: {fileID: 1595632761}
   - component: {fileID: 1595632760}
+  - component: {fileID: 1595632763}
   m_Layer: 10
   m_Name: Luca
   m_TagString: Luca
@@ -25950,6 +26146,29 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1595632763
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1595632758}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83dc7b34223b2fd4b8b59010316efdfb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  associatedQuest: {fileID: 11400000, guid: f2ab126d02c36934d87c05b11261a7a5, type: 2}
+  objectiveIndex: 0
+  playerTag: Player
+  requireButtonPress: 1
+  interactKey: 101
+  destroyOnCollect: 0
+  interactionPrompt: {fileID: 0}
+  promptText: Press E to collect
+  hoverUIElement: {fileID: 0}
+  hoverUIDisplayTime: 0
+  showOnlyForActiveQuest: 1
 --- !u!1 &1600584755
 GameObject:
   m_ObjectHideFlags: 0
@@ -28234,7 +28453,6 @@ GameObject:
   - component: {fileID: 1761263194}
   - component: {fileID: 1761263196}
   - component: {fileID: 1761263197}
-  - component: {fileID: 1761263198}
   - component: {fileID: 1761263199}
   m_Layer: 7
   m_Name: Frugan2
@@ -28338,37 +28556,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialog: {fileID: 11400000, guid: ec687cf81d9edce4b82ca8e9013cfe0a, type: 2}
+  repeatDialog: {fileID: 11400000, guid: dd58cbf0b468350489112e35c8241b4e, type: 2}
   autoTrigger: 0
   triggerDistance: 3
   interactionPrompt: {fileID: 1481384169}
+  resetOnDialogEnd: 0
   questToComplete: {fileID: 11400000, guid: 7c74b2cf57e7f3e41a65532db2543618, type: 2}
   objectiveIndex: 0
   completeQuestAfterDialog: 0
---- !u!114 &1761263198
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1761263193}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d38cff2b1027ab44b903f1efa0c34e3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  questToGive: {fileID: 11400000, guid: 7c74b2cf57e7f3e41a65532db2543618, type: 2}
-  startQuestOnTriggerEnter: 0
-  initialDialog: {fileID: 0}
-  questOfferDialog: {fileID: 0}
-  acceptedDialog: {fileID: 0}
-  activeQuestDialog: {fileID: 0}
-  completedQuestDialog: {fileID: 0}
-  useDialogForQuest: 1
-  requireButtonPress: 1
-  interactKey: 101
-  playerTag: Player
-  interactionDistance: 3
-  interactionPrompt: {fileID: 1481384169}
 --- !u!65 &1761263199
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -28611,6 +28806,7 @@ GameObject:
   - component: {fileID: 1782355998}
   - component: {fileID: 1782355997}
   - component: {fileID: 1782355996}
+  - component: {fileID: 1782355999}
   m_Layer: 10
   m_Name: Calvin
   m_TagString: Lisa
@@ -28736,6 +28932,29 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1782355999
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1782355994}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83dc7b34223b2fd4b8b59010316efdfb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  associatedQuest: {fileID: 11400000, guid: f2ab126d02c36934d87c05b11261a7a5, type: 2}
+  objectiveIndex: 0
+  playerTag: Player
+  requireButtonPress: 1
+  interactKey: 101
+  destroyOnCollect: 0
+  interactionPrompt: {fileID: 0}
+  promptText: Press E to collect
+  hoverUIElement: {fileID: 0}
+  hoverUIDisplayTime: 0
+  showOnlyForActiveQuest: 1
 --- !u!1 &1783594617
 GameObject:
   m_ObjectHideFlags: 0
@@ -35040,6 +35259,17 @@ Transform:
   - {fileID: 638171619}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 451.224, z: 0}
+--- !u!114 &2117278918 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6510795932177284450, guid: 58b6d411068885443a80a496dea22f74, type: 3}
+  m_PrefabInstance: {fileID: 861809627}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2127937054
 GameObject:
   m_ObjectHideFlags: 0
@@ -35549,6 +35779,7 @@ SceneRoots:
   - {fileID: 1285650313}
   - {fileID: 1320068106}
   - {fileID: 719550805}
+  - {fileID: 1147602186}
   - {fileID: 1028255156}
   - {fileID: 1251371577}
   - {fileID: 1771619820}
