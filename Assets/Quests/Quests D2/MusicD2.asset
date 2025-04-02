@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c3ceb0f901fe7a4d991bfe619c2f728, type: 3}
   m_Name: MusicD2
   m_EditorClassIdentifier: 
-  questName: Turn on the gramophone 2
+  questName: Turn on the gramophone
   description: 
   objectives:
   - {fileID: 11400000, guid: e8e75218b89bb544489e7272738e11cc, type: 2}
   isActive: 0
-  isCompleted: 1
+  isCompleted: 0
   nextQuest: {fileID: 11400000, guid: c3c2f38368eddf246ba45427d1454355, type: 2}
