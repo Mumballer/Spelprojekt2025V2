@@ -27835,7 +27835,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1700698379}
   - component: {fileID: 1700698380}
-  m_Layer: 0
+  - component: {fileID: 1700698381}
+  m_Layer: 7
   m_Name: "lilS\xE4ng (1)"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27880,12 +27881,33 @@ MonoBehaviour:
   playerTag: Player
   requireButtonPress: 1
   interactKey: 101
-  destroyOnCollect: 1
+  destroyOnCollect: 0
   interactionPrompt: {fileID: 49777793}
   promptText: Press E to collect
   hoverUIElement: {fileID: 0}
   hoverUIDisplayTime: 0
   showOnlyForActiveQuest: 1
+--- !u!65 &1700698381
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1700698378}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 20.19978, y: 42.53876, z: 3.7982566}
+  m_Center: {x: -5.6179814, y: 4.8281264, z: -0.17194308}
 --- !u!1 &1701012568
 GameObject:
   m_ObjectHideFlags: 0
@@ -28353,8 +28375,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 50.119633, y: 10.608076, z: 6.089897}
-  m_Center: {x: -1.6585994, y: -6.332223, z: -0.30116272}
+  m_Size: {x: 51.834675, y: 23.457508, z: 7.744196}
+  m_Center: {x: -0.8010888, y: -12.756939, z: -1.1283121}
 --- !u!4 &1762148853
 Transform:
   m_ObjectHideFlags: 0
@@ -28364,7 +28386,7 @@ Transform:
   m_GameObject: {fileID: 1762148851}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.94, y: 2.26, z: 21.85}
+  m_LocalPosition: {x: 2.94, y: 3.25, z: 21.85}
   m_LocalScale: {x: 0.1, y: 0.1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -30954,7 +30976,6 @@ GameObject:
   - component: {fileID: 1857762975}
   - component: {fileID: 1857762978}
   - component: {fileID: 1857762977}
-  - component: {fileID: 1857762976}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -30977,27 +30998,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1700698379}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &1857762976
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1857762974}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1857762977
 MeshRenderer:
   m_ObjectHideFlags: 0
