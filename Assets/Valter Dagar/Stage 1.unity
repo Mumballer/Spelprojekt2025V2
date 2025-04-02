@@ -36519,12 +36519,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6510795932177284450, guid: 58b6d411068885443a80a496dea22f74, type: 3}
       propertyPath: m_fontSize
-      value: 25
+      value: 38.9
       objectReference: {fileID: 0}
     - target: {fileID: 6510795932177284450, guid: 58b6d411068885443a80a496dea22f74, type: 3}
       propertyPath: m_fontAsset
       value: 
       objectReference: {fileID: 11400000, guid: bd546432be014774fa50870d0e345184, type: 2}
+    - target: {fileID: 6510795932177284450, guid: 58b6d411068885443a80a496dea22f74, type: 3}
+      propertyPath: m_fontSizeMin
+      value: 11
+      objectReference: {fileID: 0}
     - target: {fileID: 6510795932177284450, guid: 58b6d411068885443a80a496dea22f74, type: 3}
       propertyPath: m_sharedMaterial
       value: 
