@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: EmmaD3Opt1
   m_EditorClassIdentifier: 
   lines:
-  - text: Nvm.. it's nothing.
+  - text: Nevermind.. it's nothing.
     choices:
     - text: Well okay then.. I love you Sandra
       nextDialog: {fileID: 11400000, guid: 9a0ee90f8bb295840b4e50effefbb715, type: 2}
