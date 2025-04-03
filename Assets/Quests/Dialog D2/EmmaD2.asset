@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: EmmaD2
   m_EditorClassIdentifier: 
   lines:
-  - text: Good morning Dad! How are you, by the way, why did you turn on the music?
+  - text: Kalimera Dad! How are you? By the way, why did you turn on the music?
     choices:
     - text: I'm alright, bit dizzy that's all, what do you mean? We have guest coming.
       nextDialog: {fileID: 11400000, guid: 86052a6eb6b84334ea135626479ba013, type: 2}

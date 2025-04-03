@@ -15,7 +15,7 @@ MonoBehaviour:
   lines:
   - text: Ughh. And I remember why I acted like that.
     choices:
-    - text: Yeah, yeah my little Bean.
+    - text: Yeah, yeah my little kouki.
       nextDialog: {fileID: 0}
       quest: {fileID: 0}
     character: {fileID: 11400000, guid: 902c9ecf90c47fc46b61b74de8e0e880, type: 2}

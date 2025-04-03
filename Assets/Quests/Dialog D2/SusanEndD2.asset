@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lines:
   - text: Seriously Nico? You know when she stayed up multiple days in a row then
-      slept off the whole Friday and saturday?
+      slept off the whole Friday and Saturday?
     choices:
     - text: Oh.. yes of course.. I remember now
       nextDialog: {fileID: 11400000, guid: 172959792c1b0d64a88e03a923d71bea, type: 2}

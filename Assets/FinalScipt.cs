@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class FinalScipt : MonoBehaviour
 {
@@ -22,7 +23,7 @@ public class FinalScipt : MonoBehaviour
 
     public void End()
     {
-        Application.Quit();
+        SceneManager.LoadScene("ThankYouForPlaying");
     }
 
     // Update is called once per frame
