@@ -8371,8 +8371,8 @@ MonoBehaviour:
   requireButtonPress: 1
   interactKey: 101
   placedItemPrefab: {fileID: 20472157}
-  interactionPrompt: {fileID: 1302265564}
-  promptText: Luca
+  interactionPrompt: {fileID: 2105792}
+  promptText: Calvin
 --- !u!114 &470725361
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9741,8 +9741,8 @@ MonoBehaviour:
   requireButtonPress: 1
   interactKey: 101
   placedItemPrefab: {fileID: 928019707}
-  interactionPrompt: {fileID: 2105792}
-  promptText: Calvin
+  interactionPrompt: {fileID: 1302265564}
+  promptText: Luca
 --- !u!114 &547082158
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19174,8 +19174,8 @@ MonoBehaviour:
   requireButtonPress: 1
   interactKey: 101
   placedItemPrefab: {fileID: 1192347746}
-  interactionPrompt: {fileID: 339584908}
-  promptText: Nico
+  interactionPrompt: {fileID: 1447892625}
+  promptText: Lisa
 --- !u!65 &1071701093
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -27636,8 +27636,8 @@ MonoBehaviour:
   requireButtonPress: 1
   interactKey: 101
   placedItemPrefab: {fileID: 266338707}
-  interactionPrompt: {fileID: 2110651943}
-  promptText: Emma
+  interactionPrompt: {fileID: 1193248604}
+  promptText: Susan
 --- !u!65 &1555575576
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -29500,8 +29500,8 @@ MonoBehaviour:
   requireButtonPress: 1
   interactKey: 101
   placedItemPrefab: {fileID: 1956712956}
-  interactionPrompt: {fileID: 1447892625}
-  promptText: Lisa
+  interactionPrompt: {fileID: 339584908}
+  promptText: Nico
 --- !u!65 &1682927211
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -37179,8 +37179,8 @@ MonoBehaviour:
   requireButtonPress: 1
   interactKey: 101
   placedItemPrefab: {fileID: 2014155783}
-  interactionPrompt: {fileID: 1193248604}
-  promptText: Susan
+  interactionPrompt: {fileID: 2110651943}
+  promptText: Emma
 --- !u!114 &2043652599
 MonoBehaviour:
   m_ObjectHideFlags: 0
