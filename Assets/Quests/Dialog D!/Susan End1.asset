@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Susan End1
   m_EditorClassIdentifier: 
   lines:
-  - text: Oh God, that sounds awful. I'm sorry you dreamt that dear. By the way,
-      Can you turn on the music? Your daughter is also waiting for you in her room.
+  - text: Oh God, that sounds awful. I'm sorry you dreamt that, dear. By the way,
+      can you turn on the music? Your daughter is also waiting for you in her room.
     choices:
     - text: "Well, it's just a dream after all. I\u2019ll get right on it!"
       nextDialog: {fileID: 0}

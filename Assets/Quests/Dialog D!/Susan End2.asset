@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: Susan End2
   m_EditorClassIdentifier: 
   lines:
-  - text: Flirtatious as ever Nico. By the way, Can you turn on the music? Your daughter
-      is also waiting for you in her room.
+  - text: I've always had trouble with Greek Nico. Luckily, Emma can translate for
+      me. By the way, she's waiting in her room for you. Can you also turn on the
+      music for the guest?
     choices:
     - text: "I\u2019ll get right on it!"
       nextDialog: {fileID: 0}

@@ -21134,7 +21134,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1681368678
 RectTransform:
   m_ObjectHideFlags: 0
@@ -21670,7 +21670,7 @@ PrefabInstance:
     - target: {fileID: 1394960407189864965, guid: 040c9b6f4b9b4ce408f9b39f9361757b, type: 3}
       propertyPath: m_Animation
       value: 
-      objectReference: {fileID: 7400000, guid: 4e358859a4e94ea43bf554d24d281a14, type: 2}
+      objectReference: {fileID: 7400000, guid: 24bc2467426f2a544a6f42bae48d5b18, type: 2}
     - target: {fileID: 1394960407189864965, guid: 040c9b6f4b9b4ce408f9b39f9361757b, type: 3}
       propertyPath: m_Animations.Array.size
       value: 4
@@ -21729,7 +21729,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3533028702361644696, guid: 040c9b6f4b9b4ce408f9b39f9361757b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 66.66667
+      value: 89.92584
       objectReference: {fileID: 0}
     - target: {fileID: 3533028702361644696, guid: 040c9b6f4b9b4ce408f9b39f9361757b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -21741,7 +21741,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7480949739981596364, guid: 040c9b6f4b9b4ce408f9b39f9361757b, type: 3}
       propertyPath: openAnimationName
-      value: DoorAnimOther
+      value: LastAnim
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

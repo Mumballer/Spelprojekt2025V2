@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: Susan OPT2
   m_EditorClassIdentifier: 
   lines:
-  - text: Ahhh, summer 1924. I still remember your costume, you hunk.
+  - text: Ahhh, Greece, summer 1924. I remember how awkward it was with the language
+      barrier between me and your parents.
     choices:
-    - text: Hahahaha, you were not too bad yourself
+    - text: Hahahaha, you definitely were struggling talking to them.
       nextDialog: {fileID: 11400000, guid: aa78718661352b548bce12327e9613cf, type: 2}
       quest: {fileID: 0}
     character: {fileID: 11400000, guid: e21005152e6683e42989884abc2c2927, type: 2}

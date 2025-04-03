@@ -16,7 +16,7 @@ MonoBehaviour:
   - text: That's fine Dad I'm not exactly 13 anymore.
     choices:
     - text: Oh god don't remind me. You have grown so big already. I still remember
-        how you used to boss me around when you were just a little bean.
+        how you used to boss me around when you were just a little kouki.
       nextDialog: {fileID: 11400000, guid: daeb510eb1737d94d9b45894f2aa4940, type: 2}
       quest: {fileID: 0}
     character: {fileID: 11400000, guid: c2405cd586ae9254c862d66121dfc807, type: 2}

@@ -40,16 +40,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aaa3b8214f75b354e9ba2caadd022259, type: 3}
   m_Name: DepthOfField
   m_EditorClassIdentifier: 
-  active: 0
+  active: 1
   quality:
     m_OverrideState: 1
-    m_Value: 3
-  focusMode:
-    m_OverrideState: 0
     m_Value: 1
+  focusMode:
+    m_OverrideState: 1
+    m_Value: 0
   focusDistance:
     m_OverrideState: 1
-    m_Value: 0.1
+    m_Value: 10
   focusDistanceMode:
     m_OverrideState: 1
     m_Value: 0
@@ -67,16 +67,16 @@ MonoBehaviour:
     m_Value: 20
   m_NearSampleCount:
     m_OverrideState: 1
-    m_Value: 8
+    m_Value: 5
   m_NearMaxBlur:
     m_OverrideState: 1
-    m_Value: 8
+    m_Value: 4
   m_FarSampleCount:
     m_OverrideState: 1
-    m_Value: 16
+    m_Value: 7
   m_FarMaxBlur:
     m_OverrideState: 1
-    m_Value: 16
+    m_Value: 8
   m_Resolution:
     m_OverrideState: 1
     m_Value: 2
