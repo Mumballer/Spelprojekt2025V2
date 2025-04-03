@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SusanD3End1
   m_EditorClassIdentifier: 
   lines:
-  - text: Kyle? oh Nico.. don't worry i will take care of the table
+  - text: Kyle? oh Nico.. don't worry I'll take care of the table
     choices:
     - text: NO.
       nextDialog: {fileID: 0}

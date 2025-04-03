@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: SusanOpt3D2Pt3
   m_EditorClassIdentifier: 
   lines:
-  - text: Gosh Nico you helped me look for them each time too.
+  - text: Gosh Nico, you helped me look for them each time too.
     choices:
-    - text: Oh i see.. Strange, i don't remember it
+    - text: Oh I see.. Strange, i don't remember it
       nextDialog: {fileID: 0}
       quest: {fileID: 11400000, guid: 1940d68440ce9de488f97ee5d6306262, type: 2}
     character: {fileID: 11400000, guid: 314a9546f111aa64a890056f6cad0283, type: 2}

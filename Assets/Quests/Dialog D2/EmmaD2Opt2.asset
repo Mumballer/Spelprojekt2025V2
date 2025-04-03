@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: EmmaD2Opt2
   m_EditorClassIdentifier: 
   lines:
-  - text: What? did mom forget to tell me?
+  - text: What? Did mom forget to tell me?
     choices:
     - text: I guess so..?
       nextDialog: {fileID: 11400000, guid: a7ac74e429a0f6b43a3e1b405751329b, type: 2}

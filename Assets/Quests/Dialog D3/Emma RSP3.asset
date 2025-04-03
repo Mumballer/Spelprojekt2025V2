@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Emma RSP3
   m_EditorClassIdentifier: 
   lines:
-  - text: Whats wrong with you??
+  - text: What's wrong with you??
     choices:
     - text: I'm sorry...
       nextDialog: {fileID: 0}

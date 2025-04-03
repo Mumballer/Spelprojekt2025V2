@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: EmmaD2Opt2Pt3
   m_EditorClassIdentifier: 
   lines:
-  - text: Ughh. and I remember why I acted like that.
+  - text: Ughh. And I remember why I acted like that.
     choices:
-    - text: Yea Yea my little Bean
+    - text: Yeah, yeah my little Bean.
       nextDialog: {fileID: 0}
       quest: {fileID: 0}
     character: {fileID: 11400000, guid: 902c9ecf90c47fc46b61b74de8e0e880, type: 2}

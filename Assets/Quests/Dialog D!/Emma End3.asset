@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Emma End3
   m_EditorClassIdentifier: 
   lines:
-  - text: Hahhahaha, yes i'm a grown woman now dad! By the way, make sure you set
+  - text: Hahhahaha, yes I'm a grown woman now dad! By the way, make sure you set
       the table before the guests come!
     choices:
     - text: "I\u2019ll get right to it!"

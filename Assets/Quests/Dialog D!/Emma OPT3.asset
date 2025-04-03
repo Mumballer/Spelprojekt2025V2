@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Emma OPT3
   m_EditorClassIdentifier: 
   lines:
-  - text: Hahahaha yea you haven't seen him in a while have you?
+  - text: Hahahaha yeah you haven't seen him in a while have you?
     choices:
-    - text: Yea last time i saw him was when we painted that painting of Mt. Olympus.
+    - text: Yeah last time I saw him was when we painted that painting of Mt. Olympus.
       nextDialog: {fileID: 11400000, guid: d524ab16e86854d4599caa430714a4dc, type: 2}
       quest: {fileID: 0}
     character: {fileID: 11400000, guid: c2405cd586ae9254c862d66121dfc807, type: 2}

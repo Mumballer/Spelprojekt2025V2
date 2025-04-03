@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Susan OPT3
   m_EditorClassIdentifier: 
   lines:
-  - text: "Ever since we retired sleep has been great hasn\u2019t it"
+  - text: "Ever since we retired sleep has been great hasn\u2019t it."
     choices:
-    - text: since you stopped working darling, I still paint
+    - text: Since you stopped working darling, I still paint.
       nextDialog: {fileID: 11400000, guid: 6c86573f42a3ea64f81aa38c2db474c0, type: 2}
       quest: {fileID: 0}
     character: {fileID: 11400000, guid: e21005152e6683e42989884abc2c2927, type: 2}

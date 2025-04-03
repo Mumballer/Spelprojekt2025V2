@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SusanD3Opt1
   m_EditorClassIdentifier: 
   lines:
-  - text: Oh Nico.. I can make the table just go yoo your room and paint, it keeps
+  - text: Oh Nico.. I can make the table just go to your room and paint, it keeps
       your brain active
     choices:
     - text: "But the guests are coming? I can\u2019t look silly in front of Kyle."

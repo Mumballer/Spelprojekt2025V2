@@ -15,7 +15,7 @@ MonoBehaviour:
   lines:
   - text: 'Perhaps a little painting competition? '
     choices:
-    - text: Yea, that could be something!
+    - text: Yeah, that could be something!
       nextDialog: {fileID: 11400000, guid: c3fe8329b67a6e248b4d03c3b0b8c2e3, type: 2}
       quest: {fileID: 0}
     character: {fileID: 11400000, guid: c2405cd586ae9254c862d66121dfc807, type: 2}

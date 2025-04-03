@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SusanEnd2Pt3
   m_EditorClassIdentifier: 
   lines:
-  - text: "It\u2019s probably your age catching up to you nico, how about we take
+  - text: "It\u2019s probably your age catching up to you Nico, how about we take
       it easy today?"
     choices:
     - text: "Yea\u2026"

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SusanOpt1D2
   m_EditorClassIdentifier: 
   lines:
-  - text: What kinda dream was it?
+  - text: What sort of dream was it?
     choices:
     - text: I don't remember.
       nextDialog: {fileID: 11400000, guid: 69450a1fdb9afa047805024dc7b1ece9, type: 2}

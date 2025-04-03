@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: EmmaD2opt1Pt3
   m_EditorClassIdentifier: 
   lines:
-  - text: "Im serious Dad you\u2019re 68 now, you need to slow down"
+  - text: "I'm serious Dad you\u2019re 68 now, you need to slow down."
     choices:
-    - text: Fine Emma I will slow down a bit, for you
+    - text: Fine Emma, I'll slow down a bit, for you.
       nextDialog: {fileID: 0}
       quest: {fileID: 0}
     character: {fileID: 11400000, guid: 902c9ecf90c47fc46b61b74de8e0e880, type: 2}

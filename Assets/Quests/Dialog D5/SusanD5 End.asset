@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SusanD5 End
   m_EditorClassIdentifier: 
   lines:
-  - text: CALM DOWN NICO, PLEASE ITS JUST ME ITS VICTORIA, YOUR WIFE.
+  - text: CALM DOWN NICO, PLEASE IT'S ME IT'S VICTORIA, YOUR WIFE.
     choices:
     - text: O THEE TI MOU SYMVAINEI
       nextDialog: {fileID: 0}

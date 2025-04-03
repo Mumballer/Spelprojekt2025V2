@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Susan OPT3P3
   m_EditorClassIdentifier: 
   lines:
-  - text: Yea yea Nico, By the way, Can you turn on the music? Your daughter is also
-      waiting for you in her room.
+  - text: Yea yea Nico, By the way, could you turn on the music? Your daughter is
+      also waiting for you in her room.
     choices:
     - text: "I\u2019ll get right on it!"
       nextDialog: {fileID: 0}

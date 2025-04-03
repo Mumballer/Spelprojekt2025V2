@@ -15,7 +15,7 @@ MonoBehaviour:
   lines:
   - text: Are you feeling okay honey?
     choices:
-    - text: Oh.. Yes no i feel fine.. Just had a weird dream.
+    - text: Oh.. Yes no I feel fine.. Just had a weird dream.
       nextDialog: {fileID: 11400000, guid: 028c21735b131da42859ed1ffea93907, type: 2}
       quest: {fileID: 0}
     character: {fileID: 11400000, guid: 314a9546f111aa64a890056f6cad0283, type: 2}

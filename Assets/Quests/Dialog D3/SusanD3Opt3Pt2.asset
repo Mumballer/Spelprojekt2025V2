@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SusanD3Opt3Pt2
   m_EditorClassIdentifier: 
   lines:
-  - text: "Oh god.. I\u2019m sorry Nico i can't do this.. please just leave me alone
+  - text: "Oh god.. I\u2019m sorry Nico I can't do this.. please just leave me alone
       for now\r"
     choices:
     - text: I'm sorry.. I don't know why I can't remember.

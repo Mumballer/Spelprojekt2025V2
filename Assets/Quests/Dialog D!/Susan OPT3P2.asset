@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Susan OPT3P2
   m_EditorClassIdentifier: 
   lines:
-  - text: oh yes right, you still do that. My little Picasso
+  - text: Oh yes right, you still do that. My little Picasso
     choices:
-    - text: old age must be getting to you honey
+    - text: Old age must be getting to you honey
       nextDialog: {fileID: 11400000, guid: b6f95fd79e6b27047acf790b51488112, type: 2}
       quest: {fileID: 0}
     character: {fileID: 11400000, guid: e21005152e6683e42989884abc2c2927, type: 2}

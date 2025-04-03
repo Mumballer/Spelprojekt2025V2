@@ -15,7 +15,7 @@ MonoBehaviour:
   lines:
   - text: 'What? Did mom forget to tell me? '
     choices:
-    - text: guess so..?
+    - text: I guess so.
       nextDialog: {fileID: 11400000, guid: 5486cf6f12589714da003ea18d37b715, type: 2}
       quest: {fileID: 0}
     character: {fileID: 11400000, guid: 902c9ecf90c47fc46b61b74de8e0e880, type: 2}

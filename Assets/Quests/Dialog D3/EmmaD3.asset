@@ -15,7 +15,7 @@ MonoBehaviour:
   lines:
   - text: Has your head gotten any better dad?
     choices:
-    - text: what..? Are you talking about it?
+    - text: What..? Are you talking about it?
       nextDialog: {fileID: 11400000, guid: 85dee28ca1449664594511f2909d7258, type: 2}
       quest: {fileID: 0}
     character: {fileID: 11400000, guid: ac36cae3a04f0b04bb60bbe70cfb4f0f, type: 2}

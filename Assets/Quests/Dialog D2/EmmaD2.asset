@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: EmmaD2
   m_EditorClassIdentifier: 
   lines:
-  - text: Good Morning Dad! How are you, btw why did you put on the music?
+  - text: Good morning Dad! How are you, by the way, why did you turn on the music?
     choices:
-    - text: I'm alright, bit dizzy that's all, what do you mean? we have guest coming
+    - text: I'm alright, bit dizzy that's all, what do you mean? We have guest coming.
       nextDialog: {fileID: 11400000, guid: 86052a6eb6b84334ea135626479ba013, type: 2}
       quest: {fileID: 0}
     - text: I'm feeling a bit stiff that's all, how are you sweetie? Also, what do
-        you mean? we have guests coming, remember?
+        you mean? We have guests coming, remember?
       nextDialog: {fileID: 11400000, guid: a20fcaa891aa2724bb1981b6c53aaa9f, type: 2}
       quest: {fileID: 0}
     - text: What? Oh you're here? Hi sweetie!

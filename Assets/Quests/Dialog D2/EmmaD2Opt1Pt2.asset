@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: EmmaD2Opt1Pt2
   m_EditorClassIdentifier: 
   lines:
-  - text: Oh well, anyways of course your dizzy you always keep painting for hours
-      straight with Luca, I told you to take breaks dad
+  - text: Oh well, anyways of course you're dizzy you always keep painting for hours
+      straight with Luca, I told you to take breaks dad.
     choices:
-    - text: Yea yea, I will be fine it's just dizziness
+    - text: Yeah yeah, I'll be fine it's just dizziness
       nextDialog: {fileID: 11400000, guid: 7cb11e759b4dea64894511644fc576e0, type: 2}
       quest: {fileID: 0}
     character: {fileID: 11400000, guid: 902c9ecf90c47fc46b61b74de8e0e880, type: 2}

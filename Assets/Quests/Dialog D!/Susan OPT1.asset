@@ -15,7 +15,7 @@ MonoBehaviour:
   lines:
   - text: Oh dear, did you dream about spiders again?
     choices:
-    - text: Yes, this time they  crawled in my head
+    - text: Yes, they were crawling in my head this time.
       nextDialog: {fileID: 11400000, guid: 28f67126f6ca4f044b87af271ce60311, type: 2}
       quest: {fileID: 0}
     character: {fileID: 11400000, guid: e21005152e6683e42989884abc2c2927, type: 2}

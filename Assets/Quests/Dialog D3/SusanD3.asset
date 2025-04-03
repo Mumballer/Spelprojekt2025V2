@@ -18,10 +18,10 @@ MonoBehaviour:
     - text: "I need to make the table\u2026"
       nextDialog: {fileID: 11400000, guid: 34f1fd8e5af29ef49bd2e6a261bb1a63, type: 2}
       quest: {fileID: 0}
-    - text: i don't wanna lay down all day, i can't rest anymore...
+    - text: I don't want to lay down all day, I can't rest anymore...
       nextDialog: {fileID: 11400000, guid: 59e03b2d622ebab4f8ccfc97ecc553e3, type: 2}
       quest: {fileID: 0}
-    - text: "\u201CWho are you?\u201D"
+    - text: ....Who are you?
       nextDialog: {fileID: 11400000, guid: e9b6de38e3e829b4f9a03daef62e58fb, type: 2}
       quest: {fileID: 0}
     character: {fileID: 11400000, guid: a03606f4c5af2ac47a2a991625062ccb, type: 2}

@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: SusanOpt3D2
   m_EditorClassIdentifier: 
   lines:
-  - text: Oh really? You are usually on point with your sleep schedule.
+  - text: Oh really? You're usually on point with your sleep schedule.
     choices:
     - text: Oh yea.. I am, how weird. I guess everyone slips up sometimes! old age
-        must be getting to me
+        must be getting to me.
       nextDialog: {fileID: 11400000, guid: 6931856d77d6d49409ec98aed4b4bae2, type: 2}
       quest: {fileID: 0}
     character: {fileID: 11400000, guid: 314a9546f111aa64a890056f6cad0283, type: 2}

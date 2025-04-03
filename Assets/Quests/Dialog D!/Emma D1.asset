@@ -21,7 +21,7 @@ MonoBehaviour:
     - text: "Of course I am! Kalimera to you too, I\u2019m glad to see you."
       nextDialog: {fileID: 11400000, guid: 4ca3fa1bcf86b9d4aa63d2f55dd2b534, type: 2}
       quest: {fileID: 0}
-    - text: Of course I am! Kalimera to you too, im happy to see Luca again
+    - text: Of course I am! Kalimera to you too, I'm happy to see Luca again
       nextDialog: {fileID: 11400000, guid: e4e35bdeefd6681408e722ee95362859, type: 2}
       quest: {fileID: 0}
     character: {fileID: 11400000, guid: c2405cd586ae9254c862d66121dfc807, type: 2}

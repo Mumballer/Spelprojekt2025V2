@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: EmmaD2Opt3
   m_EditorClassIdentifier: 
   lines:
-  - text: What? Uhh you okay dad? I've been here since yesterday..
+  - text: What? Uhh you okay, dad? I've been here since yesterday..
     choices:
-    - text: Oh what? I must have missed you, I was asleep for so long yesterday so
+    - text: Oh what? I must've missed you, I was asleep for so long yesterday so
         that's probably why.
       nextDialog: {fileID: 11400000, guid: 11914a587ce35bf4eb287b3a58b7c383, type: 2}
       quest: {fileID: 0}
