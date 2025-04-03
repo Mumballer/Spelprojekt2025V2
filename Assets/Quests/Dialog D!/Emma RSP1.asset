@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Emma RSP1
   m_EditorClassIdentifier: 
   lines:
-  - text: Done already?
+  - text: Did you place the nametags?
     choices:
     - text: ...
       nextDialog: {fileID: 0}

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Susan RSP1
   m_EditorClassIdentifier: 
   lines:
-  - text: Have you done what I asked?
+  - text: Your daughter is waiting for you in her room Nico
     choices:
     - text: ...
       nextDialog: {fileID: 0}

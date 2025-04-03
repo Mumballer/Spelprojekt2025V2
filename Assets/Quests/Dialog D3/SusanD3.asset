@@ -18,7 +18,7 @@ MonoBehaviour:
     - text: "I need to make the table\u2026"
       nextDialog: {fileID: 11400000, guid: 34f1fd8e5af29ef49bd2e6a261bb1a63, type: 2}
       quest: {fileID: 0}
-    - text: I don't want to lay down all day, I can't rest anymore...
+    - text: Den thelo na xaplono oli mera, den boro na xekourasto pia..
       nextDialog: {fileID: 11400000, guid: 59e03b2d622ebab4f8ccfc97ecc553e3, type: 2}
       quest: {fileID: 0}
     - text: ....Who are you?

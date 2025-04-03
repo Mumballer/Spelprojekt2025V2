@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: EmmaRSP6
   m_EditorClassIdentifier: 
   lines:
-  - text: Truth lies beyond the door, step into the light dad.
+  - text: I love you Dad
     choices:
-    - text: What do you mean by that?
+    - text: I love you too kouki
       nextDialog: {fileID: 0}
       quest: {fileID: 0}
     character: {fileID: 11400000, guid: c2405cd586ae9254c862d66121dfc807, type: 2}

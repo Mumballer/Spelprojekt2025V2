@@ -13,8 +13,7 @@ MonoBehaviour:
   m_Name: SusanD3Opt2
   m_EditorClassIdentifier: 
   lines:
-  - text: "I understand\u2026 Well do whatever you want honey, it's good to stay
-      active"
+  - text: Honey, you're speaking Greek.. I can't understand you.
     choices:
     - text: Where's Sandra..?
       nextDialog: {fileID: 11400000, guid: aa5fd285c6a983b44b5c9c02cfe5f590, type: 2}

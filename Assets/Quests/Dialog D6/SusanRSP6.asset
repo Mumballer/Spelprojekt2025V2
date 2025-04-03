@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: SusanRSP6
   m_EditorClassIdentifier: 
   lines:
-  - text: We'll see you on the other side, soon enough...
+  - text: I love you Nico.
     choices:
-    - text: What do you mean?
+    - text: I love you too
       nextDialog: {fileID: 0}
       quest: {fileID: 0}
     character: {fileID: 11400000, guid: e21005152e6683e42989884abc2c2927, type: 2}
