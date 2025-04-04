@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: HDRP Performant
   m_EditorClassIdentifier: 
   m_RenderPipelineSettings:
-    supportShadowMask: 0
+    supportShadowMask: 1
     supportSSR: 0
     supportSSRTransparent: 0
     supportSSAO: 1
@@ -146,7 +146,7 @@ MonoBehaviour:
       maxDirectionalShadowMapResolution: 1024
       maxPunctualShadowMapResolution: 2048
       maxAreaShadowMapResolution: 2048
-      supportScreenSpaceShadows: 0
+      supportScreenSpaceShadows: 1
       maxScreenSpaceShadowSlots: 4
       screenSpaceShadowBufferFormat: 48
     decalSettings:
