@@ -4609,7 +4609,7 @@ MonoBehaviour:
   theEnemy: {fileID: 399233375}
   normalSpeed: 0.01
   chaseSpeed: 0.05
-  detectionRange: 22
+  detectionRange: 23
   playerLayer:
     serializedVersion: 2
     m_Bits: 8
@@ -4625,6 +4625,7 @@ MonoBehaviour:
   adjustAudioWithSpeed: 1
   minPitch: 1
   maxPitch: 1.5
+  crossXThreshold: 26.052
 --- !u!136 &399233377
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -4679,7 +4680,7 @@ Transform:
   m_GameObject: {fileID: 399233375}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 28.9, y: 0.67289, z: 16.261}
+  m_LocalPosition: {x: 27.258, y: 0.67289, z: 22.62}
   m_LocalScale: {x: 1.3162625, y: 1.3162625, z: 1.3162625}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -19369,7 +19370,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: bd8f20747bf7ea644a729e5a721295d5, type: 3}
   m_Resource: {fileID: 8300000, guid: bd8f20747bf7ea644a729e5a721295d5, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.843
+  m_Volume: 1
   m_Pitch: 1
   Loop: 1
   Mute: 0

@@ -7,7 +7,6 @@ using UnityEngine.UI;
 
 public class EnemyAI : MonoBehaviour
 {
-    // Existing variables
     public GameObject stalkerDes;
     NavMeshAgent stalkerAgent;
     public GameObject theEnemy;
@@ -22,16 +21,16 @@ public class EnemyAI : MonoBehaviour
     Animation enemyAnimation;
     AudioSource footstepAudio;
     AudioSource Boom;
-    bool hasPlayed = false;
+    bool hasPlayed = false; // Tracks Boom sound
     public Transform player;
     public GameObject childObject;
 
     // New variables for speed ramping
-    public float initialSpeed = 1.5f;     // Starting speed for NavMeshAgent
-    public float maxSpeed = 5.0f;         // Maximum speed the agent can reach
-    public float speedIncreaseRate = 0.1f; // How much to increase speed per second
-    public float speedIncreaseDelay = 5.0f; // Time in seconds before speed starts increasing
-    private float timeElapsed = 0.0f;      // Track elapsed time
+    public float initialSpeed = 1.5f;
+    public float maxSpeed = 5.0f;
+    public float speedIncreaseRate = 0.1f;
+    public float speedIncreaseDelay = 5.0f;
+    private float timeElapsed = 0.0f;
     private bool speedIncreaseStarted = false;
 
     // Optional: audio pitch adjustment with speed
@@ -39,12 +38,16 @@ public class EnemyAI : MonoBehaviour
     public float minPitch = 1.0f;
     public float maxPitch = 1.5f;
 
+    // New: X Position Threshold for Detection
+    public float crossXThreshold = 5.0f;
+    private bool playerHasCrossed = false;
+
     void Start()
     {
         stalkerAgent = GetComponent<NavMeshAgent>();
-        stalkerAgent.speed = initialSpeed; // Set initial speed
+        stalkerAgent.speed = initialSpeed;
 
-        stalkerAgent.Stop();
+        stalkerAgent.isStopped = true;
         enemyAnimation = theEnemy.GetComponent<Animation>();
         footstepAudio = theEnemy.GetComponent<AudioSource>();
         Boom = childObject.GetComponent<AudioSource>();
@@ -52,110 +55,55 @@ public class EnemyAI : MonoBehaviour
 
     void Update()
     {
-        // Update elapsed time
-        timeElapsed += Time.deltaTime;
-
-        // Start increasing speed after delay
-        if (timeElapsed >= speedIncreaseDelay && !speedIncreaseStarted)
+        // Check if player has crossed the X threshold
+        if (!playerHasCrossed && player.position.x > crossXThreshold)
         {
-            speedIncreaseStarted = true;
-            timeElapsed = 0;
+            playerHasCrossed = true;
+            StartChase();
         }
 
-        // Gradually increase speed if started
-        if (speedIncreaseStarted)
+        if (playerHasCrossed)
         {
-            // Increase speed gradually up to max speed
-            stalkerAgent.speed = Mathf.Min(initialSpeed + (speedIncreaseRate * timeElapsed), maxSpeed);
-
-            // Optional: Adjust animation speed with agent speed
-            animSpeed = Mathf.Lerp(1.0f, 1.5f, (stalkerAgent.speed - initialSpeed) / (maxSpeed - initialSpeed));
-
-            // Optional: Adjust audio pitch with speed
-            if (adjustAudioWithSpeed && footstepAudio != null)
+            // Gradually increase speed
+            timeElapsed += Time.deltaTime;
+            if (timeElapsed >= speedIncreaseDelay && !speedIncreaseStarted)
             {
-                footstepAudio.pitch = Mathf.Lerp(minPitch, maxPitch,
-                    (stalkerAgent.speed - initialSpeed) / (maxSpeed - initialSpeed));
+                speedIncreaseStarted = true;
+                timeElapsed = 0;
             }
-        }
 
-        // Set destination (enemy follows player)
-        if (IsPlayerInSight())
-        {
+            if (speedIncreaseStarted)
+            {
+                stalkerAgent.speed = Mathf.Min(initialSpeed + (speedIncreaseRate * timeElapsed), maxSpeed);
+                animSpeed = Mathf.Lerp(1.0f, 1.5f, (stalkerAgent.speed - initialSpeed) / (maxSpeed - initialSpeed));
+
+                if (adjustAudioWithSpeed && footstepAudio != null)
+                {
+                    footstepAudio.pitch = Mathf.Lerp(minPitch, maxPitch,
+                        (stalkerAgent.speed - initialSpeed) / (maxSpeed - initialSpeed));
+                }
+            }
+
+            // Set enemy destination to follow player
             stalkerAgent.SetDestination(player.position);
-            stalkerAgent.Resume();
-        }
-        else
-        {
-            stalkerAgent.Stop();
-        }
-
-
-        // Handle footstep audio based on distance
-        float distanceToPlayer = Vector3.Distance(transform.position, stalkerDes.transform.position);
-
-        if (distanceToPlayer <= footstepDistance)
-        {
-            if (!hasPlayed)
-            {
-                Boom.Play();
-                hasPlayed = true;
-            }
-
-            footstepAudio.volume = Mathf.Lerp(0, maxVolume, (footstepDistance - distanceToPlayer) / footstepDistance);
-
-            if (!footstepAudio.isPlaying && footstepAudio.volume > 0.01f)
-            {
-                footstepAudio.Play();
-            }
-        }
-        else
-        {
-            if (footstepAudio.isPlaying)
-            {
-                footstepAudio.Stop();
-            }
-        }
-
-        // Handle player detection
-        if (IsPlayerInSight() == true)
-        {
-            stalkerAgent.Resume();
-        }
-        else
-        {
-            stalkerAgent.Stop();
-        }
-
-        // Check if agent has reached destination
-        if (stalkerAgent.remainingDistance > stalkerAgent.stoppingDistance)
-        {
             stalkerAgent.isStopped = false;
-        }
-        else
-        {
-            stalkerAgent.isStopped = true;
         }
     }
 
-    bool IsPlayerInSight()
+    void StartChase()
     {
-        Vector3 directionToPlayer = stalkerDes.transform.position - transform.position;
-        float distanceToPlayer = directionToPlayer.magnitude;
-
-        if (distanceToPlayer <= detectionRange)
+        // Start playing Boom sound if it hasn't been played yet
+        if (!hasPlayed)
         {
-            Debug.Log("Less than detection range");
-            RaycastHit hit;
-            if (Physics.Raycast(transform.position, directionToPlayer.normalized, out hit, detectionRange, playerLayer))
-            {
-                if (hit.transform == stalkerDes.transform)
-                {
-                    return true;
-                }
-            }
+            Boom.Play();
+            hasPlayed = true;
         }
-        return false;
+
+        // Start footstep sound
+        if (!footstepAudio.isPlaying)
+        {
+            footstepAudio.Play();
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -173,7 +121,6 @@ public class EnemyAI : MonoBehaviour
 
     void ReloadScene()
     {
-        // Reload the current scene
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
