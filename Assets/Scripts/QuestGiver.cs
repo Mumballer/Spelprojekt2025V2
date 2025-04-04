@@ -4,78 +4,81 @@ using System.Collections;
 public class QuestGiver : MonoBehaviour
 {
     [Header("Quest Settings")]
-    [SerializeField] private Quest questToGive;
-    [SerializeField] private bool startQuestOnTriggerEnter = false;
+    [SerializeField] private Quest questToGive; // questen som ges
+    [SerializeField] private bool startQuestOnTriggerEnter = false; // ge direkt när man går nära?
 
     [Header("Dialog Integration")]
-    [SerializeField] private Dialog initialDialog;          // Dialog before quest is offered/known.
-    [SerializeField] private Dialog questOfferDialog;       // Dialog specifically offering the quest (optional, can use initialDialog).
-    [SerializeField] private Dialog postAcceptanceDialog;   // Dialog shown ONCE immediately after accepting.
-    [SerializeField] private Dialog activeQuestDialog;      // Dialog shown while the quest is active but not complete.
-    [SerializeField] private Dialog completedQuestDialog;   // Dialog shown after the quest is completed.
-    [SerializeField] private bool useDialogForQuest = true; // Use dialog choices to offer quest
+    [SerializeField] private Dialog initialDialog; // prat innan quest
+    [SerializeField] private Dialog questOfferDialog; // prat som erbjuder quest
+    [SerializeField] private Dialog postAcceptanceDialog; // prat direkt efter ja tack
+    [SerializeField] private Dialog activeQuestDialog; // prat medan quest pågår
+    [SerializeField] private Dialog completedQuestDialog; // prat när quest är klar
+    [SerializeField] private bool useDialogForQuest = true; // använd dialogval för quest?
 
     [Header("Interaction Settings")]
-    [SerializeField] private bool requireButtonPress = true;
-    [SerializeField] private KeyCode interactKey = KeyCode.E;
-    [SerializeField] private string playerTag = "Player";
-    [SerializeField] private float interactionDistance = 3f;
-    [SerializeField] private GameObject interactionPrompt;
+    [SerializeField] private bool requireButtonPress = true; // måste man trycka knapp?
+    [SerializeField] private KeyCode interactKey = KeyCode.E; // vilken knapp
+    [SerializeField] private string playerTag = "Player"; // spelarens tag
+    [SerializeField] private float interactionDistance = 3f; // avstånd för prat
+    [SerializeField] private GameObject interactionPrompt; // "tryck E" prompt
 
-    private bool playerInRange = false;
-    private bool questOfferedOrGiven = false; // Renamed from questGiven for clarity
-    private bool shownPostAcceptanceDialog = false; // Flag to track if the post-acceptance dialog was shown
+    private bool playerInRange = false; // är spelaren nära?
+    private bool questOfferedOrGiven = false; // har questen erbjudits?
+    private bool shownPostAcceptanceDialog = false; // har "efter-ja" dialogen visats?
 
-    private DialogTrigger dialogTrigger;
+    private DialogTrigger dialogTrigger; // trigger-komponenten på samma objekt
 
     private void Start()
     {
-        // If we're using dialog for quest, set up a DialogTrigger component
-        if (useDialogForQuest) // Check if dialog system should be used
+        // sätt upp trigger om vi använder dialog
+        if (useDialogForQuest)
         {
-            dialogTrigger = GetComponent<DialogTrigger>();
+            dialogTrigger = GetComponent<DialogTrigger>(); // försök hitta
             if (dialogTrigger == null)
             {
-                dialogTrigger = gameObject.AddComponent<DialogTrigger>();
+                dialogTrigger = gameObject.AddComponent<DialogTrigger>(); // lägg till om saknas
             }
 
-            // Set initial dialog based on current state
+            // sätt rätt dialog från start
             dialogTrigger.dialog = GetAppropriateDialog();
             dialogTrigger.triggerDistance = interactionDistance;
             dialogTrigger.interactionPrompt = interactionPrompt;
 
-            // Subscribe to dialog completion events ONLY if using dialog system
+            // lyssna på när dialoger blir klara
             if (DialogManager.Instance != null)
             {
                 DialogManager.Instance.OnDialogComplete += HandleDialogComplete;
             }
         }
-        else if (initialDialog != null) // Handle non-quest-related initial dialog even if not using dialog for quest giving
+        // om vi INTE ger quest via dialog, men HAR en startdialog
+        else if (initialDialog != null)
         {
              dialogTrigger = GetComponent<DialogTrigger>();
             if (dialogTrigger == null)
             {
                 dialogTrigger = gameObject.AddComponent<DialogTrigger>();
             }
-             dialogTrigger.dialog = initialDialog; // Just use the initial one
+             // använd bara startdialogen
+             dialogTrigger.dialog = initialDialog;
              dialogTrigger.triggerDistance = interactionDistance;
              dialogTrigger.interactionPrompt = interactionPrompt;
-             // No need to subscribe to OnDialogComplete if not handling quest acceptance via dialog
         }
 
 
+        // göm prompten
         if (interactionPrompt != null)
         {
             interactionPrompt.SetActive(false);
         }
 
-        // Check initial quest state to set flags correctly on load/start
+        // kolla quest-status när spelet startar
         if (questToGive != null && QuestManager.Instance != null)
         {
+            // om quest redan är aktiv/klar
             if (QuestManager.Instance.IsQuestActive(questToGive) || QuestManager.Instance.IsQuestCompleted(questToGive))
             {
                 questOfferedOrGiven = true;
-                // If it's active or completed, we assume the post-acceptance phase is passed
+                // då har "efter-ja" fasen passerat
                 shownPostAcceptanceDialog = true;
             }
         }
@@ -83,115 +86,109 @@ public class QuestGiver : MonoBehaviour
 
     private void OnDestroy()
     {
-        // Unsubscribe from events ONLY if using dialog system for quest
+        // sluta lyssna om vi använde dialog för quest
         if (useDialogForQuest && DialogManager.Instance != null)
         {
             DialogManager.Instance.OnDialogComplete -= HandleDialogComplete;
         }
     }
 
-    // Handle dialog completion events (primarily to know when offer/acceptance dialogs finish)
+    // körs när en dialog är klar (om vi lyssnar)
     private void HandleDialogComplete(Dialog completedDialog)
     {
-        // If the dialog that just finished was the one offering the quest,
-        // OR the one shown immediately after acceptance, update the state.
+        // om det var erbjudande- eller efter-ja-dialogen
         if (completedDialog == questOfferDialog || completedDialog == postAcceptanceDialog)
         {
-             // If the quest is now active, ensure the post-acceptance flag is set.
+             // kolla om questen nu är aktiv
              if (questToGive != null && QuestManager.Instance != null && QuestManager.Instance.IsQuestActive(questToGive))
              {
-                 questOfferedOrGiven = true; // Mark as given
-                 shownPostAcceptanceDialog = true; // Mark post-acceptance dialog as conceptually "shown"
-                 Debug.Log($"QuestGiver: Dialog '{completedDialog.name}' completed. Quest '{questToGive.questName}' is active. Post-acceptance phase passed.");
+                 questOfferedOrGiven = true; // markera som given
+                 shownPostAcceptanceDialog = true; // markera "efter-ja" som visad
+                 Debug.Log($"givare: dialog '{completedDialog.name}' klar. quest aktiv.");
              }
         }
-        // Potentially add logic here if other dialogs trigger state changes
     }
 
-    // Get the appropriate dialog based on quest state
+    // välj rätt dialog att visa nu
     private Dialog GetAppropriateDialog()
     {
         if (questToGive == null || QuestManager.Instance == null)
         {
-            Debug.Log("QuestGiver: No quest assigned or QuestManager not found, returning initial dialog.");
-            return initialDialog; // Return initial if no quest logic applies
+            Debug.Log("givare: ingen quest/chef, visar startdialog.");
+            return initialDialog;
         }
 
-        // 1. Check if quest is completed
+        // 1. är questen klar?
         if (QuestManager.Instance.IsQuestCompleted(questToGive))
         {
-            Debug.Log($"QuestGiver: Quest '{questToGive.questName}' is completed. Returning completed dialog.");
-            return completedQuestDialog ?? initialDialog; // Use completed or fallback to initial
+            Debug.Log($"givare: quest '{questToGive.questName}' klar. visar klar-dialog.");
+            return completedQuestDialog ?? initialDialog; // visa klar-dialog, annars start
         }
 
-        // 2. Check if quest is active
+        // 2. är questen aktiv?
         if (QuestManager.Instance.IsQuestActive(questToGive))
         {
-            // 2a. Check if we need to show the post-acceptance dialog (only once)
+            // 2a. ska vi visa "efter-ja" dialogen? (bara en gång)
             if (questOfferedOrGiven && !shownPostAcceptanceDialog && postAcceptanceDialog != null)
             {
-                 Debug.Log($"QuestGiver: Quest '{questToGive.questName}' was just accepted. Returning post-acceptance dialog.");
-                 // We don't set shownPostAcceptanceDialog = true here yet.
-                 // It gets set when this specific dialog completes (in HandleDialogComplete)
-                 // or when the player interacts again after seeing it once.
+                 Debug.Log($"givare: quest '{questToGive.questName}' nyss accepterad. visar efter-ja.");
                  return postAcceptanceDialog;
             }
-            // 2b. Otherwise, show the standard active quest dialog
+            // 2b. visa vanliga "pågående quest"-dialogen
             else
             {
-                Debug.Log($"QuestGiver: Quest '{questToGive.questName}' is active. Returning active dialog.");
-                // If we got here, the post-acceptance phase is definitely over.
-                shownPostAcceptanceDialog = true;
-                return activeQuestDialog ?? initialDialog; // Use active or fallback to initial
+                Debug.Log($"givare: quest '{questToGive.questName}' aktiv. visar aktiv-dialog.");
+                shownPostAcceptanceDialog = true; // nu är efter-ja fasen över
+                return activeQuestDialog ?? initialDialog; // visa aktiv-dialog, annars start
             }
         }
 
-        // 3. If not completed and not active, check if it has been offered/given before
-        //    (This state usually means the player declined or hasn't accepted yet)
+        // 3. om inte klar/aktiv, har den erbjudits förut?
         if (questOfferedOrGiven)
         {
-             // If it was offered but is not active/completed, maybe show the offer again or a reminder?
-             // For simplicity, let's fall back to the offer dialog or initial.
-             Debug.Log($"QuestGiver: Quest '{questToGive.questName}' was offered but isn't active/completed. Returning offer/initial dialog.");
-             return questOfferDialog ?? initialDialog;
+             // spelaren sa kanske nej? visa erbjudandet igen?
+             Debug.Log($"givare: quest '{questToGive.questName}' erbjuden men ej aktiv. visar erbjudande/start.");
+             return questOfferDialog ?? initialDialog; // visa erbjudande, annars start
         }
 
-        // 4. If none of the above, it means the quest hasn't been offered yet.
-        Debug.Log($"QuestGiver: Quest '{questToGive.questName}' not offered yet. Returning offer/initial dialog.");
-        return questOfferDialog ?? initialDialog; // Use offer dialog or fallback to initial
+        // 4. annars, erbjud questen för första gången
+        Debug.Log($"givare: quest '{questToGive.questName}' ej erbjuden. visar erbjudande/start.");
+        return questOfferDialog ?? initialDialog; // visa erbjudande, annars start
     }
 
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag(playerTag))
+        if (other.CompareTag(playerTag)) // om spelaren kommer nära
         {
             playerInRange = true;
 
-            // Update the dialog trigger ONLY if using dialog system
+            // uppdatera dialog-triggern om vi använder den
             if (useDialogForQuest && dialogTrigger != null)
             {
-                 dialogTrigger.dialog = GetAppropriateDialog(); // Ensure dialog is up-to-date
+                 dialogTrigger.dialog = GetAppropriateDialog(); // se till att den har rätt dialog
             }
 
+            // visa prompten om ingen dialog pågår
             if (interactionPrompt != null && !DialogManager.Instance.IsDialogActive)
             {
                 interactionPrompt.SetActive(true);
             }
 
+            // ge quest direkt om inställt så
             if (startQuestOnTriggerEnter && !questOfferedOrGiven && !useDialogForQuest)
             {
-                GiveQuest(); // Legacy direct giving
+                GiveQuest();
             }
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag(playerTag))
+        if (other.CompareTag(playerTag)) // om spelaren går
         {
             playerInRange = false;
-
+            // göm prompten
             if (interactionPrompt != null)
             {
                 interactionPrompt.SetActive(false);
@@ -201,86 +198,82 @@ public class QuestGiver : MonoBehaviour
 
     private void Update()
     {
+        // om spelaren är nära, trycker E
         if (playerInRange && requireButtonPress && Input.GetKeyDown(interactKey))
         {
+            // om vi använder dialog för quest
             if (useDialogForQuest)
             {
-                // Update dialog based on current quest state right before triggering
                 if (dialogTrigger != null)
                 {
-                    // If the current dialog IS the post-acceptance one, mark it as shown now
-                    // so the *next* interaction uses the active dialog.
+                    // om vi just visat efter-ja, markera den som klar nu
                     if (dialogTrigger.dialog == postAcceptanceDialog)
                     {
                         shownPostAcceptanceDialog = true;
                     }
 
-                    dialogTrigger.dialog = GetAppropriateDialog(); // Get the potentially updated dialog
-                    dialogTrigger.TriggerDialog();
+                    // hämta rätt dialog igen precis innan start
+                    dialogTrigger.dialog = GetAppropriateDialog();
+                    dialogTrigger.TriggerDialog(); // starta prat
                 }
                 else {
-                     Debug.LogError($"QuestGiver on {gameObject.name}: useDialogForQuest is true, but DialogTrigger is missing!");
+                     Debug.LogError($"givare {gameObject.name}: ska använda dialog men trigger saknas!");
                 }
             }
-            else
+            else // om vi ger quest direkt
             {
-                // Legacy direct quest giving without dialog
                 GiveQuest();
             }
         }
     }
 
-    // Original method for directly giving quests (no dialog integration)
+    // ge quest direkt utan dialogval
     public void GiveQuest()
     {
         if (questToGive != null && !questOfferedOrGiven && QuestManager.Instance != null)
         {
-            // Check if already active/completed just in case
+            // dubbelkolla om den redan finns
             if (QuestManager.Instance.IsQuestActive(questToGive) || QuestManager.Instance.IsQuestCompleted(questToGive))
             {
-                Debug.Log($"Quest {questToGive.questName} already active or completed");
-                questOfferedOrGiven = true; // Ensure flag is set
-                shownPostAcceptanceDialog = true; // Skip post-acceptance if already active/done
+                Debug.Log($"quest {questToGive.questName} redan aktiv/klar");
+                questOfferedOrGiven = true;
+                shownPostAcceptanceDialog = true; // hoppa över efter-ja
                 return;
             }
 
-            // Add the quest to the player's active quests
+            // lägg till questen hos chefen
             QuestManager.Instance.AddQuest(questToGive);
-            questOfferedOrGiven = true; // Mark as given
-            shownPostAcceptanceDialog = false; // Allow post-acceptance dialog to show next
+            questOfferedOrGiven = true; // markera som erbjuden
+            shownPostAcceptanceDialog = false; // redo för efter-ja dialog
 
-            Debug.Log($"Gave quest directly: {questToGive.questName}");
+            Debug.Log($"gav quest direkt: {questToGive.questName}");
 
-            // Trigger post-acceptance dialog if available and NOT using dialog choice system
+            // starta efter-ja dialogen direkt (om den finns)
             if (!useDialogForQuest && postAcceptanceDialog != null && dialogTrigger != null)
             {
                 dialogTrigger.dialog = postAcceptanceDialog;
                 dialogTrigger.TriggerDialog();
-                // Note: HandleDialogComplete won't fire if not subscribed,
-                // so the shownPostAcceptanceDialog flag relies on the Update logic.
             }
-            // Fallback to acceptedDialog if postAcceptanceDialog is null but acceptedDialog exists (for backward compatibility maybe?)
-            // else if (!useDialogForQuest && acceptedDialog != null && dialogTrigger != null) { ... }
         }
     }
 
-    // Called by UI button or other components to force give the quest
+    // tvinga fram quest-givning (t.ex. från knapp)
     public void ForceGiveQuest()
     {
-        useDialogForQuest = false; // Ensure direct giving logic is used
+        useDialogForQuest = false; // använd direkt-metoden
         GiveQuest();
     }
 
-    // Called by DialogManager when a choice accepts a quest
+    // körs från dialog-chef när quest accepteras via val
     public void HandleQuestAccepted(Quest quest)
     {
         if (quest == questToGive)
         {
-            questOfferedOrGiven = true;
-            shownPostAcceptanceDialog = false; // Reset this flag so the post-acceptance dialog can show
-            Debug.Log($"Quest accepted via dialog choice: {quest.questName}. Ready for post-acceptance dialog.");
+            questOfferedOrGiven = true; // nu är den erbjuden
+            shownPostAcceptanceDialog = false; // nollställ så efter-ja kan visas
+            Debug.Log($"quest accepterad via val: {quest.questName}.");
 
-            // Optional: Immediately update the dialog trigger if the player is still in range
+            // uppdatera triggerns dialog direkt om spelaren är kvar
             if (playerInRange && dialogTrigger != null)
             {
                  dialogTrigger.dialog = GetAppropriateDialog();

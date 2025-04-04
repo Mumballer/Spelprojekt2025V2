@@ -87,41 +87,39 @@ public class PlacementSpot : MonoBehaviour
 
     private bool CheckQuestIsActive()
     {
-        if (associatedQuest == null)
-            return false;
-        
-        // First check the property directly
-        if (associatedQuest.IsActive)
-            return true;
-        
-        // Then check if it's in the active quests list
-        if (QuestManager.Instance != null)
+        if (associatedQuest == null || QuestManager.Instance == null)
         {
-            foreach (var quest in QuestManager.Instance.activeQuests)
-            {
-                if (quest.questName == associatedQuest.questName)
-                    return true;
-            }
+            // Cannot check if quest asset or manager is missing
+            return false;
         }
-        
-        return false;
+
+        // Directly check if the QuestManager's list contains this specific quest asset.
+        // This is the most reliable way to know if it's active *right now*.
+        bool isActive = QuestManager.Instance.IsQuestActive(associatedQuest); // Use QuestManager's check
+
+        // Log the result from the QuestManager's perspective
+        // Debug.Log($"PlacementSpot Check: Quest '{associatedQuest.questName}' IsActive according to QuestManager: {isActive}");
+
+        return isActive;
     }
 
     public void TryPlaceItem()
     {
         if (isItemPlaced) return;
 
+        // Use the reliable CheckQuestIsActive method
+        bool isActive = CheckQuestIsActive();
+        Debug.Log($"<color=orange>PlacementSpot - Quest '{associatedQuest?.questName ?? "NULL"}' active check: {isActive}</color>"); // Keep this log
+
+        if (!isActive) // Use the result from our improved check
+        {
+            Debug.Log("Cannot place item - quest is not active according to QuestManager.");
+            return; // Exit if not active
+        }
+
+        // Only proceed if the quest IS active
         if (associatedQuest != null && QuestManager.Instance != null)
         {
-            bool isActive = CheckQuestIsActive();
-            Debug.Log($"<color=orange>PlacementSpot - Quest '{associatedQuest.questName}' active check: {isActive}</color>");
-            
-            if (!isActive)
-            {
-                Debug.Log("Cannot place item - quest is not active");
-                return;
-            }
-
             // Make sure the objective is not already completed
             if (objectiveIndex >= 0 && objectiveIndex < associatedQuest.objectives.Count)
             {
@@ -134,6 +132,7 @@ public class PlacementSpot : MonoBehaviour
                 }
 
                 // Complete this specific objective
+                Debug.Log($"Attempting to complete objective {objectiveIndex} via QuestManager for quest {associatedQuest.questName}");
                 QuestManager.Instance.CompleteObjective(associatedQuest, objectiveIndex);
 
                 // Mark as placed
@@ -142,12 +141,10 @@ public class PlacementSpot : MonoBehaviour
                 // Show the placed item visual
                 if (placedItemPrefab != null)
                 {
-                    // If it's a prefab, instantiate it
                     if (!placedItemPrefab.scene.IsValid())
                     {
                         Instantiate(placedItemPrefab, transform.position, transform.rotation);
                     }
-                    // If it's already in the scene, just activate it
                     else
                     {
                         placedItemPrefab.SetActive(true);
@@ -162,17 +159,24 @@ public class PlacementSpot : MonoBehaviour
 
                 Debug.Log($"Item placed for objective {objectiveIndex} in quest {associatedQuest.questName}");
 
-                // Make sure the quest UI stays visible for this quest
+                // Keep UI visible (existing logic)
                 if (QuestUI.Instance != null && QuestManager.Instance != null)
                 {
-                    // If this quest is still active, make sure the UI is showing
-                    if (QuestManager.Instance.activeQuests.Contains(associatedQuest))
-                    {
-                        QuestUI.Instance.ShowQuestPanel();
-                        Debug.Log("Making sure quest UI stays visible for active placement quest");
-                    }
-                }
+                     if (QuestManager.Instance.activeQuests.Contains(associatedQuest))
+                     {
+                         QuestUI.Instance.ShowQuestPanel();
+                         Debug.Log("Making sure quest UI stays visible for active placement quest");
+                     }
+                 }
             }
+            else
+            {
+                 Debug.LogWarning($"Invalid objective index ({objectiveIndex}) for quest '{associatedQuest.questName}'");
+            }
+        }
+        else
+        {
+            Debug.LogError("Cannot place item - AssociatedQuest or QuestManager became null unexpectedly!");
         }
     }
 }

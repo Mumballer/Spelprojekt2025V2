@@ -3,101 +3,85 @@ using UnityEngine.UI;
 using TMPro;
 
 [RequireComponent(typeof(Button))]
-[RequireComponent(typeof(LayoutElement))] // Need LayoutElement for size control
+[RequireComponent(typeof(LayoutElement))] // behöver denna för storlek
 public class DialogChoiceButton : MonoBehaviour
 {
     [Header("Components")]
-    [SerializeField] private TextMeshProUGUI buttonText;
+    [SerializeField] private TextMeshProUGUI buttonText; // texten på knappen
 
     [Header("Sizing & Padding")]
-    [Tooltip("Total horizontal padding (left + right)")]
-    [SerializeField] private float horizontalPadding = 30f; // Increased default slightly
-    [Tooltip("Total vertical padding (top + bottom)")]
-    [SerializeField] private float verticalPadding = 15f; // Increased default slightly
-    [Tooltip("Minimum width the button can have.")]
-    [SerializeField] private float minWidth = 150f;
-    [Tooltip("Minimum height the button can have.")]
-    [SerializeField] private float minHeight = 45f;
-    [Tooltip("Maximum width the button can have. Text will wrap if wider.")]
-    [SerializeField] private float maxWidth = 500f; // Adjust as needed
+    [SerializeField] private float horizontalPadding = 30f; // luft på sidorna
+    [SerializeField] private float verticalPadding = 15f; // luft uppe/nere
+    [SerializeField] private float minWidth = 150f; // minsta bredd
+    [SerializeField] private float minHeight = 45f; // minsta höjd
+    [SerializeField] private float maxWidth = 500f; // största bredd
 
-    private LayoutElement layoutElement;
-    private Button button;
-    private RectTransform textRectTransform; // Cache text rect transform
+    private LayoutElement layoutElement; // komponent för storlek
+    private Button button; // själva knappen
+    private RectTransform textRectTransform; // textens rektangel
 
     private void Awake()
     {
+        // hämta komponenterna
         layoutElement = GetComponent<LayoutElement>();
         button = GetComponent<Button>();
-
         if (buttonText == null) buttonText = GetComponentInChildren<TextMeshProUGUI>();
         if (buttonText != null) textRectTransform = buttonText.GetComponent<RectTransform>();
 
+        // kolla att allt finns
         if (layoutElement == null || button == null || buttonText == null || textRectTransform == null)
         {
-            Debug.LogError($"DialogChoiceButton on {gameObject.name} is missing required components!", gameObject);
-            enabled = false; // Disable script if setup fails
+            Debug.LogError($"knapp {gameObject.name} saknar delar!", gameObject);
+            enabled = false; // stäng av scriptet
             return;
         }
 
-        // Configure LayoutElement defaults - prevent flexible expansion
+        // grundinställningar för layout
         layoutElement.minWidth = minWidth;
         layoutElement.minHeight = minHeight;
-        layoutElement.flexibleWidth = 0;
+        layoutElement.flexibleWidth = 0; // ska inte sträckas ut
         layoutElement.flexibleHeight = 0;
 
-        // Configure Text defaults
+        // grundinställningar för text
         buttonText.alignment = TextAlignmentOptions.Center;
-        buttonText.enableWordWrapping = true; // Ensure wrapping is enabled
-        buttonText.overflowMode = TextOverflowModes.Overflow; // Allow vertical overflow if needed (height calc should handle)
-        // Ensure text rect fills the button area minus padding (handled in Setup now)
+        buttonText.enableWordWrapping = true; // slå på radbrytning
+        buttonText.overflowMode = TextOverflowModes.Overflow; // låt text växa nedåt
     }
 
+    // ställ in knappen med text och klick-händelse
     public void Setup(string text, System.Action onClickAction)
     {
-        if (!enabled) return; // Don't run if Awake failed
+        if (!enabled) return; // kör inte om trasig
 
-        // --- 1. Set Text Content ---
+        // sätt texten
         buttonText.text = text;
 
-        // --- 2. Calculate Text Preferred Size ---
-        // Define the maximum width the *text itself* can occupy
+        // räkna ut hur stor texten vill vara
         float maxTextWidth = maxWidth - horizontalPadding;
-
-        // Get preferred values based on the text and the max width constraint
-        // This calculation accounts for word wrapping
         Vector2 preferredTextSize = buttonText.GetPreferredValues(text, maxTextWidth, Mathf.Infinity);
 
-        // --- 3. Calculate Button Size ---
-        // Add padding back to get the desired button size
+        // räkna ut knappens storlek
         float desiredWidth = preferredTextSize.x + horizontalPadding;
         float desiredHeight = preferredTextSize.y + verticalPadding;
 
-        // --- 4. Apply Constraints ---
-        // Clamp width between min and max
+        // begränsa storleken
         float finalWidth = Mathf.Clamp(desiredWidth, minWidth, maxWidth);
-        // Ensure height meets minimum, use calculated height otherwise
         float finalHeight = Mathf.Max(desiredHeight, minHeight);
 
-        // --- 5. Apply Size to LayoutElement ---
+        // säg åt layouten hur stor knappen ska vara
         layoutElement.preferredWidth = finalWidth;
         layoutElement.preferredHeight = finalHeight;
-        // Re-apply min values just in case, though Awake should handle it
-        layoutElement.minWidth = minWidth;
+        layoutElement.minWidth = minWidth; // upprepa min-värden
         layoutElement.minHeight = minHeight;
 
-        // --- 6. Adjust Text RectTransform (Optional but good practice) ---
-        // Make text rect fill the button area defined by padding
-        textRectTransform.anchorMin = Vector2.zero; // Bottom-left
-        textRectTransform.anchorMax = Vector2.one;  // Top-right
-        textRectTransform.offsetMin = new Vector2(horizontalPadding / 2f, verticalPadding / 2f); // Bottom-left padding
-        textRectTransform.offsetMax = new Vector2(-horizontalPadding / 2f, -verticalPadding / 2f); // Top-right padding
+        // justera textens område inuti knappen
+        textRectTransform.anchorMin = Vector2.zero;
+        textRectTransform.anchorMax = Vector2.one;
+        textRectTransform.offsetMin = new Vector2(horizontalPadding / 2f, verticalPadding / 2f);
+        textRectTransform.offsetMax = new Vector2(-horizontalPadding / 2f, -verticalPadding / 2f);
 
-
-        // --- 7. Setup Button Action ---
-        button.onClick.RemoveAllListeners();
-        button.onClick.AddListener(() => onClickAction?.Invoke());
-
-        // Debug.Log($"Button '{text}': MaxTextW={maxTextWidth:F1}, PrefText={preferredTextSize.x:F1}x{preferredTextSize.y:F1}, Desired={desiredWidth:F1}x{desiredHeight:F1}, Final={finalWidth:F1}x{finalHeight:F1}");
+        // sätt vad som händer vid klick
+        button.onClick.RemoveAllListeners(); // ta bort gamla först
+        button.onClick.AddListener(() => onClickAction?.Invoke()); // lägg till nya
     }
 }

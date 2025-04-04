@@ -5215,7 +5215,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   associatedQuest: {fileID: 11400000, guid: ecd10f3f38419c84995e456cb15313ab, type: 2}
-  objectiveIndex: 0
+  objectiveIndex: 2
   playerTag: Player
   requireButtonPress: 1
   interactKey: 101
@@ -21855,7 +21855,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   associatedQuest: {fileID: 11400000, guid: ecd10f3f38419c84995e456cb15313ab, type: 2}
-  objectiveIndex: 0
+  objectiveIndex: 4
   playerTag: Player
   requireButtonPress: 1
   interactKey: 101
@@ -28277,7 +28277,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   associatedQuest: {fileID: 11400000, guid: ecd10f3f38419c84995e456cb15313ab, type: 2}
-  objectiveIndex: 0
+  objectiveIndex: 5
   playerTag: Player
   requireButtonPress: 1
   interactKey: 101
@@ -28882,7 +28882,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   associatedQuest: {fileID: 11400000, guid: ecd10f3f38419c84995e456cb15313ab, type: 2}
-  objectiveIndex: 0
+  objectiveIndex: 1
   playerTag: Player
   requireButtonPress: 1
   interactKey: 101
@@ -34199,7 +34199,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   associatedQuest: {fileID: 11400000, guid: ecd10f3f38419c84995e456cb15313ab, type: 2}
-  objectiveIndex: 0
+  objectiveIndex: 3
   playerTag: Player
   requireButtonPress: 1
   interactKey: 101

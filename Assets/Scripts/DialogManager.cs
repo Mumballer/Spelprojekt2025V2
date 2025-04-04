@@ -11,60 +11,62 @@ public class DialogManager : MonoBehaviour
     [Header("Dialog UI")]
     [SerializeField] GameObject dialogBox;
     [SerializeField] TextMeshProUGUI dialogText;
-    [SerializeField] int lettersPerSecond = 30;
-    [SerializeField] GameObject choicesContainer;
-    [SerializeField] GameObject choiceButtonPrefab;
-    [SerializeField] private float cooldownDuration = 3f;
-    [SerializeField] private float maxButtonWidth = 350f;
+    [SerializeField] int lettersPerSecond = 30; // hur snabbt texten skrivs ut
+    [SerializeField] GameObject choicesContainer; // där valknappar hamnar
+    [SerializeField] GameObject choiceButtonPrefab; // mall för valknappar
+    [SerializeField] private float cooldownDuration = 3f; // väntetid efter prat
+    [SerializeField] private float maxButtonWidth = 350f; // inte för breda knappar
 
     [Header("Portrait System")]
-    [SerializeField] private GameObject portraitContainer;
-    [SerializeField] private Image portraitImage;
-    [SerializeField] private TextMeshProUGUI characterNameText;
-    [SerializeField] private RectTransform portraitFrame;
-    [SerializeField] private float defaultPortraitSize = 100f;
-    [SerializeField] private Vector2 defaultPortraitOffset = Vector2.zero;
+    [SerializeField] private GameObject portraitContainer; // bildens ram
+    [SerializeField] private Image portraitImage; // karaktärens bildruta
+    [SerializeField] private TextMeshProUGUI characterNameText; // karaktärens namn
+    [SerializeField] private RectTransform portraitFrame; // själva bildramen
+    [SerializeField] private float defaultPortraitSize = 100f; // normal bildstorlek
+    [SerializeField] private Vector2 defaultPortraitOffset = Vector2.zero; // normal bildposition
 
     [Header("3D Settings")]
-    [SerializeField] private float interactionDistance = 3f;
-    [SerializeField] private LayerMask interactableLayers;
+    [SerializeField] private float interactionDistance = 3f; // hur nära för att prata
+    [SerializeField] private LayerMask interactableLayers; // vilka saker går att prata med
 
     [Header("Camera and Input Settings")]
-    [SerializeField] private bool lockCameraDuringDialog = true;
-    [SerializeField] private bool allowCameraEffectsDuringDialog = true;
-    [SerializeField] private bool showCursorDuringDialog = true;
-    [SerializeField] private string[] cameraControlComponentNames = new string[] 
-    { 
-        "MouseLook", 
+    [SerializeField] private bool lockCameraDuringDialog = true; // lås kameran vid prat
+    [SerializeField] private bool allowCameraEffectsDuringDialog = true; // tillåt kamera skak osv
+    [SerializeField] private bool showCursorDuringDialog = true; // visa muspekaren vid prat
+    [SerializeField] private string[] cameraControlComponentNames = new string[] // namn på kamerakontroller att stänga av
+    {
+        "MouseLook",
         "FirstPersonLook",
         "PlayerLook",
-        "LookController" 
+        "LookController"
     };
 
+    // signaler när dialog startar/slutar
     public event Action OnShowDialog;
     public event Action OnHideDialog;
     public event System.Action<Dialog> OnDialogComplete;
-    public static DialogManager Instance { get; private set; }
+    public static DialogManager Instance { get; private set; } // enkel åtkomst till chefen
 
-    private Dialog currentDialog; // Renamed from 'dialog' for clarity
-    private int currentLine = 0;
-    private bool isTyping;
-    private List<GameObject> currentChoiceButtons = new List<GameObject>();
-    private Coroutine typingCoroutine;
-    private PlayerController playerController;
-    private bool isOnCooldown = false;
-    private Camera mainCamera;
+    private Dialog currentDialog; // dialogen som visas nu
+    private int currentLine = 0; // inte använd längre, kö istället
+    private bool isTyping; // skriver texten ut sig nu?
+    private List<GameObject> currentChoiceButtons = new List<GameObject>(); // listan med valknappar
+    private Coroutine typingCoroutine; // processen som skriver ut text
+    private PlayerController playerController; // spelarens kontrollscript
+    private bool isOnCooldown = false; // är chefen i paus?
+    private Camera mainCamera; // huvudkameran
 
-    public bool IsDialogActive { get; private set; }
+    public bool IsDialogActive { get; private set; } // är en dialog igång?
 
-    private Queue<DialogLine> remainingLines = new Queue<DialogLine>();
+    private Queue<DialogLine> remainingLines = new Queue<DialogLine>(); // kö med repliker
 
     private void Awake()
     {
-        Instance = this;
-        playerController = UnityEngine.Object.FindFirstObjectByType<PlayerController>();
-        mainCamera = Camera.main;
+        Instance = this; // sätt chefen
+        playerController = FindFirstObjectByType<PlayerController>(); // hitta spelaren
+        mainCamera = Camera.main; // hitta kameran
 
+        // göm alla ui-delar från start
         if (dialogBox != null)
         {
             dialogBox.SetActive(false);
@@ -80,20 +82,22 @@ public class DialogManager : MonoBehaviour
 
         if (choiceButtonPrefab != null)
         {
-            choiceButtonPrefab.SetActive(false);
+            choiceButtonPrefab.SetActive(false); // göm knappmallen också
         }
     }
 
     private void Start()
     {
+        // kolla om canvas är i 3d-läge
         Canvas canvas = GetComponentInParent<Canvas>();
         if (canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay)
         {
-            Debug.Log("Dialog UI is set up for 3D world space");
+            Debug.Log("dialog ui i 3d-läge");
         }
-        SetupChoicesContainer();
+        SetupChoicesContainer(); // fixa layout för knappar
     }
 
+    // fixa layouten för knappbehållaren
     private void SetupChoicesContainer()
     {
         if (choicesContainer == null) return;
@@ -104,12 +108,14 @@ public class DialogManager : MonoBehaviour
             layoutGroup.childAlignment = TextAnchor.MiddleCenter;
             layoutGroup.spacing = 10f;
             layoutGroup.padding = new RectOffset(10, 10, 10, 10);
-            layoutGroup.childControlWidth = true;
-            layoutGroup.childControlHeight = true;
+            // dessa rader styr knapparnas storlek
+            layoutGroup.childControlWidth = true; // tas över av knapparna sen
+            layoutGroup.childControlHeight = true; // tas över av knapparna sen
             layoutGroup.childForceExpandWidth = false;
             layoutGroup.childForceExpandHeight = false;
         }
 
+        // fixa så storleken anpassas
         ContentSizeFitter sizeFitter = choicesContainer.GetComponent<ContentSizeFitter>();
         if (sizeFitter == null)
         {
@@ -123,75 +129,74 @@ public class DialogManager : MonoBehaviour
     {
         if (IsDialogActive)
         {
-            HandleUpdate();
+            HandleUpdate(); // hantera input under dialog
         }
         else if (Input.GetKeyDown(KeyCode.E))
         {
-            TryInteractWithNPC();
+            TryInteractWithNPC(); // försök prata med nån
         }
     }
 
+    // försök starta prat med npc
     private void TryInteractWithNPC()
     {
-        if (!CanStartDialog() || mainCamera == null) return;
+        if (!CanStartDialog() || mainCamera == null) return; // kolla om vi får prata
 
+        // skicka en stråle från mitten
         Ray ray = mainCamera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
         if (Physics.Raycast(ray, out RaycastHit hit, interactionDistance, interactableLayers))
         {
-            DialogTrigger trigger = hit.collider.GetComponent<DialogTrigger>();
+            DialogTrigger trigger = hit.collider.GetComponent<DialogTrigger>(); // kolla om det är en prat-trigger
             if (trigger != null)
             {
-                Debug.Log($"Found dialog trigger on {hit.collider.gameObject.name}");
-                trigger.TriggerDialog();
+                Debug.Log($"hittade prat-trigger på {hit.collider.gameObject.name}");
+                trigger.TriggerDialog(); // säg åt triggern att starta
             }
             else
             {
-                Debug.Log($"No dialog trigger found on {hit.collider.gameObject.name}");
+                Debug.Log($"ingen prat-trigger på {hit.collider.gameObject.name}");
             }
         }
         else
         {
-            Debug.Log("No interactable object hit by raycast");
+            Debug.Log("strålen träffade inget pratbart");
         }
     }
 
+    // starta en hel dialogsekvens
     public void StartDialog(Dialog dialogToShow)
     {
         if (dialogToShow == null || dialogToShow.Lines == null || dialogToShow.Lines.Count == 0)
         {
-            Debug.LogError("DialogManager: Cannot start null or empty dialog.");
+            Debug.LogError("kan inte starta tom dialog");
             return;
         }
         if (IsDialogActive)
         {
-            Debug.LogWarning("DialogManager: Tried to start a new dialog while one is already active.");
-            return; // Don't start a new one if already active
+            Debug.LogWarning("försökte starta ny dialog för tidigt");
+            return;
         }
 
-        Debug.Log($"<color=yellow>Starting Dialog: {dialogToShow.name}</color>");
+        Debug.Log($"<color=yellow>startar dialog: {dialogToShow.name}</color>");
         currentDialog = dialogToShow;
-        remainingLines.Clear();
+        remainingLines.Clear(); // töm gamla repliker
 
-        // Queue up all lines
+        // lägg alla repliker i kön
         foreach (var line in currentDialog.Lines)
         {
             remainingLines.Enqueue(line);
         }
 
-        // Lock camera, show cursor, disable player movement (existing logic)
+        // lås kamera etc
         if (lockCameraDuringDialog && mainCamera != null)
         {
             var cameraComponents = mainCamera.GetComponents<MonoBehaviour>();
             foreach (var comp in cameraComponents)
             {
                 string componentName = comp.GetType().Name;
-                
-                // Disable only specific camera control components
                 bool shouldDisable = false;
-                
                 if (cameraControlComponentNames.Length > 0)
                 {
-                    // Use the explicit list of components to disable
                     foreach (var name in cameraControlComponentNames)
                     {
                         if (componentName.Contains(name))
@@ -203,49 +208,43 @@ public class DialogManager : MonoBehaviour
                 }
                 else
                 {
-                    // Fallback to generic naming detection for camera control
                     shouldDisable = (componentName.Contains("Look") && componentName.Contains("Mouse")) ||
-                                   (componentName.Contains("Look") && componentName.Contains("Player")) || 
+                                   (componentName.Contains("Look") && componentName.Contains("Player")) ||
                                    componentName.Contains("PlayerController");
                 }
-                
-                // Only disable the component if it's a control component
-                // and not a camera effect (like shake)
-                if (shouldDisable && 
-                    !(allowCameraEffectsDuringDialog && 
-                      (componentName.Contains("Shake") || 
-                       componentName.Contains("Effect") || 
-                       componentName.Contains("PostProcessing"))))
+
+                // stäng bara av kontroller, inte effekter
+                if (shouldDisable && !(allowCameraEffectsDuringDialog && (componentName.Contains("Shake") || componentName.Contains("Effect") || componentName.Contains("PostProcessing"))))
                 {
                     comp.enabled = false;
-                    Debug.Log($"<color=cyan>DialogManager: Disabled camera component: {componentName}</color>");
+                    Debug.Log($"<color=cyan>stängde av kamerakontroll: {componentName}</color>");
                 }
             }
         }
-        
+
         if (showCursorDuringDialog)
         {
-            Cursor.lockState = CursorLockMode.None;
+            Cursor.lockState = CursorLockMode.None; // visa muspekare
             Cursor.visible = true;
         }
-        
-        playerController?.SetCanMove(false);
-        
-        // Show dialog panel and set active state
+
+        playerController?.SetCanMove(false); // stoppa spelaren
+
+        // visa ui och sätt status
         dialogBox.SetActive(true);
-        IsDialogActive = true; // Set active *before* showing first line
-        
-        // Clear any leftover choices UI just in case
+        IsDialogActive = true; // nu är dialogen aktiv!
+
+        // städa gamla knappar/bilder
         ClearChoiceButtons();
         choicesContainer?.SetActive(false);
-        portraitContainer?.SetActive(false); // Hide portrait initially
-        
-        // Start showing the first line
-        DisplayNextLine();
-        
-        OnShowDialog?.Invoke();
+        portraitContainer?.SetActive(false);
+
+        DisplayNextLine(); // visa första repliken
+
+        OnShowDialog?.Invoke(); // signalera att dialog startat
     }
 
+    // visa nästa replik från kön
     public void DisplayNextLine()
     {
         // If typing, finish immediately (optional, but common UX)
@@ -318,27 +317,28 @@ public class DialogManager : MonoBehaviour
         // DO NOT increment currentLine here (we use the queue)
     }
 
+    // skriv ut texten bokstav för bokstav
     private IEnumerator TypeText(string text, List<DialogChoice> choices)
     {
         isTyping = true;
-        dialogText.text = ""; // Clear text first
+        dialogText.text = ""; // börja tomt
 
         try
         {
             foreach (var letter in text.ToCharArray())
             {
                 dialogText.text += letter;
-                yield return new WaitForSeconds(1f / lettersPerSecond);
+                yield return new WaitForSeconds(1f / lettersPerSecond); // vänta lite
             }
         }
-        finally // This block executes whether the coroutine finishes normally or is stopped
+        finally // körs alltid, även om avbruten
         {
-            // Ensure full text is displayed if stopped early or finished normally
+            // visa hela texten direkt
             dialogText.text = text;
             isTyping = false;
-            typingCoroutine = null; // Clear the reference
+            typingCoroutine = null; // nollställ skrivprocessen
 
-            // Show choices if they exist, regardless of how the coroutine ended
+            // visa valknappar om det finns
             if (choices != null && choices.Count > 0)
             {
                 Debug.Log($"<color=lime>Typing finished or skipped, showing choices.</color>");
@@ -351,87 +351,80 @@ public class DialogManager : MonoBehaviour
         }
     }
 
+    // ta bort gamla valknappar
     private void ClearChoiceButtons()
     {
         foreach (var btn in currentChoiceButtons)
         {
-            if (btn != null) Destroy(btn);
+            if (btn != null) Destroy(btn); // förstör knappen
         }
-        currentChoiceButtons.Clear();
+        currentChoiceButtons.Clear(); // töm listan
     }
 
+    // skapa och visa valknapparna
     private void ShowChoices(List<DialogChoice> choices)
     {
         if (choicesContainer == null || choiceButtonPrefab == null) { /* Error Log */ return; }
         if (choices == null || choices.Count == 0) { /* Warning Log */ choicesContainer?.SetActive(false); return; }
 
-        choicesContainer.SetActive(true);
-        ClearChoiceButtons();
+        choicesContainer.SetActive(true); // visa knappområdet
+        ClearChoiceButtons(); // ta bort gamla först
 
-        // --- Configure Layout Group ---
-        // Ensure the layout group doesn't force expansion if we want LayoutElement to control size
+        // fixa layouten så knapparna ser bra ut
         var layoutGroup = choicesContainer.GetComponent<VerticalLayoutGroup>();
         if (layoutGroup != null)
         {
             layoutGroup.enabled = true;
-            // *** IMPORTANT: Uncheck these if you want buttons to truly size themselves ***
-            layoutGroup.childControlWidth = false;  // Let LayoutElement control width
-            layoutGroup.childControlHeight = false; // Let LayoutElement control height
-            layoutGroup.childForceExpandWidth = false; // Don't force expand width
-            layoutGroup.childForceExpandHeight = false; // Don't force expand height
-            // Set alignment (e.g., MiddleCenter to center the potentially different-sized buttons)
-            layoutGroup.childAlignment = TextAnchor.MiddleCenter;
-            // Adjust spacing/padding for the container itself if needed
-            // layoutGroup.spacing = 10f;
-            // layoutGroup.padding = new RectOffset(10, 10, 10, 10);
+            // låt knapparna bestämma sin egen storlek
+            layoutGroup.childControlWidth = false;
+            layoutGroup.childControlHeight = false;
+            layoutGroup.childForceExpandWidth = false;
+            layoutGroup.childForceExpandHeight = false;
+            layoutGroup.childAlignment = TextAnchor.MiddleCenter; // centrera knapparna
         }
-        // --- End Layout Group Config ---
 
-
-        // Create buttons for each choice
+        // skapa en knapp för varje val
         foreach (var choice in choices)
         {
-            GameObject buttonObj = Instantiate(choiceButtonPrefab, choicesContainer.transform);
-            buttonObj.SetActive(true);
+            GameObject buttonObj = Instantiate(choiceButtonPrefab, choicesContainer.transform); // skapa från mallen
+            buttonObj.SetActive(true); // se till att den syns
 
             DialogChoiceButton choiceButtonScript = buttonObj.GetComponent<DialogChoiceButton>();
             if (choiceButtonScript != null)
             {
-                DialogChoice choiceRef = choice; // Capture loop variable
+                DialogChoice choiceRef = choice; // kom ihåg rätt val för klicket
 
-                // --- Use the revised Setup method ---
+                // säg åt knappen att ställa in sig
                 choiceButtonScript.Setup(choiceRef.Text, () => {
-                    // --- Existing Click Logic ---
+                    // detta händer när man klickar
                     Debug.Log($"Choice selected: '{choiceRef.Text}'");
                     Dialog nextDialogToStart = choiceRef.NextDialog;
                     Quest questToGive = choiceRef.Quest;
 
-                    // +++ ADD THIS LOG +++
-                    Debug.Log($"---> Checking choice '{choiceRef.Text}': Quest field is {(questToGive == null ? "NULL" : questToGive.name)}, NextDialog is {(nextDialogToStart == null ? "NULL" : nextDialogToStart.name)}");
-                    // ++++++++++++++++++++
-
+                    // göm och ta bort knappar
                     choicesContainer?.SetActive(false);
                     ClearChoiceButtons();
 
-                    // Handle quest *before* potentially ending/starting new dialog
-                    if (questToGive != null && QuestManager.Instance != null) // Check quest *after* logging
+                    // ge quest om det finns
+                    if (questToGive != null && QuestManager.Instance != null)
                     {
-                        Debug.Log($"Adding quest '{questToGive.questName}' from choice."); // This log is missing
+                        Debug.Log($"Adding quest '{questToGive.questName}' from choice.");
                         QuestManager.Instance.AddQuest(questToGive);
                     }
 
+                    // starta nästa dialog eller avsluta
                     if (nextDialogToStart != null)
                     {
-                        EndDialog(fireCompletionEvent: false);
-                        StartDialog(nextDialogToStart);
+                        Debug.Log($"val leder till ny dialog: {nextDialogToStart.name}");
+                        EndDialog(fireCompletionEvent: false); // avsluta nuvarande tyst
+                        StartDialog(nextDialogToStart); // starta nästa
                     }
                     else
                     {
-                        EndDialog(fireCompletionEvent: true);
+                        Debug.Log("val avslutar samtalet.");
+                        EndDialog(fireCompletionEvent: true); // avsluta på riktigt
                     }
-                    // --- End Click Logic ---
                 });
-                // --- End Setup call ---
             }
             else
             {
@@ -443,15 +436,16 @@ public class DialogManager : MonoBehaviour
                  if(btn != null) btn.onClick.AddListener(() => Debug.LogError("Button click failed - missing script"));
             }
 
-            currentChoiceButtons.Add(buttonObj);
+            currentChoiceButtons.Add(buttonObj); // lägg till i listan
         }
 
-        // Force the layout group to update its arrangement *after* all buttons are added and configured
+        // tvinga layouten att uppdateras direkt
         LayoutRebuilder.ForceRebuildLayoutImmediate(choicesContainer.GetComponent<RectTransform>());
 
         Debug.Log($"Displayed {currentChoiceButtons.Count} choices.");
     }
 
+    // onödig nu? beror på button script
     private void OptimizeButtonText(TextMeshProUGUI textComponent, float maxWidth)
     {
         if (textComponent == null) return;
@@ -477,6 +471,8 @@ public class DialogManager : MonoBehaviour
             }
         }
     }
+
+    // onödig nu? beror på button script
     private void SetWordWrapping(TMP_Text textComponent, bool enableWrapping)
     {
         var property = typeof(TMP_Text).GetProperty("textWrappingMode");
@@ -494,18 +490,20 @@ public class DialogManager : MonoBehaviour
         }
     }
 
+    // stäng dialogen utifrån
     public void ForceCloseDialog()
     {
         if (IsDialogActive)
         {
-            Debug.Log("Force closing dialog due to player walking away");
-            EndDialog();
+            Debug.Log("stänger dialog (spelaren gick iväg?)");
+            EndDialog(); // avsluta normalt
         }
     }
 
+    // avsluta hela dialogsekvensen
     private void EndDialog(bool fireCompletionEvent = true)
     {
-        // Stop typing if it's happening
+        // stoppa skrivandet om det pågår
         if (typingCoroutine != null)
         {
             StopCoroutine(typingCoroutine);
@@ -513,11 +511,10 @@ public class DialogManager : MonoBehaviour
             isTyping = false;
         }
 
-        // Store reference before clearing
-        Dialog completedDialog = this.currentDialog;
-        this.currentDialog = null; // Clear current dialog reference
+        Dialog completedDialog = this.currentDialog; // spara vilken som avslutades
+        this.currentDialog = null; // glöm nuvarande dialog
 
-        // Clear buttons and hide containers
+        // städa upp ui
         ClearChoiceButtons();
         if (choicesContainer != null) choicesContainer.SetActive(false);
         if (portraitContainer != null) portraitContainer.SetActive(false);
@@ -525,23 +522,19 @@ public class DialogManager : MonoBehaviour
 
         Debug.Log("<color=yellow>EndDialog called - Dialog UI hidden.</color>");
 
-        IsDialogActive = false; // Set inactive *before* enabling controls/firing events
-        remainingLines.Clear(); // Clear any remaining lines
+        IsDialogActive = false; // dialogen är inte aktiv längre
+        remainingLines.Clear(); // töm replikkön
 
-        // Re-enable camera/controls (existing logic)
+        // återställ kamera/kontroller
         if (lockCameraDuringDialog && mainCamera != null)
         {
             var cameraComponents = mainCamera.GetComponents<MonoBehaviour>();
             foreach (var comp in cameraComponents)
             {
                 string componentName = comp.GetType().Name;
-                
-                // Re-enable only specific camera control components
                 bool shouldReEnable = false;
-                
                 if (cameraControlComponentNames.Length > 0)
                 {
-                    // Use the explicit list of components to re-enable
                     foreach (var name in cameraControlComponentNames)
                     {
                         if (componentName.Contains(name))
@@ -553,12 +546,11 @@ public class DialogManager : MonoBehaviour
                 }
                 else
                 {
-                    // Fallback to generic naming detection for camera control
                     shouldReEnable = (componentName.Contains("Look") && componentName.Contains("Mouse")) ||
-                                    (componentName.Contains("Look") && componentName.Contains("Player")) || 
+                                    (componentName.Contains("Look") && componentName.Contains("Player")) ||
                                     componentName.Contains("PlayerController");
                 }
-                
+
                 if (shouldReEnable && !comp.enabled)
                 {
                     comp.enabled = true;
@@ -567,18 +559,17 @@ public class DialogManager : MonoBehaviour
             }
         }
 
-        // Restore cursor and player movement
+        // återställ mus och spelare
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         playerController?.SetCanMove(true);
 
-        // Start cooldown
-        StartCoroutine(DialogCooldown());
+        StartCoroutine(DialogCooldown()); // starta kort paus
 
-        // Fire events AFTER setting IsDialogActive to false and cleaning up
+        // signalera att dialogen är gömd
         OnHideDialog?.Invoke();
 
-        // Only fire completion event if requested
+        // signalera att dialogen är KLAR (om det var slutet)
         if (fireCompletionEvent && completedDialog != null)
         {
             Debug.Log($"<color=yellow>DialogManager: Firing OnDialogComplete event for dialog {completedDialog.name}</color>");
@@ -594,6 +585,7 @@ public class DialogManager : MonoBehaviour
         }
     }
 
+    // kort paus efter dialogen slutat
     private IEnumerator DialogCooldown()
     {
         isOnCooldown = true;
@@ -601,37 +593,36 @@ public class DialogManager : MonoBehaviour
         isOnCooldown = false;
     }
 
+    // får vi starta en ny dialog?
     public bool CanStartDialog()
     {
-        return !isOnCooldown && !IsDialogActive;
+        return !isOnCooldown && !IsDialogActive; // inte paus och inte redan igång
     }
 
+    // hantera input medan dialog är aktiv
     public void HandleUpdate()
     {
-        // Handle advancing the dialog
-        if (Input.GetKeyDown(KeyCode.E)) // Or your interaction key
+        if (Input.GetKeyDown(KeyCode.E)) // om man trycker E
         {
-            // Only advance if NOT typing and NO choices are shown
+            // gör inget om text skrivs ut
+            // gör inget om val visas
             if (!isTyping && currentChoiceButtons.Count == 0)
             {
                 Debug.Log("DialogManager: E pressed, advancing to next line.");
-                DisplayNextLine(); // Display the next line from the queue
+                DisplayNextLine(); // visa nästa
             }
-            // If choices are showing, pressing E does nothing here (handled by button clicks)
-            // If typing is in progress, pressing E also does nothing now.
         }
     }
 
+    // ställ in storlek och position på porträttbilden
     private void SetPortraitSizeAndPosition(float size, Vector2 offset)
     {
-        // Only adjust the portrait frame/image, not the container
         if (portraitFrame != null)
         {
-            // Set the portrait image size
             portraitFrame.sizeDelta = new Vector2(size, size);
             portraitFrame.anchoredPosition = offset;
 
-            // Ensure the portrait image is centered within its frame
+            // se till att bilden fyller ramen
             RectTransform imageRect = portraitImage.GetComponent<RectTransform>();
             if (imageRect != null && imageRect != portraitFrame)
             {
@@ -644,6 +635,7 @@ public class DialogManager : MonoBehaviour
         }
     }
 
+    // ge andra script tillgång till boxen
     public GameObject GetDialogBox()
     {
         return dialogBox;

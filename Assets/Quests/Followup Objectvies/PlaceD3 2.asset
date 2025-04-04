@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PlaceD3 2
   m_EditorClassIdentifier: 
   description: 
-  type: 0
+  type: 4
   itemID: 
   requiredAmount: 1
   currentAmount: 0
